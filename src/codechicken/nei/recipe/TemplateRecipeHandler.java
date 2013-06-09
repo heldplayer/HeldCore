@@ -15,9 +15,16 @@ import codechicken.nei.forge.GuiContainerManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/**
+ * Dummy class
+ */
 @SideOnly(Side.CLIENT)
 public abstract class TemplateRecipeHandler implements ICraftingHandler, IUsageHandler {
+
     public abstract class CachedRecipe {
+
+        final long offset = System.currentTimeMillis();
+
         public abstract PositionedStack getResult();
 
         public ArrayList<PositionedStack> getIngredients() {
@@ -46,7 +53,6 @@ public abstract class TemplateRecipeHandler implements ICraftingHandler, IUsageH
             return false;
         }
 
-        final long offset = System.currentTimeMillis();
     }
 
     public ArrayList<CachedRecipe> arecipes = new ArrayList<CachedRecipe>();
@@ -155,4 +161,5 @@ public abstract class TemplateRecipeHandler implements ICraftingHandler, IUsageH
     public ICraftingHandler getRecipeHandler(String outputId, Object... results) {
         return null;
     }
+
 }

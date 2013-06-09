@@ -12,6 +12,9 @@ import codechicken.nei.api.IOverlayHandler;
 import codechicken.nei.api.IRecipeOverlayRenderer;
 import codechicken.nei.forge.GuiContainerManager;
 
+/**
+ * Dummy class
+ */
 public interface IRecipeHandler {
 
     public String getRecipeName();

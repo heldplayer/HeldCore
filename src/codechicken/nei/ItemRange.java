@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+/**
+ * Dummy class
+ */
 public class ItemRange {
 
     public ItemRange(int itemID) {}
@@ -18,7 +21,7 @@ public class ItemRange {
     }
 
     public String toString() {
-        return "";
+        return null;
     }
 
     public ItemRange(String rangestring) {}

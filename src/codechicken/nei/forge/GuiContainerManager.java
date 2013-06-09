@@ -3,6 +3,9 @@ package codechicken.nei.forge;
 
 import net.minecraft.item.ItemStack;
 
+/**
+ * Dummy class
+ */
 public class GuiContainerManager {
 
     public static void addTooltipHandler(IContainerTooltipHandler handler) {}
@@ -36,4 +39,5 @@ public class GuiContainerManager {
     public int getStringWidth(String s) {
         return 0;
     }
+
 }

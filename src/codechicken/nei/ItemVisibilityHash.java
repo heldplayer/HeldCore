@@ -1,9 +1,11 @@
+
 package codechicken.nei;
 
+/**
+ * Dummy class
+ */
 public class ItemVisibilityHash {
 
-    public ItemVisibilityHash() {
-        // TODO Auto-generated constructor stub
-    }
+    public ItemVisibilityHash() {}
 
 }

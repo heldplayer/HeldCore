@@ -8,6 +8,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+/**
+ * Dummy class
+ */
 public class MultiItemRange {
 
     public boolean isItemInRange(int itemid, int damage) {
@@ -85,4 +88,5 @@ public class MultiItemRange {
     public void updateState(ItemVisibilityHash vis) {}
 
     public void addItemIfInRange(int item, int damage, NBTTagCompound compound) {}
+
 }

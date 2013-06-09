@@ -8,6 +8,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import codechicken.nei.PositionedStack;
 
+/**
+ * Dummy class
+ */
 public class ShapedRecipeHandler extends TemplateRecipeHandler {
 
     public class CachedShapedRecipe extends CachedRecipe {
@@ -38,4 +41,5 @@ public class ShapedRecipeHandler extends TemplateRecipeHandler {
     public boolean hasOverlay(GuiContainer gui, Container container, int recipe) {
         return false;
     }
+
 }

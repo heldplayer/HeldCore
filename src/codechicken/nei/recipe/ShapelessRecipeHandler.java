@@ -10,11 +10,17 @@ import codechicken.nei.PositionedStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/**
+ * Dummy class
+ */
 @SideOnly(Side.CLIENT)
 public class ShapelessRecipeHandler extends TemplateRecipeHandler {
-    public int[][] stackorder;
 
     public class CachedShapelessRecipe extends CachedRecipe {
+
+        public ArrayList<PositionedStack> ingredients;
+        public PositionedStack result;
+
         public CachedShapelessRecipe() {}
 
         public CachedShapelessRecipe(ItemStack output) {}
@@ -38,12 +44,12 @@ public class ShapelessRecipeHandler extends TemplateRecipeHandler {
 
         @Override
         public PositionedStack getResult() {
-            return this.result;
+            return null;
         }
 
-        public ArrayList<PositionedStack> ingredients;
-        public PositionedStack result;
     }
+
+    public int[][] stackorder;
 
     @Override
     public void loadCraftingRecipes(String outputId, Object... results) {}
@@ -52,4 +58,5 @@ public class ShapelessRecipeHandler extends TemplateRecipeHandler {
     public String getGuiTexture() {
         return null;
     }
+
 }

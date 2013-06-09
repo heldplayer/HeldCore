@@ -9,6 +9,9 @@ import codechicken.nei.MultiItemRange;
 import codechicken.nei.recipe.ICraftingHandler;
 import codechicken.nei.recipe.IUsageHandler;
 
+/**
+ * Dummy class
+ */
 public class API {
 
     public static void registerRecipeHandler(ICraftingHandler neiSolderingStationRecipeManager) {}
