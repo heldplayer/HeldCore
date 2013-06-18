@@ -14,6 +14,7 @@ import net.minecraft.util.HttpUtil;
  */
 public class RunnableMinecraftChecker implements Runnable {
 
+    @Override
     public void run() {
         try {
             String s = HttpUtil.func_104145_a(new URL("http://assets.minecraft.net/1_6_has_been_released.flag"));

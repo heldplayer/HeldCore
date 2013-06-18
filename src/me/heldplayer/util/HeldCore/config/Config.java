@@ -4,9 +4,8 @@ package me.heldplayer.util.HeldCore.config;
 import java.io.File;
 import java.util.ArrayList;
 
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-
 import net.minecraftforge.common.Configuration;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 /**
  * Class used for configurations
@@ -27,7 +26,7 @@ public class Config {
      *        {@link FMLPreInitializationEvent#getSuggestedConfigurationFile()}
      */
     public Config(File file) {
-        keys = new ArrayList<ConfigValue<?>>();
+        this.keys = new ArrayList<ConfigValue<?>>();
 
         this.config = new Configuration(file);
     }
@@ -40,7 +39,7 @@ public class Config {
      *        The key to add
      */
     public void addConfigKey(ConfigValue<?> key) {
-        keys.add(key);
+        this.keys.add(key);
         key.config = this;
     }
 
@@ -48,7 +47,7 @@ public class Config {
      * Loads the configuration
      */
     public void load() {
-        for (ConfigValue<?> key : keys) {
+        for (ConfigValue<?> key : this.keys) {
             key.load();
         }
     }
@@ -65,7 +64,7 @@ public class Config {
      * Saves the configuration if any key has been changed
      */
     public void saveOnChange() {
-        for (ConfigValue<?> key : keys) {
+        for (ConfigValue<?> key : this.keys) {
             if (key.isChanged()) {
                 this.config.save();
 

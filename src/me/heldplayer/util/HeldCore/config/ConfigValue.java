@@ -57,32 +57,32 @@ public class ConfigValue<T> {
     }
 
     public void load() {
-        if (side != FMLCommonHandler.instance().getSide() && side != null) {
+        if (this.side != FMLCommonHandler.instance().getSide() && this.side != null) {
             return;
         }
 
-        if (mode == 0) {
-            value = config.config.get(category, name, ((IConfigurable) deff).serialize(), comment);
+        if (this.mode == 0) {
+            this.value = this.config.config.get(this.category, this.name, ((IConfigurable) this.deff).serialize(), this.comment);
         }
-        if (mode == 1) {
-            value = config.config.get(category, name, (Boolean) deff, comment);
+        if (this.mode == 1) {
+            this.value = this.config.config.get(this.category, this.name, (Boolean) this.deff, this.comment);
         }
-        if (mode == 2) {
-            value = config.config.get(category, name, (Double) deff, comment);
+        if (this.mode == 2) {
+            this.value = this.config.config.get(this.category, this.name, (Double) this.deff, this.comment);
         }
-        if (mode == 3) {
+        if (this.mode == 3) {
             if (this.category.equalsIgnoreCase(Configuration.CATEGORY_BLOCK)) {
-                value = config.config.getBlock(category, name, (Integer) deff, comment);
+                this.value = this.config.config.getBlock(this.category, this.name, (Integer) this.deff, this.comment);
             }
             else if (this.category.equalsIgnoreCase(Configuration.CATEGORY_ITEM)) {
-                value = config.config.getItem(category, name, (Integer) deff, comment);
+                this.value = this.config.config.getItem(this.category, this.name, (Integer) this.deff, this.comment);
             }
             else {
-                value = config.config.get(category, name, (Integer) deff, comment);
+                this.value = this.config.config.get(this.category, this.name, (Integer) this.deff, this.comment);
             }
         }
-        if (mode == 4) {
-            value = config.config.get(category, name, (String) deff, comment);
+        if (this.mode == 4) {
+            this.value = this.config.config.get(this.category, this.name, (String) this.deff, this.comment);
         }
     }
 
@@ -93,35 +93,35 @@ public class ConfigValue<T> {
      */
     @SuppressWarnings("unchecked")
     public T getValue() {
-        if (side != FMLCommonHandler.instance().getSide() && side != null) {
+        if (this.side != FMLCommonHandler.instance().getSide() && this.side != null) {
             return null;
         }
 
         if (this.value == null) {
-            return deff;
+            return this.deff;
         }
 
-        if (mode == 0) {
+        if (this.mode == 0) {
             return (T) ((IConfigurable) this.deff).load(this.value.getString());
         }
-        if (mode == 1) {
-            return (T) Boolean.valueOf(this.value.getBoolean((Boolean) deff));
+        if (this.mode == 1) {
+            return (T) Boolean.valueOf(this.value.getBoolean((Boolean) this.deff));
         }
-        if (mode == 2) {
-            return (T) Double.valueOf(this.value.getDouble((Double) deff));
+        if (this.mode == 2) {
+            return (T) Double.valueOf(this.value.getDouble((Double) this.deff));
         }
-        if (mode == 3) {
-            return (T) Integer.valueOf(this.value.getInt((Integer) deff));
+        if (this.mode == 3) {
+            return (T) Integer.valueOf(this.value.getInt((Integer) this.deff));
         }
-        if (mode == 4) {
+        if (this.mode == 4) {
             return (T) this.value.getString();
         }
 
-        return deff;
+        return this.deff;
     }
 
     public boolean isChanged() {
-        if (side != FMLCommonHandler.instance().getSide() && side != null) {
+        if (this.side != FMLCommonHandler.instance().getSide() && this.side != null) {
             return false;
         }
 

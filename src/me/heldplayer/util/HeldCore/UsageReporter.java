@@ -25,14 +25,25 @@ public class UsageReporter implements Runnable {
 
     public final String modId;
     public final String version;
+    public final String modpack;
     public final Side side;
     public final File modDir;
 
+    @Deprecated
     public UsageReporter(String modId, String version, Side side, File modDir) {
         this.modId = modId;
         this.version = version;
         this.side = side;
         this.modDir = modDir;
+        this.modpack = "";
+    }
+
+    public UsageReporter(String modId, String version, String modpack, Side side, File modDir) {
+        this.modId = modId;
+        this.version = version;
+        this.side = side;
+        this.modDir = modDir;
+        this.modpack = modpack;
     }
 
     @Override
@@ -49,12 +60,12 @@ public class UsageReporter implements Runnable {
         }
         if (needsResending) {
             try {
-                request = (HttpURLConnection) new URL("http://dsiwars.x10.mx/files/report_activation.php?mod=" + this.modId + "&version=" + this.version + "&side=" + side.ordinal()).openConnection();
+                request = (HttpURLConnection) new URL("http://dsiwars.x10.mx/files/report_activation.php?mod=" + this.modId + "&version=" + this.version + "&side=" + this.side.ordinal() + "&pack=" + this.modpack).openConnection();
                 request.setRequestMethod("GET");
                 request.connect();
 
                 if (request.getResponseCode() == 200) {
-                    rewriteVersion();
+                    this.rewriteVersion();
                 }
                 else {
                     throw new RuntimeException("Server returned HTTP response code " + request.getResponseCode());
@@ -79,7 +90,7 @@ public class UsageReporter implements Runnable {
         request = null;
 
         try {
-            request = (HttpURLConnection) new URL("http://dsiwars.x10.mx/files/report_launch.php?mod=" + this.modId + "&version=" + this.version + "&side=" + side.ordinal()).openConnection();
+            request = (HttpURLConnection) new URL("http://dsiwars.x10.mx/files/report_launch.php?mod=" + this.modId + "&version=" + this.version + "&side=" + this.side.ordinal() + "&pack=" + this.modpack).openConnection();
             request.setRequestMethod("GET");
             request.connect();
 
@@ -98,7 +109,7 @@ public class UsageReporter implements Runnable {
     }
 
     private void rewriteVersion() {
-        File file = new File(modDir, this.modId + ".version");
+        File file = new File(this.modDir, this.modId + ".version");
 
         BufferedWriter out = null;
 
@@ -125,7 +136,7 @@ public class UsageReporter implements Runnable {
     }
 
     private boolean needsResending() {
-        File file = new File(modDir, this.modId + ".version");
+        File file = new File(this.modDir, this.modId + ".version");
 
         if (!file.exists()) {
             return true;
