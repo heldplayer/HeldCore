@@ -4,11 +4,14 @@ package me.heldplayer.util.HeldCore;
 public final class MathHelper {
 
     private static float[] sinTable = new float[65536];
+    private static int[] bezierValues = new int[16];
 
     static {
         for (int i = 0; i < 65536; ++i) {
             sinTable[i] = (float) Math.sin((double) i * Math.PI * 2.0D / 65536.0D);
         }
+
+        bezierValues[0] = 1;
     }
 
     /**
@@ -102,62 +105,35 @@ public final class MathHelper {
             actualInput++;
         }
 
-        if (actualInput < 2) {
-            throw new RuntimeException("Need more input points");
-        }
-        if (actualInput == 2) {
-            Vector[] points = VectorPool.getFreeVectorArray(actualInput);
-
-            for (int i = 0; i < actualInput; i++) {
-                points[i] = input[i].clone();
+        for (int i = 1; i < bezierValues.length; i++) {
+            if (i > actualInput - 1) {
+                bezierValues[i] = 0;
             }
-
-            Vector result = VectorPool.getFreeVector();
-            points[0].multiply(t);
-            points[1].multiply(1.0D - t);
-            result.add(points[0]);
-            result.add(points[1]);
-
-            return result;
-        }
-        if (actualInput == 3) {
-            Vector[] points = VectorPool.getFreeVectorArray(actualInput);
-
-            for (int i = 0; i < actualInput; i++) {
-                points[i] = input[i].clone();
+            else {
+                bezierValues[i] = bezierValues[i - 1] * (actualInput - i) / i;
             }
-
-            Vector result = VectorPool.getFreeVector();
-            points[0].multiply(t * t);
-            points[1].multiply((1.0D - t) * t * 2.0D);
-            points[2].multiply((1.0D - t) * (1.0D - t));
-            result.add(points[0]);
-            result.add(points[1]);
-            result.add(points[2]);
-
-            return result;
         }
-        if (actualInput == 4) {
-            Vector[] points = VectorPool.getFreeVectorArray(actualInput);
 
-            for (int i = 0; i < actualInput; i++) {
-                points[i] = input[i].clone();
+        Vector[] points = VectorPool.getFreeVectorArray(actualInput);
+        Vector result = VectorPool.getFreeVector();
+
+        for (int i = 0; i < actualInput; i++) {
+            points[i] = input[i].clone();
+
+            points[i].multiply(bezierValues[i]);
+
+            for (int j = i; j < actualInput - 1; j++) {
+                points[i].multiply(t);
             }
-
-            Vector result = VectorPool.getFreeVector();
-            points[0].multiply(t * t * t);
-            points[1].multiply((1.0D - t) * t * t * 3.0D);
-            points[2].multiply((1.0D - t) * (1.0D - t) * t * 3.0D);
-            points[3].multiply((1.0D - t) * (1.0D - t) * (1.0D - t));
-            result.add(points[0]);
-            result.add(points[1]);
-            result.add(points[2]);
-            result.add(points[3]);
-
-            return result;
+            for (int j = 0; j < i; j++) {
+                points[i].multiply(1.0D - t);
+            }
+            
+            
+            result.add(points[i]);
         }
 
-        throw new RuntimeException("Unknown bezier function");
+        return result;
     }
 
 }
