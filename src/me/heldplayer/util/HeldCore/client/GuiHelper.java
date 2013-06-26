@@ -24,7 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  */
 @SideOnly(Side.CLIENT)
-public abstract class GuiHelper {
+public final class GuiHelper {
 
     /**
      * Draws a liquid tank

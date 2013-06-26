@@ -1,7 +1,7 @@
 
 package me.heldplayer.util.HeldCore;
 
-public class MathHelper {
+public final class MathHelper {
 
     private static float[] sinTable = new float[65536];
 
@@ -14,14 +14,14 @@ public class MathHelper {
     /**
      * Returns the sin of an angle in Quaternary degrees
      */
-    public static final float sin(float angle) {
+    public static float sin(float angle) {
         return sinTable[(int) (angle * 16384.0F) & 65535];
     }
 
     /**
      * Returns the sin of an angle in Quaternary degrees
      */
-    public static final float cos(float angle) {
+    public static float cos(float angle) {
         return sinTable[(int) (angle * 16384.0F + 16384.0F) & 65535];
     }
 
@@ -74,6 +74,14 @@ public class MathHelper {
         return number < 0.0D ? -number : number;
     }
 
+    public static float sqrt(float par0) {
+        return (float) Math.sqrt((double) par0);
+    }
+
+    public static float sqrt(double par0) {
+        return (float) Math.sqrt(par0);
+    }
+
     public static float lerp(float origin, float target, int steps, int maxSteps) {
         return origin + (target - origin) * (float) steps / (float) maxSteps;
     }
@@ -86,17 +94,25 @@ public class MathHelper {
      * Gets a point on a bezier curve
      */
     public static Vector bezier(Vector[] input, double t) {
-        if (input.length < 2) {
+        int actualInput = 0;
+        for (int i = 0; i < input.length; i++) {
+            if (input[i] == null) {
+                break;
+            }
+            actualInput++;
+        }
+
+        if (actualInput < 2) {
             throw new RuntimeException("Need more input points");
         }
-        if (input.length == 2) {
-            Vector[] points = new Vector[2];
+        if (actualInput == 2) {
+            Vector[] points = VectorPool.getFreeVectorArray(actualInput);
 
-            for (int i = 0; i < points.length; i++) {
+            for (int i = 0; i < actualInput; i++) {
                 points[i] = input[i].clone();
             }
 
-            Vector result = new Vector();
+            Vector result = VectorPool.getFreeVector();
             points[0].multiply(t);
             points[1].multiply(1.0D - t);
             result.add(points[0]);
@@ -104,14 +120,14 @@ public class MathHelper {
 
             return result;
         }
-        if (input.length == 3) {
-            Vector[] points = new Vector[3];
+        if (actualInput == 3) {
+            Vector[] points = VectorPool.getFreeVectorArray(actualInput);
 
-            for (int i = 0; i < points.length; i++) {
+            for (int i = 0; i < actualInput; i++) {
                 points[i] = input[i].clone();
             }
 
-            Vector result = new Vector();
+            Vector result = VectorPool.getFreeVector();
             points[0].multiply(t * t);
             points[1].multiply((1.0D - t) * t * 2.0D);
             points[2].multiply((1.0D - t) * (1.0D - t));
@@ -121,14 +137,14 @@ public class MathHelper {
 
             return result;
         }
-        if (input.length == 4) {
-            Vector[] points = new Vector[4];
+        if (actualInput == 4) {
+            Vector[] points = VectorPool.getFreeVectorArray(actualInput);
 
-            for (int i = 0; i < points.length; i++) {
+            for (int i = 0; i < actualInput; i++) {
                 points[i] = input[i].clone();
             }
 
-            Vector result = new Vector();
+            Vector result = VectorPool.getFreeVector();
             points[0].multiply(t * t * t);
             points[1].multiply((1.0D - t) * t * t * 3.0D);
             points[2].multiply((1.0D - t) * (1.0D - t) * t * 3.0D);

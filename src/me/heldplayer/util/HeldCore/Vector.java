@@ -43,8 +43,21 @@ public class Vector {
         return this.posX * other.posX + this.posY * other.posY + this.posZ * other.posZ;
     }
 
+    public void normalize() {
+        double length = this.length();
+        if (length != 0.0D) {
+            this.posX = this.posX / length;
+            this.posY = this.posY / length;
+            this.posZ = this.posZ / length;
+        }
+    }
+
+    public double length() {
+        return MathHelper.sqrt(this.posX * this.posX + this.posY * this.posY + this.posZ * this.posZ);
+    }
+
     public Vector clone() {
-        Vector result = new Vector(this.posX, this.posY, this.posZ);
+        Vector result = VectorPool.getFreeVector(this.posX, this.posY, this.posZ);
 
         return result;
     }
