@@ -6,8 +6,25 @@ import java.io.BufferedReader;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
+/**
+ * Class for loading GL Shaders
+ * 
+ * @author heldplayer
+ * 
+ */
 public class ShaderLoader {
 
+    /**
+     * Creates a shader from given parameters
+     * 
+     * @param name
+     *        Name of the shader, purely used for writing error messages
+     * @param vertex
+     *        The vertex shader part
+     * @param fragment
+     *        The fragment shader part
+     * @return A shader object representing the newly created shader
+     */
     public static Shader createShader(String name, BufferedReader vertex, BufferedReader fragment) {
         int programId = GL20.glCreateProgram();
         int vertexId = GL20.glCreateShader(GL20.GL_VERTEX_SHADER);
