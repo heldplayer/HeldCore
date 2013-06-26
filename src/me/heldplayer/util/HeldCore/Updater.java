@@ -28,7 +28,7 @@ public class Updater implements Runnable {
     public static boolean hide = false;
 
     public static Logger log = Logger.getLogger("HeldCore");
-    public static final String version = "01.02.02.00";
+    public static final String version = "01.02.03.00";
 
     private String modId;
     private String modVersion;
