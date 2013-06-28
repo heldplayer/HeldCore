@@ -4,11 +4,18 @@ package me.heldplayer.util.HeldCore.packet;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.TreeMap;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.PlayerInstance;
+import net.minecraft.server.management.PlayerManager;
+import net.minecraft.world.WorldServer;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
@@ -90,6 +97,51 @@ public abstract class PacketHandler implements IPacketHandler {
         payload.isChunkDataPacket = packet.isMapPacket();
 
         return payload;
+    }
+
+    public static void sendPacketToPlayersWatching(Packet packet, int dimensionId, int chunkX, int chunkZ) {
+        MinecraftServer server = MinecraftServer.getServer();
+
+        if (server != null) {
+            for (WorldServer world : server.worldServers) {
+                if (world.provider.dimensionId == dimensionId) {
+                    PlayerManager manager = world.getPlayerManager();
+                    PlayerInstance instance = manager.getOrCreateChunkWatcher(chunkX, chunkZ, false);
+
+                    if (instance != null) {
+                        instance.sendToAllPlayersWatchingChunk(packet);
+                    }
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void sendPacketToPlayersInDim(Packet packet, int dimensionId) {
+        MinecraftServer server = MinecraftServer.getServer();
+
+        if (server != null) {
+            List<EntityPlayerMP> players = server.getConfigurationManager().playerEntityList;
+
+            for (EntityPlayerMP player : players) {
+                if (player.dimension == dimensionId) {
+                    player.playerNetServerHandler.sendPacketToPlayer(packet);
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void sendPacketToAllPlayers(Packet packet) {
+        MinecraftServer server = MinecraftServer.getServer();
+
+        if (server != null) {
+            List<EntityPlayerMP> players = server.getConfigurationManager().playerEntityList;
+
+            for (EntityPlayerMP player : players) {
+                player.playerNetServerHandler.sendPacketToPlayer(packet);
+            }
+        }
     }
 
 }
