@@ -22,6 +22,7 @@ import com.google.common.io.ByteStreams;
 
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.relauncher.Side;
 
 public abstract class PacketHandler implements IPacketHandler {
 
@@ -77,6 +78,13 @@ public abstract class PacketHandler implements IPacketHandler {
     }
 
     public Packet250CustomPayload createPacket(HeldCorePacket packet) {
+        if (packet == null) {
+            return null;
+        }
+        if (packet.world != null && packet.getSendingSide() == Side.CLIENT && !packet.world.isRemote) {
+            return null;
+        }
+
         ByteArrayOutputStream bos = new ByteArrayOutputStream(32767);
         DataOutputStream dos = new DataOutputStream(bos);
 
@@ -100,6 +108,9 @@ public abstract class PacketHandler implements IPacketHandler {
     }
 
     public static void sendPacketToPlayersWatching(Packet packet, int dimensionId, int chunkX, int chunkZ) {
+        if (packet == null) {
+            return;
+        }
         MinecraftServer server = MinecraftServer.getServer();
 
         if (server != null) {
@@ -118,6 +129,9 @@ public abstract class PacketHandler implements IPacketHandler {
 
     @SuppressWarnings("unchecked")
     public static void sendPacketToPlayersInDim(Packet packet, int dimensionId) {
+        if (packet == null) {
+            return;
+        }
         MinecraftServer server = MinecraftServer.getServer();
 
         if (server != null) {
@@ -133,6 +147,9 @@ public abstract class PacketHandler implements IPacketHandler {
 
     @SuppressWarnings("unchecked")
     public static void sendPacketToAllPlayers(Packet packet) {
+        if (packet == null) {
+            return;
+        }
         MinecraftServer server = MinecraftServer.getServer();
 
         if (server != null) {
