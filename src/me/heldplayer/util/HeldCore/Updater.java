@@ -157,11 +157,6 @@ public class Updater implements Runnable {
         else if (java != null && java.startsWith("1.5")) {
             hide = true;
         }
-        else {
-            Thread thread = new Thread(new RunnableMinecraftChecker());
-            thread.setDaemon(true);
-            thread.start();
-        }
         log.log(Level.INFO, "Current implemented version of HeldCore is " + version);
         log.log(Level.WARNING, "This version will now be running on ALL mods by heldplayer and may break older or newer versions");
     }

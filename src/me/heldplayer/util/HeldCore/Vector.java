@@ -56,6 +56,7 @@ public class Vector {
         return MathHelper.sqrt(this.posX * this.posX + this.posY * this.posY + this.posZ * this.posZ);
     }
 
+    @Override
     public Vector clone() {
         Vector result = VectorPool.getFreeVector(this.posX, this.posY, this.posZ);
 

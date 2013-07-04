@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
@@ -50,10 +51,10 @@ public final class GuiHelper {
         ItemStack stack = new ItemStack(item, 1, itemMeta);
 
         if (stack.getItemSpriteNumber() == 0) {
-            Minecraft.getMinecraft().renderEngine.bindTexture("/terrain.png");
+            Minecraft.getMinecraft().renderEngine.func_110577_a(TextureMap.field_110575_b);
         }
         else {
-            Minecraft.getMinecraft().renderEngine.bindTexture("/gui/items.png");
+            Minecraft.getMinecraft().renderEngine.func_110577_a(TextureMap.field_110576_c);
         }
 
         for (int i = 0; i <= item.getRenderPasses(itemMeta); i++) {
@@ -70,14 +71,15 @@ public final class GuiHelper {
                     int drawWidth = width - x > 16 ? 16 : width - x;
                     int drawHeight = height - y > 16 ? 16 : height - y;
 
-                    float pixelSize = 0.0F;
+                    // FIXME: Check if this is correct
+                    float pixelSize = 1.0F / (float) Minecraft.getGLMaximumTextureSize();
 
-                    if (stack.getItemSpriteNumber() == 0) {
-                        pixelSize = 1.0F / (float) Minecraft.getMinecraft().renderEngine.textureMapBlocks.getTexture().getHeight();
-                    }
-                    else {
-                        pixelSize = 1.0F / (float) Minecraft.getMinecraft().renderEngine.textureMapItems.getTexture().getHeight();
-                    }
+                    //if (stack.getItemSpriteNumber() == 0) {
+                    //pixelSize = 1.0F / (float) Minecraft.getMinecraft().renderEngine.textureMapBlocks.getTexture().getHeight();
+                    //}
+                    //else {
+                    //pixelSize = 1.0F / (float) Minecraft.getMinecraft().renderEngine.textureMapItems.getTexture().getHeight();
+                    //}
 
                     float pixels = pixelSize * 16 - pixelSize * drawHeight;
 

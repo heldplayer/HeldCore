@@ -128,8 +128,7 @@ public final class MathHelper {
             for (int j = 0; j < i; j++) {
                 points[i].multiply(1.0D - t);
             }
-            
-            
+
             result.add(points[i]);
         }
 
