@@ -1,16 +1,18 @@
 
 package me.heldplayer.util.HeldCore.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraft.util.StatCollector;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -27,13 +29,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public final class GuiHelper {
 
+    private static final ArrayList<String> reusableArrayList = new ArrayList<String>();
+
     /**
-     * Draws a liquid tank
+     * Draws a fluid tank
      * 
-     * @param itemId
-     *        The item ID of the liquid
-     * @param itemMeta
-     *        The meta for the liquid
+     * @param fluid
+     *        The fluid to render
      * @param left
      *        The x position to start at
      * @param top
@@ -43,48 +45,33 @@ public final class GuiHelper {
      * @param height
      *        The height of the tank to render
      */
-    public static void drawLiquid(int itemId, int itemMeta, int left, int top, int width, int height) {
-        Item item = Item.itemsList[itemId];
-        if (item == null) {
-            return;
-        }
-        ItemStack stack = new ItemStack(item, 1, itemMeta);
-
-        if (stack.getItemSpriteNumber() == 0) {
+    public static void drawFluid(Fluid fluid, int left, int top, int width, int height) {
+        if (fluid.getSpriteNumber() == 0) {
             Minecraft.getMinecraft().renderEngine.func_110577_a(TextureMap.field_110575_b);
         }
         else {
             Minecraft.getMinecraft().renderEngine.func_110577_a(TextureMap.field_110576_c);
         }
 
-        for (int i = 0; i <= item.getRenderPasses(itemMeta); i++) {
-            Icon icon = item.getIconFromDamageForRenderPass(itemMeta, i);
-            int color = item.getColorFromItemStack(stack, i);
-            float red = (color >> 16 & 0xFF) / 255.0F;
-            float green = (color >> 8 & 0xFF) / 255.0F;
-            float blue = (color & 0xFF) / 255.0F;
+        Icon icon = RenderHelper.getIconSafe(fluid.getIcon(), fluid.getSpriteNumber() == 0);
+        int color = fluid.getColor();
+        float red = (color >> 16 & 0xFF) / 255.0F;
+        float green = (color >> 8 & 0xFF) / 255.0F;
+        float blue = (color & 0xFF) / 255.0F;
 
-            GL11.glColor4f(red, green, blue, 1.0F);
+        GL11.glColor4f(red, green, blue, 1.0F);
 
-            for (int x = 0; x < width; x += 16) {
-                for (int y = 0; y < height; y += 16) {
-                    int drawWidth = width - x > 16 ? 16 : width - x;
-                    int drawHeight = height - y > 16 ? 16 : height - y;
+        for (int x = 0; x < width; x += 16) {
+            for (int y = 0; y < height; y += 16) {
+                int drawWidth = width - x > 16 ? 16 : width - x;
+                int drawHeight = height - y > 16 ? 16 : height - y;
 
-                    // FIXME: Check if this is correct
-                    float pixelSize = 1.0F / (float) Minecraft.getGLMaximumTextureSize();
+                float minU = icon.getMinU();
+                float minV = icon.getInterpolatedV(16.0F - (float) drawHeight);
+                float maxU = icon.getMaxU();
+                float maxV = icon.getMaxV();
 
-                    //if (stack.getItemSpriteNumber() == 0) {
-                    //pixelSize = 1.0F / (float) Minecraft.getMinecraft().renderEngine.textureMapBlocks.getTexture().getHeight();
-                    //}
-                    //else {
-                    //pixelSize = 1.0F / (float) Minecraft.getMinecraft().renderEngine.textureMapItems.getTexture().getHeight();
-                    //}
-
-                    float pixels = pixelSize * 16 - pixelSize * drawHeight;
-
-                    drawTexturedModalRect(left + x, top + height - y - drawHeight, drawWidth, drawHeight, 0.0F, icon.getMinU(), icon.getMinV() + pixels, icon.getMaxU(), icon.getMaxV());
-                }
+                drawTexturedModalRect(left + x, top + height - y - drawHeight, drawWidth, drawHeight, 0.0F, minU, minV, maxU, maxV);
             }
         }
     }
@@ -126,7 +113,7 @@ public final class GuiHelper {
      */
     public static void drawTooltip(List<String> strings, FontRenderer fontRenderer, int mouseX, int mouseY, int guiTop, int height) {
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        RenderHelper.disableStandardItemLighting();
+        net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
 
@@ -184,6 +171,28 @@ public final class GuiHelper {
                 yPos += 10;
             }
         }
+    }
+
+    public static ArrayList<String> getFluidString(IFluidTank tank) {
+        reusableArrayList.clear();
+
+        if (tank == null) {
+            reusableArrayList.add("This tank is broken");
+            return reusableArrayList;
+        }
+
+        FluidStack stack = tank.getFluid();
+
+        if (stack != null && stack.amount > 0) {
+            reusableArrayList.add(stack.getFluid().getLocalizedName());
+            reusableArrayList.add(StatCollector.translateToLocalFormatted("gui.container.fluid.filled", stack.amount, tank.getCapacity()).trim());
+        }
+        else {
+            reusableArrayList.add("Empty");
+            reusableArrayList.add(StatCollector.translateToLocalFormatted("gui.container.fluid.filled", 0, tank.getCapacity()).trim());
+        }
+
+        return reusableArrayList;
     }
 
     /**
@@ -262,6 +271,16 @@ public final class GuiHelper {
         tes.addVertexWithUV((double) (startX + width), (double) (startY + height), (double) zLevel, endU, endV);
         tes.addVertexWithUV((double) (startX + width), (double) startY, (double) zLevel, endU, startV);
         tes.addVertexWithUV((double) startX, (double) startY, (double) zLevel, startU, startV);
+        tes.draw();
+    }
+
+    public static void drawTexturedModalRect(int startX, int startY, int width, int height, double zLevel, double startU, double startV, double endU, double endV) {
+        Tessellator tes = Tessellator.instance;
+        tes.startDrawingQuads();
+        tes.addVertexWithUV(startX, startY + (double) height, zLevel, startU, endV);
+        tes.addVertexWithUV(startX + (double) width, startY + (double) height, zLevel, endU, endV);
+        tes.addVertexWithUV(startX + (double) width, startY, zLevel, endU, startV);
+        tes.addVertexWithUV(startX, startY, zLevel, startU, startV);
         tes.draw();
     }
 

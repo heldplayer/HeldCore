@@ -4,6 +4,8 @@ package me.heldplayer.util.HeldCore.client;
 import me.heldplayer.util.HeldCore.MathHelper;
 import me.heldplayer.util.HeldCore.Vector;
 import me.heldplayer.util.HeldCore.VectorPool;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.Icon;
 
 import org.lwjgl.opengl.GL11;
@@ -15,6 +17,19 @@ import org.lwjgl.opengl.GL11;
  * 
  */
 public final class RenderHelper {
+
+    public static Icon getIconSafe(Icon icon, boolean block) {
+        if (icon == null) {
+            if (block) {
+                icon = ((TextureMap) Minecraft.getMinecraft().func_110434_K().func_110581_b(TextureMap.field_110575_b)).func_110572_b("missingno");
+            }
+            else {
+                icon = ((TextureMap) Minecraft.getMinecraft().func_110434_K().func_110581_b(TextureMap.field_110576_c)).func_110572_b("missingno");
+            }
+        }
+
+        return (Icon) icon;
+    }
 
     public static Vector[] getBezierPlanePoints(Vector[][] points, int pointCount) {
         int actualLength = 0;
