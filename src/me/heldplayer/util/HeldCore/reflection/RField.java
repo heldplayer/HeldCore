@@ -25,11 +25,11 @@ public class RField<T, V> {
         try {
             V result = (V) field.get(classInstance);
 
-            Updater.log.log(Level.WARNING, "Reflection: Fetched field value");
+            Updater.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.field.getName() + "] Fetched field value");
             return result;
         }
         catch (Exception e) {
-            Updater.log.log(Level.WARNING, "Reflection: Exception while getting field value", e);
+            Updater.log.log(Level.WARNING, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.field.getName() + "] Exception while getting field value", e);
         }
 
         return null;

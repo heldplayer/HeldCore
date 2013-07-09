@@ -25,11 +25,11 @@ public class RMethod<T, V> {
         try {
             V result = (V) method.invoke(classInstance, args);
 
-            Updater.log.log(Level.WARNING, "Reflection: Called method");
+            Updater.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.method.getName() + "] Called method");
             return result;
         }
         catch (Exception e) {
-            Updater.log.log(Level.WARNING, "Reflection: Exception while calling method", e);
+            Updater.log.log(Level.WARNING, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.method.getName() + "] Exception while calling method", e);
         }
 
         return null;

@@ -147,6 +147,7 @@ public class Updater implements Runnable {
 
     static {
         log.setParent(FMLLog.getLogger());
+        log.setLevel(Level.FINE);
 
         String os = System.getProperty("os_architecture");
         String java = System.getProperty("java_version");

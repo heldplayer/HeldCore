@@ -22,14 +22,14 @@ public class RClass<T> {
             Field field = clazz.getDeclaredField(name);
             field.setAccessible(true);
 
-            Updater.log.log(Level.WARNING, "Reflection: Found field '" + name + "'");
+            Updater.log.log(Level.FINE, "Reflection: [" + this.clazz.getName() + "] Found field '" + name + "'");
             return new RField<T, V>(this, field);
         }
         catch (NoSuchFieldException e) {
-            Updater.log.log(Level.WARNING, "Reflection: Field not found", e);
+            Updater.log.log(Level.WARNING, "Reflection: [" + this.clazz.getName() + "] Field not found '" + name + "'", e);
         }
         catch (Exception e) {
-            Updater.log.log(Level.WARNING, "Reflection: Exception while getting field", e);
+            Updater.log.log(Level.WARNING, "Reflection: [" + this.clazz.getName() + "] Exception while getting field", e);
         }
 
         return null;
@@ -40,14 +40,14 @@ public class RClass<T> {
             Method method = clazz.getDeclaredMethod(name, args);
             method.setAccessible(true);
 
-            Updater.log.log(Level.WARNING, "Reflection: Found method '" + name + "'");
+            Updater.log.log(Level.FINE, "Reflection: [" + this.clazz.getName() + "] Found method '" + name + "'");
             return new RMethod<T, V>(this, method);
         }
         catch (NoSuchMethodException e) {
-            Updater.log.log(Level.WARNING, "Reflection: Method not found", e);
+            Updater.log.log(Level.WARNING, "Reflection: [" + this.clazz.getName() + "] Method not found '" + name + "'", e);
         }
         catch (Exception e) {
-            Updater.log.log(Level.WARNING, "Reflection: Exception while getting method", e);
+            Updater.log.log(Level.WARNING, "Reflection: [" + this.clazz.getName() + "] Exception while getting method", e);
         }
 
         return null;
@@ -58,14 +58,14 @@ public class RClass<T> {
             Constructor<T> constructor = clazz.getDeclaredConstructor(args);
             constructor.setAccessible(true);
 
-            Updater.log.log(Level.WARNING, "Reflection: Found constructor");
+            Updater.log.log(Level.FINE, "Reflection: [" + this.clazz.getName() + "] Found constructor");
             return new RConstructor<T>(this, constructor);
         }
         catch (NoSuchMethodException e) {
-            Updater.log.log(Level.WARNING, "Reflection: Constructor not found", e);
+            Updater.log.log(Level.WARNING, "Reflection: [" + this.clazz.getName() + "] Constructor not found", e);
         }
         catch (Exception e) {
-            Updater.log.log(Level.WARNING, "Reflection: Exception while getting constructor", e);
+            Updater.log.log(Level.WARNING, "Reflection: [" + this.clazz.getName() + "] Exception while getting constructor", e);
         }
 
         return null;

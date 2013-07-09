@@ -4,11 +4,13 @@ package me.heldplayer.util.HeldCore.client;
 import me.heldplayer.util.HeldCore.MathHelper;
 import me.heldplayer.util.HeldCore.Vector;
 import me.heldplayer.util.HeldCore.VectorPool;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.Icon;
 
 import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * A helper class used for rendering in 3D-space
@@ -16,15 +18,16 @@ import org.lwjgl.opengl.GL11;
  * @author heldplayer
  * 
  */
+@SideOnly(Side.CLIENT)
 public final class RenderHelper {
 
     public static Icon getIconSafe(Icon icon, boolean block) {
         if (icon == null) {
             if (block) {
-                icon = ((TextureMap) Minecraft.getMinecraft().func_110434_K().func_110581_b(TextureMap.field_110575_b)).func_110572_b("missingno");
+                icon = ((TextureMap) MineHelp.getMinecraft().func_110434_K().func_110581_b(TextureMap.field_110575_b)).func_110572_b("missingno");
             }
             else {
-                icon = ((TextureMap) Minecraft.getMinecraft().func_110434_K().func_110581_b(TextureMap.field_110576_c)).func_110572_b("missingno");
+                icon = ((TextureMap) MineHelp.getMinecraft().func_110434_K().func_110581_b(TextureMap.field_110576_c)).func_110572_b("missingno");
             }
         }
 

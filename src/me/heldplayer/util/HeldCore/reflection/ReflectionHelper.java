@@ -12,11 +12,11 @@ public final class ReflectionHelper {
         try {
             Class<T> clazz = (Class<T>) Class.forName(classPath);
 
-            Updater.log.log(Level.WARNING, "Reflection: Found class '" + classPath + "'");
+            Updater.log.log(Level.FINE, "Reflection: Found class '" + classPath + "'");
             return new RClass<T>(clazz);
         }
         catch (ClassNotFoundException e) {
-            Updater.log.log(Level.WARNING, "Reflection: Class not found", e);
+            Updater.log.log(Level.WARNING, "Reflection: Class not found for '" + classPath + "'", e);
         }
         catch (ClassCastException e) {
             Updater.log.log(Level.WARNING, "Reflection: Class found but of invalid type", e);
@@ -26,6 +26,7 @@ public final class ReflectionHelper {
     }
 
     public static <T> RClass<T> getClass(Class<T> clazz) {
+        Updater.log.log(Level.FINE, "Reflection: Constructed class for '" + clazz.getName() + "'");
         return new RClass<T>(clazz);
     }
 

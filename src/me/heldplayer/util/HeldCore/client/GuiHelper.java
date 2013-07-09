@@ -4,7 +4,6 @@ package me.heldplayer.util.HeldCore.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -47,10 +46,10 @@ public final class GuiHelper {
      */
     public static void drawFluid(Fluid fluid, int left, int top, int width, int height) {
         if (fluid.getSpriteNumber() == 0) {
-            Minecraft.getMinecraft().renderEngine.func_110577_a(TextureMap.field_110575_b);
+            MineHelp.getRenderEngine().func_110577_a(TextureMap.field_110575_b);
         }
         else {
-            Minecraft.getMinecraft().renderEngine.func_110577_a(TextureMap.field_110576_c);
+            MineHelp.getRenderEngine().func_110577_a(TextureMap.field_110576_c);
         }
 
         Icon icon = RenderHelper.getIconSafe(fluid.getIcon(), fluid.getSpriteNumber() == 0);

@@ -3,7 +3,7 @@ package me.heldplayer.util.HeldCore;
 
 import java.util.EnumSet;
 
-import net.minecraft.client.Minecraft;
+import me.heldplayer.util.HeldCore.client.MineHelp;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -28,8 +28,7 @@ public class GuiDrawer extends Gui implements ITickHandler {
 
     @Override
     public void tickEnd(EnumSet<TickType> type, Object... tickData) {
-        Minecraft mc = Minecraft.getMinecraft();
-        GuiScreen screen = mc.currentScreen;
+        GuiScreen screen = MineHelp.getMinecraft().currentScreen;
 
         if (!(screen instanceof GuiMainMenu)) {
             return;
@@ -39,7 +38,7 @@ public class GuiDrawer extends Gui implements ITickHandler {
             return;
         }
 
-        FontRenderer font = mc.fontRenderer;
+        FontRenderer font = MineHelp.getFontRenderer();
 
         String str1 = Updater.notice;
         String str2 = Updater.outOfDateList;

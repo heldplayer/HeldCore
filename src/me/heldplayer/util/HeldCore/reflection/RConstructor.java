@@ -20,11 +20,11 @@ public class RConstructor<T> {
         try {
             T result = constructor.newInstance(args);
 
-            Updater.log.log(Level.WARNING, "Reflection: Called constructor");
+            Updater.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + "] Called constructor");
             return result;
         }
         catch (Exception e) {
-            Updater.log.log(Level.WARNING, "Reflection: Exception while calling constructor", e);
+            Updater.log.log(Level.WARNING, "Reflection: [" + this.clazz.clazz.getName() + "] Exception while calling constructor", e);
         }
 
         return null;
