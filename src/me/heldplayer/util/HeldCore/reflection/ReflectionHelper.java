@@ -3,7 +3,7 @@ package me.heldplayer.util.HeldCore.reflection;
 
 import java.util.logging.Level;
 
-import me.heldplayer.util.HeldCore.Updater;
+import me.heldplayer.util.HeldCore.HeldCore;
 
 @SuppressWarnings("unchecked")
 public final class ReflectionHelper {
@@ -12,21 +12,21 @@ public final class ReflectionHelper {
         try {
             Class<T> clazz = (Class<T>) Class.forName(classPath);
 
-            Updater.log.log(Level.FINE, "Reflection: Found class '" + classPath + "'");
+            HeldCore.log.log(Level.FINE, "Reflection: Found class '" + classPath + "'");
             return new RClass<T>(clazz);
         }
         catch (ClassNotFoundException e) {
-            Updater.log.log(Level.WARNING, "Reflection: Class not found for '" + classPath + "'", e);
+            HeldCore.log.log(Level.WARNING, "Reflection: Class not found for '" + classPath + "'", e);
         }
         catch (ClassCastException e) {
-            Updater.log.log(Level.WARNING, "Reflection: Class found but of invalid type", e);
+            HeldCore.log.log(Level.WARNING, "Reflection: Class found but of invalid type", e);
         }
 
         return null;
     }
 
     public static <T> RClass<T> getClass(Class<T> clazz) {
-        Updater.log.log(Level.FINE, "Reflection: Constructed class for '" + clazz.getName() + "'");
+        HeldCore.log.log(Level.FINE, "Reflection: Constructed class for '" + clazz.getName() + "'");
         return new RClass<T>(clazz);
     }
 

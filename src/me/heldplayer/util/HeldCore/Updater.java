@@ -5,14 +5,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import net.minecraft.util.EnumChatFormatting;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * Host class for HeldCore
@@ -22,22 +14,8 @@ import cpw.mods.fml.relauncher.Side;
  */
 public class Updater implements Runnable {
 
-    public static ITickHandler tickHandler = null;
-    public static String notice = EnumChatFormatting.BOLD + "NOTICE!" + EnumChatFormatting.RESET + " The following mods are out-of-date";
-    public static String outOfDateList = "";
-    public static boolean hide = false;
-
-    public static Logger log = Logger.getLogger("HeldCore");
-    public static final String version = "01.02.04.00";
-
     private String modId;
     private String modVersion;
-    private boolean silent;
-
-    @Deprecated
-    public static void initializeUpdater(String modId, String modVersion) {
-        initializeUpdater(modId, modVersion, false);
-    }
 
     /**
      * Creates an updater for a mod.
@@ -46,33 +24,18 @@ public class Updater implements Runnable {
      *        The mod ID of the mod.
      * @param modVersion
      *        The current version of the mod
-     * @param silent
-     *        Whether the message on the main menu should be hidden for this mod
      */
-    public static void initializeUpdater(String modId, String modVersion, boolean silent) {
-        Updater updater = new Updater(modId, modVersion, silent);
+    public static void initializeUpdater(String modId, String modVersion) {
+        Updater updater = new Updater(modId, modVersion);
         Thread thread = new Thread(updater, modId + " update checker");
         thread.setDaemon(true);
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.start();
-
-        if (tickHandler != null) {
-            return;
-        }
-
-        if (FMLCommonHandler.instance().getSide() != Side.CLIENT) {
-            return;
-        }
-
-        tickHandler = new GuiDrawer();
-
-        TickRegistry.registerTickHandler(tickHandler, Side.CLIENT);
     }
 
-    protected Updater(String modId, String modVersion, boolean silent) {
+    protected Updater(String modId, String modVersion) {
         this.modId = modId;
         this.modVersion = modVersion;
-        this.silent = silent;
     }
 
     @Override
@@ -108,16 +71,8 @@ public class Updater implements Runnable {
                     int newest = Integer.parseInt(lastVersion[i]);
                     int old = Integer.parseInt(version[i]);
                     if (newest > old) {
-                        if (!this.silent) {
-                            if (!outOfDateList.isEmpty()) {
-                                outOfDateList += ", ";
-                            }
-
-                            outOfDateList += this.modId;
-                        }
-
-                        log.log(Level.INFO, "The mod '" + this.modId + "' is has a new version available!");
-                        log.log(Level.INFO, "   Current version: " + this.modVersion + "  new version: " + latestVersion);
+                        HeldCore.log.log(Level.INFO, "The mod '" + this.modId + "' is has a new version available!");
+                        HeldCore.log.log(Level.INFO, "   Current version: " + this.modVersion + "  new version: " + latestVersion);
 
                         break;
                     }
@@ -135,7 +90,7 @@ public class Updater implements Runnable {
                 stream.close();
             }
             catch (Exception e2) {}
-            log.log(Level.SEVERE, "Update check failed for '" + this.modId + "': " + e.getMessage());
+            HeldCore.log.log(Level.SEVERE, "Update check failed for '" + this.modId + "': " + e.getMessage());
         }
         finally {
 
@@ -143,23 +98,6 @@ public class Updater implements Runnable {
                 request.disconnect();
             }
         }
-    }
-
-    static {
-        log.setParent(FMLLog.getLogger());
-        log.setLevel(Level.FINE);
-
-        String os = System.getProperty("os_architecture");
-        String java = System.getProperty("java_version");
-
-        if (os != null && os.equalsIgnoreCase("ppc")) {
-            hide = true;
-        }
-        else if (java != null && java.startsWith("1.5")) {
-            hide = true;
-        }
-        log.log(Level.INFO, "Current implemented version of HeldCore is " + version);
-        log.log(Level.WARNING, "This version will now be running on ALL mods by heldplayer and may break older or newer versions");
     }
 
 }

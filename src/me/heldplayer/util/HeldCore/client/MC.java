@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public final class MineHelp {
+public final class MC {
 
     public static Minecraft getMinecraft() {
         return Minecraft.getMinecraft();

@@ -4,7 +4,7 @@ package me.heldplayer.util.HeldCore.reflection;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 
-import me.heldplayer.util.HeldCore.Updater;
+import me.heldplayer.util.HeldCore.HeldCore;
 
 @SuppressWarnings("unchecked")
 public class RField<T, V> {
@@ -18,18 +18,18 @@ public class RField<T, V> {
     }
 
     public V getStatic() {
-        return get(null);
+        return this.get(null);
     }
 
     public V get(T classInstance) {
         try {
-            V result = (V) field.get(classInstance);
+            V result = (V) this.field.get(classInstance);
 
-            Updater.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.field.getName() + "] Fetched field value");
+            HeldCore.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.field.getName() + "] Fetched field value");
             return result;
         }
         catch (Exception e) {
-            Updater.log.log(Level.WARNING, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.field.getName() + "] Exception while getting field value", e);
+            HeldCore.log.log(Level.WARNING, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.field.getName() + "] Exception while getting field value", e);
         }
 
         return null;

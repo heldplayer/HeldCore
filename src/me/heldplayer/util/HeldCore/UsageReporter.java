@@ -29,21 +29,12 @@ public class UsageReporter implements Runnable {
     public final Side side;
     public final File modDir;
 
-    @Deprecated
-    public UsageReporter(String modId, String version, Side side, File modDir) {
+    protected UsageReporter(String modId, String version, String modpack, Side side, File modDir) {
         this.modId = modId;
         this.version = version;
-        this.side = side;
-        this.modDir = modDir;
-        this.modpack = "";
-    }
-
-    public UsageReporter(String modId, String version, String modpack, Side side, File modDir) {
-        this.modId = modId;
-        this.version = version;
-        this.side = side;
-        this.modDir = modDir;
         this.modpack = modpack;
+        this.side = side;
+        this.modDir = modDir;
     }
 
     @Override
@@ -72,13 +63,13 @@ public class UsageReporter implements Runnable {
                 }
             }
             catch (MalformedURLException e) {
-                Updater.log.log(Level.SEVERE, "Failed reporting activation", e);
+                HeldCore.log.log(Level.SEVERE, "Failed reporting activation", e);
             }
             catch (IOException e) {
-                Updater.log.log(Level.SEVERE, "Failed reporting activation", e);
+                HeldCore.log.log(Level.SEVERE, "Failed reporting activation", e);
             }
             catch (RuntimeException e) {
-                Updater.log.log(Level.SEVERE, "Failed reporting activation: " + e.getMessage());
+                HeldCore.log.log(Level.SEVERE, "Failed reporting activation: " + e.getMessage());
             }
             finally {
                 if (request != null) {
@@ -99,7 +90,7 @@ public class UsageReporter implements Runnable {
             }
         }
         catch (Exception e) {
-            Updater.log.log(Level.SEVERE, "Failed reporting activation: " + e.getMessage());
+            HeldCore.log.log(Level.SEVERE, "Failed reporting activation: " + e.getMessage());
         }
         finally {
             if (request != null) {

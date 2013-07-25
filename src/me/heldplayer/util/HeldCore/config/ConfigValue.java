@@ -120,6 +120,28 @@ public class ConfigValue<T> {
         return this.deff;
     }
 
+    public void setValue(T value) {
+        if (this.value == null || (this.side != FMLCommonHandler.instance().getSide() && this.side != null)) {
+            return;
+        }
+
+        if (this.mode == 0) {
+            this.value.set(((IConfigurable) value).serialize());
+        }
+        if (this.mode == 1) {
+            this.value.set((Boolean) value);
+        }
+        if (this.mode == 2) {
+            this.value.set((Double) value);
+        }
+        if (this.mode == 3) {
+            this.value.set((Integer) value);
+        }
+        if (this.mode == 4) {
+            this.value.set((String) value);
+        }
+    }
+
     public boolean isChanged() {
         if (this.side != FMLCommonHandler.instance().getSide() && this.side != null) {
             return false;

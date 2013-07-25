@@ -4,7 +4,7 @@ package me.heldplayer.util.HeldCore.reflection;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 
-import me.heldplayer.util.HeldCore.Updater;
+import me.heldplayer.util.HeldCore.HeldCore;
 
 @SuppressWarnings("unchecked")
 public class RMethod<T, V> {
@@ -18,18 +18,18 @@ public class RMethod<T, V> {
     }
 
     public V callStatic(Object... args) {
-        return call(null, args);
+        return this.call(null, args);
     }
 
     public V call(T classInstance, Object... args) {
         try {
-            V result = (V) method.invoke(classInstance, args);
+            V result = (V) this.method.invoke(classInstance, args);
 
-            Updater.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.method.getName() + "] Called method");
+            HeldCore.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.method.getName() + "] Called method");
             return result;
         }
         catch (Exception e) {
-            Updater.log.log(Level.WARNING, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.method.getName() + "] Exception while calling method", e);
+            HeldCore.log.log(Level.WARNING, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.method.getName() + "] Exception while calling method", e);
         }
 
         return null;
