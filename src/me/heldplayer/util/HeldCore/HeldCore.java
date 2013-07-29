@@ -14,7 +14,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "HeldCore")
+@Mod(modid = "HeldCore", version = "@VERSION@")
 public class HeldCore {
 
     public static Logger log;
@@ -47,6 +47,9 @@ public class HeldCore {
     public void postInit(FMLPostInitializationEvent event) {}
 
     public static void initializeReporter(String modId, String modVersion) {
+        if (optOut.getValue()) {
+            return;
+        }
         try {
             File file = new File(configFolder, modId + ".version");
 
