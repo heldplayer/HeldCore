@@ -5,6 +5,7 @@ import me.heldplayer.util.HeldCore.MathHelper;
 import me.heldplayer.util.HeldCore.Vector;
 import me.heldplayer.util.HeldCore.VectorPool;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 
 import org.lwjgl.opengl.GL11;
@@ -93,6 +94,31 @@ public final class RenderHelper {
                 GL11.glVertex3d(point2.posX, point2.posY, point2.posZ);
             }
         }
+        GL11.glEnd();
+    }
+
+    public static void drawBox(AxisAlignedBB aabb) {
+        GL11.glBegin(GL11.GL_LINE_LOOP);
+        GL11.glVertex3d(aabb.minX, aabb.minY, aabb.minZ);
+        GL11.glVertex3d(aabb.maxX, aabb.minY, aabb.minZ);
+        GL11.glVertex3d(aabb.maxX, aabb.minY, aabb.maxZ);
+        GL11.glVertex3d(aabb.minX, aabb.minY, aabb.maxZ);
+        GL11.glEnd();
+        GL11.glBegin(GL11.GL_LINE_LOOP);
+        GL11.glVertex3d(aabb.minX, aabb.maxY, aabb.minZ);
+        GL11.glVertex3d(aabb.maxX, aabb.maxY, aabb.minZ);
+        GL11.glVertex3d(aabb.maxX, aabb.maxY, aabb.maxZ);
+        GL11.glVertex3d(aabb.minX, aabb.maxY, aabb.maxZ);
+        GL11.glEnd();
+        GL11.glBegin(GL11.GL_LINES);
+        GL11.glVertex3d(aabb.minX, aabb.minY, aabb.minZ);
+        GL11.glVertex3d(aabb.minX, aabb.maxY, aabb.minZ);
+        GL11.glVertex3d(aabb.maxX, aabb.minY, aabb.minZ);
+        GL11.glVertex3d(aabb.maxX, aabb.maxY, aabb.minZ);
+        GL11.glVertex3d(aabb.maxX, aabb.minY, aabb.maxZ);
+        GL11.glVertex3d(aabb.maxX, aabb.maxY, aabb.maxZ);
+        GL11.glVertex3d(aabb.minX, aabb.minY, aabb.maxZ);
+        GL11.glVertex3d(aabb.minX, aabb.maxY, aabb.maxZ);
         GL11.glEnd();
     }
 
