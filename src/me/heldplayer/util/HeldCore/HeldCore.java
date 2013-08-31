@@ -7,12 +7,15 @@ import java.util.logging.Logger;
 
 import me.heldplayer.util.HeldCore.config.Config;
 import me.heldplayer.util.HeldCore.config.ConfigValue;
+import me.heldplayer.util.HeldCore.sync.SyncHandler;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = "HeldCore", version = "@VERSION@")
 public class HeldCore {
@@ -44,7 +47,10 @@ public class HeldCore {
         this.config.saveOnChange();
     }
 
-    public void postInit(FMLPostInitializationEvent event) {}
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        TickRegistry.registerTickHandler(new SyncHandler(), Side.SERVER);
+    }
 
     public static void initializeReporter(String modId, String modVersion) {
         if (optOut.getValue()) {
