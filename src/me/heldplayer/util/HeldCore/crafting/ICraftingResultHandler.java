@@ -9,4 +9,8 @@ public interface ICraftingResultHandler {
 
     ItemStack getOutput(IHeldCoreRecipe recipe, List<ItemStack> input);
 
+    String getOwningModName();
+
+    String getOwningModId();
+
 }

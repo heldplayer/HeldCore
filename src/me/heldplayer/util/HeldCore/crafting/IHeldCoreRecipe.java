@@ -13,4 +13,11 @@ public interface IHeldCoreRecipe extends IRecipe {
      */
     ItemStack getOutput();
 
+    /**
+     * Used for getting the crafting handler
+     * 
+     * @return
+     */
+    ICraftingResultHandler getHandler();
+
 }

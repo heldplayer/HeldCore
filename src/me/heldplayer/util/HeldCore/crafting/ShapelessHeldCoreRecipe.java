@@ -15,11 +15,11 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class ShapelessHeldCoreRecipe implements IHeldCoreRecipe {
 
-    private ItemStack output = null;
-    private ArrayList<List<ItemStack>> ingredients = new ArrayList<List<ItemStack>>();
-    private ICraftingResultHandler handler;
+    public ItemStack output = null;
+    public ArrayList<List<ItemStack>> ingredients = new ArrayList<List<ItemStack>>();
+    public ICraftingResultHandler handler;
 
-    private ItemStack tempOut;
+    public ItemStack tempOut;
 
     public ShapelessHeldCoreRecipe(ICraftingResultHandler handler, ItemStack output, Object... ingredients) {
         this.handler = handler;
@@ -58,6 +58,11 @@ public class ShapelessHeldCoreRecipe implements IHeldCoreRecipe {
     @Override
     public ItemStack getOutput() {
         return this.output.copy();
+    }
+
+    @Override
+    public ICraftingResultHandler getHandler() {
+        return this.handler;
     }
 
     @Override

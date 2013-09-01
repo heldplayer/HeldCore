@@ -1,2 +1,5 @@
 gui.container.fluid.empty=Empty
 gui.container.fluid.filled=%s / %s mb
+
+nei.recipe.shaped.heldcore=Shaped HeldCore
+nei.recipe.shapeless.heldcore=Shapeless HeldCore

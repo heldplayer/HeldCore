@@ -16,14 +16,14 @@ import net.minecraftforge.oredict.OreDictionary;
 @SuppressWarnings("unchecked")
 public class ShapedHeldCoreRecipe implements IHeldCoreRecipe {
 
-    private ItemStack output = null;
-    private List<ItemStack>[] ingredients = null;
-    private ICraftingResultHandler handler;
-    private ItemStack tempOut;
+    public ItemStack output = null;
+    public List<ItemStack>[] ingredients = null;
+    public ICraftingResultHandler handler;
+    public ItemStack tempOut;
 
-    private int width = 0;
-    private int height = 0;
-    private boolean mirrored = true;
+    public int width = 0;
+    public int height = 0;
+    public boolean mirrored = true;
 
     public ShapedHeldCoreRecipe(ICraftingResultHandler handler, ItemStack output, Object... ingredients) {
         this.handler = handler;
@@ -113,6 +113,11 @@ public class ShapedHeldCoreRecipe implements IHeldCoreRecipe {
     @Override
     public ItemStack getOutput() {
         return this.output.copy();
+    }
+
+    @Override
+    public ICraftingResultHandler getHandler() {
+        return this.handler;
     }
 
     @Override
