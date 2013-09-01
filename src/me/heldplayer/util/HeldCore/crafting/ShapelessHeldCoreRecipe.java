@@ -57,7 +57,7 @@ public class ShapelessHeldCoreRecipe implements IHeldCoreRecipe {
 
     @Override
     public ItemStack getOutput() {
-        return output.copy();
+        return this.output.copy();
     }
 
     @Override

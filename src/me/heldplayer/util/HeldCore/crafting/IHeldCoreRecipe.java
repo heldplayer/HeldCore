@@ -8,6 +8,7 @@ public interface IHeldCoreRecipe extends IRecipe {
 
     /**
      * Use me for getting the output that has not been modified yet
+     * 
      * @return
      */
     ItemStack getOutput();
