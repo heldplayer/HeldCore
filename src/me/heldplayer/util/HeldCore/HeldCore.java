@@ -8,17 +8,29 @@ import java.util.logging.Logger;
 import me.heldplayer.util.HeldCore.config.Config;
 import me.heldplayer.util.HeldCore.config.ConfigValue;
 import me.heldplayer.util.HeldCore.sync.SyncHandler;
+import net.minecraft.client.multiplayer.NetClientHandler;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.MemoryConnection;
+import net.minecraft.network.NetLoginHandler;
+import net.minecraft.network.TcpConnection;
+import net.minecraft.network.packet.NetHandler;
+import net.minecraft.network.packet.Packet1Login;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.IConnectionHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = "HeldCore", version = "@VERSION@")
-public class HeldCore {
+public class HeldCore implements IConnectionHandler {
 
     public static Logger log;
     public static File configFolder;
@@ -50,6 +62,13 @@ public class HeldCore {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         TickRegistry.registerTickHandler(new SyncHandler(), Side.SERVER);
+
+        NetworkRegistry.instance().registerConnectionHandler(this);
+    }
+
+    @EventHandler
+    public void serverStarting(FMLServerStartingEvent event) {
+        SyncHandler.reset(Side.SERVER);
     }
 
     public static void initializeReporter(String modId, String modVersion) {
@@ -72,6 +91,42 @@ public class HeldCore {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void playerLoggedIn(Player player, NetHandler netHandler, INetworkManager manager) {
+        SyncHandler.startTracking(manager);
+    }
+
+    @Override
+    public String connectionReceived(NetLoginHandler netHandler, INetworkManager manager) {
+        return null;
+    }
+
+    @Override
+    public void connectionOpened(NetHandler netClientHandler, String server, int port, INetworkManager manager) {}
+
+    @Override
+    public void connectionOpened(NetHandler netClientHandler, MinecraftServer server, INetworkManager manager) {}
+
+    @Override
+    public void connectionClosed(INetworkManager manager) {
+        if (manager instanceof TcpConnection) {
+            TcpConnection tcpConnection = (TcpConnection) manager;
+        }
+        else if (manager instanceof MemoryConnection) {
+            MemoryConnection memoryConnection = (MemoryConnection) manager;
+        }
+        else if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+            if (manager instanceof NetClientHandler) {
+                SyncHandler.reset(Side.CLIENT);
+            }
+        }
+    }
+
+    @Override
+    public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login) {
+        SyncHandler.reset(Side.CLIENT);
     }
 
 }
