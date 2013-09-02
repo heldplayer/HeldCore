@@ -5,7 +5,9 @@ import java.util.Map;
 
 import cpw.mods.fml.relauncher.IFMLCallHook;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
+@TransformerExclusions({ "me.heldplayer.util.HeldCore.asm" })
 public class HeldCorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
