@@ -34,6 +34,9 @@ abstract class BaseSyncable implements ISyncable {
 
     @Override
     public int getId() {
+        if (this.id == -1) {
+            this.id = SyncHandler.lastSyncId++;
+        }
         return this.id;
     }
 

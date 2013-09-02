@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import me.heldplayer.util.HeldCore.HeldCore;
 import me.heldplayer.util.HeldCore.packet.HeldCorePacket;
 import me.heldplayer.util.HeldCore.sync.ISyncableObjectOwner;
+import me.heldplayer.util.HeldCore.sync.SyncHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
@@ -91,6 +92,8 @@ public class Packet2TrackingBegin extends HeldCorePacket {
                     ByteArrayDataInput dat = ByteStreams.newDataInput(this.data);
 
                     this.object.readSetup(dat);
+
+                    SyncHandler.clientSyncables.addAll(this.object.getSyncables());
                 }
                 catch (IOException e) {
                     HeldCore.log.log(Level.WARNING, "Failed synchronizing object", e);

@@ -22,7 +22,7 @@ import cpw.mods.fml.common.TickType;
 public class SyncHandler implements ITickHandler {
 
     private static LinkedList<PlayerTracker> players = new LinkedList<PlayerTracker>();
-    private static int lastSyncId = 0;
+    public static int lastSyncId = 0;
     public static LinkedList<ISyncable> clientSyncables = new LinkedList<ISyncable>();
 
     public static void reset() {
@@ -154,10 +154,6 @@ public class SyncHandler implements ITickHandler {
                         i2.remove();
                         HeldCore.log.log(Level.INFO, "Untracked " + syncable.toString());
                         continue;
-                    }
-
-                    if (syncable.getId() == -1) {
-                        syncable.setId(lastSyncId++);
                     }
 
                     if (syncable.hasChanged()) {
