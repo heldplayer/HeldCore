@@ -3,49 +3,104 @@ package me.heldplayer.util.HeldCore.sync;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 
 import me.heldplayer.util.HeldCore.HeldCore;
+import me.heldplayer.util.HeldCore.sync.packet.Packet2TrackingBegin;
+import me.heldplayer.util.HeldCore.sync.packet.Packet3TrackingUpdate;
+import me.heldplayer.util.HeldCore.sync.packet.PacketHandler;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
-import cpw.mods.fml.relauncher.Side;
 
 public class SyncHandler implements ITickHandler {
 
-    private static LinkedList<ISyncable> syncablesServer = new LinkedList<ISyncable>();
-    private static LinkedList<ISyncable> syncablesClient = new LinkedList<ISyncable>();
-
     private static LinkedList<PlayerTracker> players = new LinkedList<PlayerTracker>();
+    private static int lastSyncId = 0;
+    public static LinkedList<ISyncable> clientSyncables = new LinkedList<ISyncable>();
 
-    public static void registerSyncable(ISyncableObjectOwner object, Side side) {
-        if (side == Side.CLIENT) {
-            syncablesClient.addAll(object.getSyncables());
+    public static void reset() {
+        if (players.isEmpty()) {
+            return;
         }
-        else {
-            List<ISyncable> syncables = object.getSyncables();
-            syncablesServer.addAll(syncables);
-            // TODO: Send start tracking packet
-        }
-    }
 
-    public static void reset(Side side) {
-        HeldCore.log.log(Level.FINER, "Clearing syncables list of " + side);
-        if (side == Side.CLIENT) {
-            syncablesClient.clear();
+        Iterator<PlayerTracker> i = players.iterator();
+
+        while (i.hasNext()) {
+            PlayerTracker tracker = i.next();
+            tracker.syncables.clear();
+            tracker.syncables = null;
+            tracker.manager = null;
         }
-        else {
-            syncablesServer.clear();
-            players.clear();
-        }
+
+        players.clear();
+
+        lastSyncId = 0;
     }
 
     public static void startTracking(INetworkManager manager) {
         players.add(new PlayerTracker(manager));
+    }
+
+    public static void stopTracking(INetworkManager manager) {
+        if (players.isEmpty()) {
+            return;
+        }
+
+        Iterator<PlayerTracker> i = players.iterator();
+
+        while (i.hasNext()) {
+            PlayerTracker tracker = i.next();
+            if (tracker.manager == manager) {
+                i.remove();
+                tracker.syncables.clear();
+                tracker.syncables = null;
+                tracker.manager = null;
+            }
+        }
+    }
+
+    public static void startTracking(ISyncableObjectOwner object, EntityPlayerMP player) {
+        if (players.isEmpty()) {
+            return;
+        }
+
+        Iterator<PlayerTracker> i = players.iterator();
+
+        while (i.hasNext()) {
+            PlayerTracker tracker = i.next();
+            if (tracker.getPlayer() == player) {
+                HeldCore.log.log(Level.INFO, "Starting to track " + object.toString());
+                tracker.syncables.addAll(object.getSyncables());
+                tracker.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object.getPosX(), object.getPosY(), object.getPosZ(), object)));
+            }
+        }
+    }
+
+    public static void stopTracking(ISyncableObjectOwner object, EntityPlayerMP player) {
+        if (players.isEmpty()) {
+            return;
+        }
+
+        Iterator<PlayerTracker> i = players.iterator();
+
+        while (i.hasNext()) {
+            PlayerTracker tracker = i.next();
+            if (tracker.getPlayer() == player) {
+                List<ISyncable> syncables = object.getSyncables();
+                for (ISyncable syncable : syncables) {
+                    if (tracker.syncables.remove(syncable)) {
+                        HeldCore.log.log(Level.INFO, "Untracked " + syncable.toString() + " by request");
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -59,6 +114,7 @@ public class SyncHandler implements ITickHandler {
         // Client requests Tile to be tracked
         // Server starts tracking Tile for client
 
+        // Server checks for updates
         // Tile has updates
         // Server sends updates to all tracking players
 
@@ -72,40 +128,59 @@ public class SyncHandler implements ITickHandler {
                 return;
             }
 
-            ArrayList<ISyncableObjectOwner> toDrop = null;
+            if (players.isEmpty()) {
+                return;
+            }
 
-            Iterator<ISyncable> i = SyncHandler.syncablesServer.iterator();
+            Iterator<PlayerTracker> i = players.iterator();
+
+            HashSet<ISyncable> allChanged = null;
 
             while (i.hasNext()) {
-                ISyncable syncable = i.next();
+                PlayerTracker player = i.next();
 
-                if (syncable.getOwner() == null) {
-                    i.remove();
-                    continue;
-                }
-                if (syncable.getOwner().isInvalid()) {
-                    if (toDrop == null) {
-                        toDrop = new ArrayList<ISyncableObjectOwner>();
-                    }
-
-                    if (!toDrop.contains(syncable.getOwner())) {
-                        toDrop.add(syncable.getOwner());
-                    }
-
-                    i.remove();
+                if (player.syncables.isEmpty()) {
                     continue;
                 }
 
-                if (syncable.hasChanged()) {
-                    // TODO: Send update tracked value packet
-                    syncable.setChanged(true);
+                ArrayList<ISyncable> changedList = null;
+
+                Iterator<ISyncable> i2 = player.syncables.iterator();
+
+                while (i2.hasNext()) {
+                    ISyncable syncable = i2.next();
+
+                    if (syncable.getOwner().isInvalid()) {
+                        i2.remove();
+                        HeldCore.log.log(Level.INFO, "Untracked " + syncable.toString());
+                        continue;
+                    }
+
+                    if (syncable.getId() == -1) {
+                        syncable.setId(lastSyncId++);
+                    }
+
+                    if (syncable.hasChanged()) {
+                        if (changedList == null) {
+                            changedList = new ArrayList<ISyncable>();
+                            allChanged = new HashSet<ISyncable>();
+                        }
+
+                        changedList.add(syncable);
+                        allChanged.add(syncable);
+                    }
+                }
+
+                if (changedList != null) {
+                    ISyncable[] syncables = changedList.toArray(new ISyncable[changedList.size()]);
+
+                    player.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet3TrackingUpdate(syncables)));
                 }
             }
 
-            if (toDrop != null) {
-                for (ISyncableObjectOwner object : toDrop) {
-                    HeldCore.log.log(Level.FINE, "Untracking ");
-                    // TODO: Send stop tracking packet
+            if (allChanged != null) {
+                for (ISyncable syncable : allChanged) {
+                    syncable.setChanged(false);
                 }
             }
         }

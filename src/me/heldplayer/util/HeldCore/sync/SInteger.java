@@ -6,14 +6,12 @@ import java.io.IOException;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class SInteger implements ISyncable {
+public class SInteger extends BaseSyncable {
 
-    private ISyncableObjectOwner owner;
     private int value;
-    private boolean hasChanged;
 
     public SInteger(ISyncableObjectOwner owner, int value) {
-        this.owner = owner;
+        super(owner);
     }
 
     public void setValue(int value) {
@@ -26,21 +24,6 @@ public class SInteger implements ISyncable {
     }
 
     @Override
-    public ISyncableObjectOwner getOwner() {
-        return this.owner;
-    }
-
-    @Override
-    public boolean hasChanged() {
-        return this.hasChanged;
-    }
-
-    @Override
-    public void setChanged(boolean changed) {
-        this.hasChanged = changed;
-    }
-
-    @Override
     public void read(ByteArrayDataInput in) throws IOException {
         this.value = in.readInt();
     }
@@ -48,6 +31,11 @@ public class SInteger implements ISyncable {
     @Override
     public void write(DataOutputStream out) throws IOException {
         out.writeInt(this.value);
+    }
+
+    @Override
+    public String toString() {
+        return "Integer:" + this.value;
     }
 
 }

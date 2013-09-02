@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+FMLCorePlugin: me.heldplayer.util.HeldCore.asm.HeldCorePlugin
+AccessTransformer: nei_at.cfg

@@ -6,14 +6,12 @@ import java.io.IOException;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class SFloat implements ISyncable {
+public class SFloat extends BaseSyncable {
 
-    private ISyncableObjectOwner owner;
     private float value;
-    private boolean hasChanged;
 
     public SFloat(ISyncableObjectOwner owner, float value) {
-        this.owner = owner;
+        super(owner);
     }
 
     public void setValue(float value) {
@@ -26,21 +24,6 @@ public class SFloat implements ISyncable {
     }
 
     @Override
-    public ISyncableObjectOwner getOwner() {
-        return this.owner;
-    }
-
-    @Override
-    public boolean hasChanged() {
-        return this.hasChanged;
-    }
-
-    @Override
-    public void setChanged(boolean changed) {
-        this.hasChanged = changed;
-    }
-
-    @Override
     public void read(ByteArrayDataInput in) throws IOException {
         this.value = in.readFloat();
     }
@@ -48,6 +31,11 @@ public class SFloat implements ISyncable {
     @Override
     public void write(DataOutputStream out) throws IOException {
         out.writeFloat(this.value);
+    }
+
+    @Override
+    public String toString() {
+        return "Float:" + this.value;
     }
 
 }

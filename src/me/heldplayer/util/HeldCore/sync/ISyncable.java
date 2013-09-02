@@ -18,4 +18,8 @@ public interface ISyncable {
 
     void write(DataOutputStream out) throws IOException;
 
+    void setId(int id);
+
+    int getId();
+
 }

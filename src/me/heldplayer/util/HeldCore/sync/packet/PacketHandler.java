@@ -1,5 +1,5 @@
 
-package me.heldplayer.util.HeldCore;
+package me.heldplayer.util.HeldCore.sync.packet;
 
 public class PacketHandler extends me.heldplayer.util.HeldCore.packet.PacketHandler {
 
@@ -7,7 +7,7 @@ public class PacketHandler extends me.heldplayer.util.HeldCore.packet.PacketHand
 
     public PacketHandler() {
         super("HeldCore");
-        this.registerPacket(1, Packet1RequestTracking.class);
+        this.registerPacket(1, Packet1TrackingStatus.class);
         instance = this;
     }
 

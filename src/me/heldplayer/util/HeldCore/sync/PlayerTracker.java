@@ -3,6 +3,7 @@ package me.heldplayer.util.HeldCore.sync;
 
 import java.util.LinkedList;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.MemoryConnection;
@@ -10,19 +11,30 @@ import net.minecraft.network.TcpConnection;
 
 public class PlayerTracker {
 
-    public LinkedList<ISyncable> syncables = new LinkedList<ISyncable>();
-    public final INetworkManager manager;
+    public LinkedList<ISyncable> syncables;
+    public INetworkManager manager;
 
     public PlayerTracker(INetworkManager manager) {
         this.manager = manager;
+        this.syncables = new LinkedList<ISyncable>();
     }
 
     public EntityPlayerMP getPlayer() {
-        if (manager instanceof TcpConnection) {
-            TcpConnection tcpConnection = (TcpConnection) manager;
+        if (this.manager instanceof TcpConnection) {
+            TcpConnection tcpConnection = (TcpConnection) this.manager;
+            EntityPlayer player = tcpConnection.theNetHandler.getPlayer();
+
+            if (player instanceof EntityPlayerMP) {
+                return (EntityPlayerMP) player;
+            }
         }
-        else if (manager instanceof MemoryConnection) {
-            MemoryConnection memoryConnection = (MemoryConnection) manager;
+        else if (this.manager instanceof MemoryConnection) {
+            MemoryConnection memoryConnection = (MemoryConnection) this.manager;
+            EntityPlayer player = memoryConnection.myNetHandler.getPlayer();
+
+            if (player instanceof EntityPlayerMP) {
+                return (EntityPlayerMP) player;
+            }
         }
 
         return null;

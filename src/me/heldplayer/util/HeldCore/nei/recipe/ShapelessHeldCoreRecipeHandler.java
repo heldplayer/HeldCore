@@ -192,7 +192,7 @@ public class ShapelessHeldCoreRecipeHandler extends ShapedRecipeHandler {
         CachedShapelessRecipe recipe = (CachedShapelessRecipe) this.arecipes.get(recipeId);
 
         if (recipe != null && recipe.recipe != null && recipe.recipe.handler != null) {
-            GuiDraw.drawStringC(recipe.recipe.handler.getOwningModName(), 124   , 8, 0x404040, false);
+            GuiDraw.drawStringC(recipe.recipe.handler.getOwningModName(), 124, 8, 0x404040, false);
         }
     }
 

@@ -6,14 +6,12 @@ import java.io.IOException;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class SLong implements ISyncable {
+public class SLong extends BaseSyncable {
 
-    private ISyncableObjectOwner owner;
     private long value;
-    private boolean hasChanged;
 
     public SLong(ISyncableObjectOwner owner, long value) {
-        this.owner = owner;
+        super(owner);
     }
 
     public void setValue(long value) {
@@ -26,21 +24,6 @@ public class SLong implements ISyncable {
     }
 
     @Override
-    public ISyncableObjectOwner getOwner() {
-        return this.owner;
-    }
-
-    @Override
-    public boolean hasChanged() {
-        return this.hasChanged;
-    }
-
-    @Override
-    public void setChanged(boolean changed) {
-        this.hasChanged = changed;
-    }
-
-    @Override
     public void read(ByteArrayDataInput in) throws IOException {
         this.value = in.readLong();
     }
@@ -48,6 +31,11 @@ public class SLong implements ISyncable {
     @Override
     public void write(DataOutputStream out) throws IOException {
         out.writeLong(this.value);
+    }
+
+    @Override
+    public String toString() {
+        return "Long:" + this.value;
     }
 
 }

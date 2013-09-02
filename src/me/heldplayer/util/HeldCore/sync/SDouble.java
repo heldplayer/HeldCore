@@ -6,14 +6,12 @@ import java.io.IOException;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class SDouble implements ISyncable {
+public class SDouble extends BaseSyncable {
 
-    private ISyncableObjectOwner owner;
     private double value;
-    private boolean hasChanged;
 
     public SDouble(ISyncableObjectOwner owner, double value) {
-        this.owner = owner;
+        super(owner);
     }
 
     public void setValue(double value) {
@@ -26,21 +24,6 @@ public class SDouble implements ISyncable {
     }
 
     @Override
-    public ISyncableObjectOwner getOwner() {
-        return this.owner;
-    }
-
-    @Override
-    public boolean hasChanged() {
-        return this.hasChanged;
-    }
-
-    @Override
-    public void setChanged(boolean changed) {
-        this.hasChanged = changed;
-    }
-
-    @Override
     public void read(ByteArrayDataInput in) throws IOException {
         this.value = in.readDouble();
     }
@@ -48,6 +31,11 @@ public class SDouble implements ISyncable {
     @Override
     public void write(DataOutputStream out) throws IOException {
         out.writeDouble(this.value);
+    }
+
+    @Override
+    public String toString() {
+        return "Double:" + this.value;
     }
 
 }
