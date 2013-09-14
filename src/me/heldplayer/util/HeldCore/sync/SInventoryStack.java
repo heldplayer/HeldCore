@@ -15,11 +15,27 @@ public class SInventoryStack extends BaseSyncable {
 
     private IInventory inventory;
     private int slot;
+    private ItemStack prevValue;
 
     public SInventoryStack(ISyncableObjectOwner owner, IInventory inventory, int slot) {
         super(owner);
         this.inventory = inventory;
         this.slot = slot;
+        this.prevValue = inventory.getStackInSlot(slot);
+    }
+
+    @Override
+    public boolean hasChanged() {
+        ItemStack stack = inventory.getStackInSlot(slot);
+        if (prevValue == stack || (prevValue != null && stack != null && ItemStack.areItemStacksEqual(prevValue, stack))) {
+            return false;
+        }
+        this.prevValue = stack;
+        return true;
+    }
+
+    public void setValue(ItemStack value) {
+        this.inventory.setInventorySlotContents(slot, value);
     }
 
     public ItemStack getValue() {
