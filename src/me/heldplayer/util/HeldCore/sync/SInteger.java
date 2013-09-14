@@ -12,6 +12,7 @@ public class SInteger extends BaseSyncable {
 
     public SInteger(ISyncableObjectOwner owner, int value) {
         super(owner);
+        this.value = value;
     }
 
     public void setValue(int value) {

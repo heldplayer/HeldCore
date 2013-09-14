@@ -83,6 +83,7 @@ public class Packet3TrackingUpdate extends HeldCorePacket {
                     if (syncable.getId() == id) {
                         this.syncables[i] = syncable;
                         syncable.read(dat);
+                        syncable.getOwner().onDataChanged(syncable);
                     }
                 }
             }

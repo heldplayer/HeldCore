@@ -12,6 +12,7 @@ public class SDouble extends BaseSyncable {
 
     public SDouble(ISyncableObjectOwner owner, double value) {
         super(owner);
+        this.value = value;
     }
 
     public void setValue(double value) {

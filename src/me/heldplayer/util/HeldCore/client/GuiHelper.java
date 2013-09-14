@@ -46,10 +46,10 @@ public final class GuiHelper {
      */
     public static void drawFluid(Fluid fluid, int left, int top, int width, int height) {
         if (fluid.getSpriteNumber() == 0) {
-            MC.getRenderEngine().func_110577_a(TextureMap.field_110575_b);
+            MC.getRenderEngine().bindTexture(TextureMap.locationBlocksTexture);
         }
         else {
-            MC.getRenderEngine().func_110577_a(TextureMap.field_110576_c);
+            MC.getRenderEngine().bindTexture(TextureMap.locationItemsTexture);
         }
 
         Icon icon = RenderHelper.getIconSafe(fluid.getIcon(), fluid.getSpriteNumber() == 0);

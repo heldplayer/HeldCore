@@ -12,6 +12,7 @@ public class SShort extends BaseSyncable {
 
     public SShort(ISyncableObjectOwner owner, short value) {
         super(owner);
+        this.value = value;
     }
 
     public void setValue(short value) {

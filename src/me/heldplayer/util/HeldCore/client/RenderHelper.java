@@ -25,10 +25,10 @@ public final class RenderHelper {
     public static Icon getIconSafe(Icon icon, boolean block) {
         if (icon == null) {
             if (block) {
-                icon = ((TextureMap) MC.getMinecraft().func_110434_K().func_110581_b(TextureMap.field_110575_b)).func_110572_b("missingno");
+                icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
             }
             else {
-                icon = ((TextureMap) MC.getMinecraft().func_110434_K().func_110581_b(TextureMap.field_110576_c)).func_110572_b("missingno");
+                icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.locationItemsTexture)).getAtlasSprite("missingno");
             }
         }
 

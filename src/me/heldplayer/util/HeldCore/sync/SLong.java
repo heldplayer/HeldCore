@@ -12,6 +12,7 @@ public class SLong extends BaseSyncable {
 
     public SLong(ISyncableObjectOwner owner, long value) {
         super(owner);
+        this.value = value;
     }
 
     public void setValue(long value) {

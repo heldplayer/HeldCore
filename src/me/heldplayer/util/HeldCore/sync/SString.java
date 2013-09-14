@@ -6,37 +6,41 @@ import java.io.IOException;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class SBoolean extends BaseSyncable {
+public class SString extends BaseSyncable {
 
-    private boolean value;
+    private String value;
 
-    public SBoolean(ISyncableObjectOwner owner, boolean value) {
+    public SString(ISyncableObjectOwner owner, String value) {
         super(owner);
         this.value = value;
     }
 
-    public void setValue(boolean value) {
+    public void setValue(String value) {
         this.value = value;
         this.hasChanged = true;
     }
 
-    public boolean getValue() {
+    public String getValue() {
         return this.value;
     }
 
     @Override
     public void read(ByteArrayDataInput in) throws IOException {
-        this.value = in.readBoolean();
+        byte[] data = new byte[in.readInt()];
+        in.readFully(data);
+        this.value = new String(data);
     }
 
     @Override
     public void write(DataOutputStream out) throws IOException {
-        out.writeBoolean(this.value);
+        byte[] data = this.value.getBytes();
+        out.writeInt(data.length);
+        out.write(this.value.getBytes());
     }
 
     @Override
     public String toString() {
-        return "Boolean:" + this.value;
+        return "String:" + this.value;
     }
 
 }

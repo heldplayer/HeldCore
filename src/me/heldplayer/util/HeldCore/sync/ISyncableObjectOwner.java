@@ -23,4 +23,6 @@ public interface ISyncableObjectOwner {
 
     int getPosZ();
 
+    void onDataChanged(ISyncable syncable);
+
 }

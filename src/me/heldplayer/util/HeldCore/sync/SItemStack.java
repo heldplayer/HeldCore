@@ -16,6 +16,7 @@ public class SItemStack extends BaseSyncable {
 
     public SItemStack(ISyncableObjectOwner owner, ItemStack value) {
         super(owner);
+        this.value = value;
     }
 
     public void setValue(ItemStack value) {
@@ -41,7 +42,7 @@ public class SItemStack extends BaseSyncable {
 
     @Override
     public String toString() {
-        return "ItemStack" + this.value.toString();
+        return "ItemStack: " + this.value.toString();
     }
 
 }
