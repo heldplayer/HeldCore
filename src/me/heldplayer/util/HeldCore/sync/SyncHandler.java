@@ -108,19 +108,6 @@ public class SyncHandler implements ITickHandler {
 
     @Override
     public void tickEnd(EnumSet<TickType> type, Object... tickData) {
-        // New tracking system:
-
-        // Client loads Tile Entity
-        // Client requests Tile to be tracked
-        // Server starts tracking Tile for client
-
-        // Server checks for updates
-        // Tile has updates
-        // Server sends updates to all tracking players
-
-        // Client unloads Tile Entity
-        // Client requests to stop tracking Tile
-        // Server stops sending updates
         if (type.equals(EnumSet.of(TickType.WORLD))) {
             World world = (World) tickData[0];
 
