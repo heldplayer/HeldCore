@@ -12,11 +12,13 @@ import net.minecraft.network.TcpConnection;
 public class PlayerTracker {
 
     public LinkedList<ISyncable> syncables;
+    public LinkedList<ISyncableObjectOwner> syncableOwners;
     public INetworkManager manager;
 
     public PlayerTracker(INetworkManager manager) {
         this.manager = manager;
         this.syncables = new LinkedList<ISyncable>();
+        this.syncableOwners = new LinkedList<ISyncableObjectOwner>();
     }
 
     public EntityPlayerMP getPlayer() {

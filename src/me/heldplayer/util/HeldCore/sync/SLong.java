@@ -36,7 +36,7 @@ public class SLong extends BaseSyncable {
 
     @Override
     public String toString() {
-        return "Long:" + this.value;
+        return "Long: " + this.value;
     }
 
 }

@@ -40,7 +40,7 @@ public class SString extends BaseSyncable {
 
     @Override
     public String toString() {
-        return "String:" + this.value;
+        return "String: " + this.value;
     }
 
 }

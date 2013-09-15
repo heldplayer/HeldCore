@@ -36,7 +36,7 @@ public class SInteger extends BaseSyncable {
 
     @Override
     public String toString() {
-        return "Integer:" + this.value;
+        return "Integer: " + this.value;
     }
 
 }

@@ -36,7 +36,7 @@ public class SBoolean extends BaseSyncable {
 
     @Override
     public String toString() {
-        return "Boolean:" + this.value;
+        return "Boolean: " + this.value;
     }
 
 }

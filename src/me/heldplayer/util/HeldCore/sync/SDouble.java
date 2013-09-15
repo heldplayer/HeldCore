@@ -36,7 +36,7 @@ public class SDouble extends BaseSyncable {
 
     @Override
     public String toString() {
-        return "Double:" + this.value;
+        return "Double: " + this.value;
     }
 
 }

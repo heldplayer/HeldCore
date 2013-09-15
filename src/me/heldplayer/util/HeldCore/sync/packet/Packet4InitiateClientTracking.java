@@ -56,7 +56,7 @@ public class Packet4InitiateClientTracking extends HeldCorePacket {
         TileEntity tile = player.worldObj.getBlockTileEntity(this.posX, this.posY, this.posZ);
         if (tile != null) {
             if (tile instanceof ISyncableObjectOwner) {
-                manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet1TrackingStatus(posX, posY, posZ, true)));
+                manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet1TrackingStatus(this.posX, this.posY, this.posZ, true)));
             }
         }
     }

@@ -38,6 +38,7 @@ public class HeldCore implements IConnectionHandler {
     private Config config;
     public static ConfigValue<String> modPack;
     public static ConfigValue<Boolean> optOut;
+    public static ConfigValue<Integer> refreshRate;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -52,9 +53,11 @@ public class HeldCore implements IConnectionHandler {
         // Config
         modPack = new ConfigValue<String>("modPack", Configuration.CATEGORY_GENERAL, null, "", "If this mod is running in a modpack, please set this config value to the name of the modpack");
         optOut = new ConfigValue<Boolean>("optOut", Configuration.CATEGORY_GENERAL, null, Boolean.FALSE, "Set this to true to opt-out from statistics gathering. If you are configuring this mod for a modpack, please leave it set to false");
+        refreshRate = new ConfigValue<Integer>("refreshRate", Configuration.CATEGORY_GENERAL, null, 5, "The refresh-rate used for syncing objects between server and client. A higher refresh-rate will decrease bandwidth and CPU usage, but will also cause objects to appear to lag");
         this.config = new Config(event.getSuggestedConfigurationFile());
         this.config.addConfigKey(modPack);
         this.config.addConfigKey(optOut);
+        this.config.addConfigKey(refreshRate);
         this.config.load();
         this.config.saveOnChange();
     }

@@ -42,7 +42,7 @@ public class SItemStack extends BaseSyncable {
 
     @Override
     public String toString() {
-        return "ItemStack: " + this.value.toString();
+        return "ItemStack: " + (this.value == null ? "null" : this.value.toString());
     }
 
 }

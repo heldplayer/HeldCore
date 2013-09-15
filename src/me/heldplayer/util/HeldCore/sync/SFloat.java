@@ -36,7 +36,7 @@ public class SFloat extends BaseSyncable {
 
     @Override
     public String toString() {
-        return "Float:" + this.value;
+        return "Float: " + this.value;
     }
 
 }

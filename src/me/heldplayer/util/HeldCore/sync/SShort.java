@@ -36,7 +36,7 @@ public class SShort extends BaseSyncable {
 
     @Override
     public String toString() {
-        return "Short:" + this.value;
+        return "Short: " + this.value;
     }
 
 }

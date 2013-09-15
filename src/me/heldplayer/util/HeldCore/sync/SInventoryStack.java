@@ -26,16 +26,19 @@ public class SInventoryStack extends BaseSyncable {
 
     @Override
     public boolean hasChanged() {
-        ItemStack stack = inventory.getStackInSlot(slot);
-        if (prevValue == stack || (prevValue != null && stack != null && ItemStack.areItemStacksEqual(prevValue, stack))) {
+        if (super.hasChanged()) {
+            return true;
+        }
+        ItemStack stack = this.inventory.getStackInSlot(this.slot);
+        if (this.prevValue == stack || (this.prevValue != null && stack != null && ItemStack.areItemStacksEqual(this.prevValue, stack))) {
             return false;
         }
-        this.prevValue = stack;
         return true;
     }
 
     public void setValue(ItemStack value) {
-        this.inventory.setInventorySlotContents(slot, value);
+        this.inventory.setInventorySlotContents(this.slot, value);
+        super.hasChanged = true;
     }
 
     public ItemStack getValue() {
@@ -46,11 +49,11 @@ public class SInventoryStack extends BaseSyncable {
     public void read(ByteArrayDataInput in) throws IOException {
         boolean isNull = in.readBoolean();
         if (isNull) {
-            this.inventory.setInventorySlotContents(slot, null);
+            this.inventory.setInventorySlotContents(this.slot, null);
         }
         else {
             NBTTagCompound tag = CompressedStreamTools.read(in);
-            this.inventory.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(tag));
+            this.inventory.setInventorySlotContents(this.slot, ItemStack.loadItemStackFromNBT(tag));
         }
     }
 
@@ -69,7 +72,8 @@ public class SInventoryStack extends BaseSyncable {
 
     @Override
     public String toString() {
-        return "InventoryStack: " + this.inventory.getStackInSlot(this.slot).toString();
+        ItemStack stack = this.inventory.getStackInSlot(this.slot);
+        return "InventoryStack: " + (stack == null ? "null" : stack.toString());
     }
 
 }
