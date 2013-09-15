@@ -81,7 +81,7 @@ public class SyncHandler implements ITickHandler {
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
             if (tracker.getPlayer() == player) {
-                HeldCore.log.log(Level.INFO, "Starting to track " + object.toString());
+                HeldCore.log.log(Level.FINE, "Starting to track " + object.toString());
                 tracker.syncables.addAll(object.getSyncables());
                 tracker.syncableOwners.add(object);
                 tracker.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object.getPosX(), object.getPosY(), object.getPosZ(), object)));
@@ -102,7 +102,7 @@ public class SyncHandler implements ITickHandler {
                 List<ISyncable> syncables = object.getSyncables();
                 for (ISyncable syncable : syncables) {
                     if (tracker.syncables.remove(syncable)) {
-                        HeldCore.log.log(Level.INFO, "Untracked " + syncable.toString() + " by request");
+                        HeldCore.log.log(Level.FINE, "Untracked " + syncable.toString() + " by request");
                     }
                 }
                 tracker.syncableOwners.remove(object);
@@ -125,7 +125,7 @@ public class SyncHandler implements ITickHandler {
             }
 
             if (tracker.syncableOwners.contains(object)) {
-                HeldCore.log.log(Level.INFO, "Dynamically tracking " + syncable.toString());
+                HeldCore.log.log(Level.FINE, "Dynamically tracking " + syncable.toString());
                 tracker.syncables.add(syncable);
             }
         }
@@ -144,7 +144,7 @@ public class SyncHandler implements ITickHandler {
             List<ISyncable> syncables = object.getSyncables();
             if (syncables.contains(syncable)) {
                 tracker.syncables.remove(syncable);
-                HeldCore.log.log(Level.INFO, "Dynamically untracked " + syncable.toString());
+                HeldCore.log.log(Level.FINE, "Dynamically untracked " + syncable.toString());
             }
         }
     }
@@ -191,7 +191,7 @@ public class SyncHandler implements ITickHandler {
 
                     if (syncable.getOwner().isInvalid()) {
                         i2.remove();
-                        HeldCore.log.log(Level.INFO, "Untracked " + syncable.toString());
+                        HeldCore.log.log(Level.FINE, "Untracked " + syncable.toString());
                         continue;
                     }
 
