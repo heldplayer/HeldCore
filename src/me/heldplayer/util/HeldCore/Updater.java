@@ -85,6 +85,7 @@ public class Updater implements Runnable {
                 throw new RuntimeException("Server returned HTTP response code " + request.getResponseCode());
             }
         }
+        catch (NumberFormatException e) {}
         catch (Exception e) {
             try {
                 stream.close();
