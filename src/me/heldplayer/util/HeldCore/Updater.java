@@ -71,7 +71,7 @@ public class Updater implements Runnable {
                     int newest = Integer.parseInt(lastVersion[i]);
                     int old = Integer.parseInt(version[i]);
                     if (newest > old) {
-                        HeldCore.log.log(Level.INFO, "The mod '" + this.modId + "' is has a new version available!");
+                        HeldCore.log.log(Level.INFO, "The mod '" + this.modId + "' has a new version available!");
                         HeldCore.log.log(Level.INFO, "   Current version: " + this.modVersion + "  new version: " + latestVersion);
 
                         break;
