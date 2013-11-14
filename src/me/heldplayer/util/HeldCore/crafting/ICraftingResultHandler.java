@@ -13,4 +13,8 @@ public interface ICraftingResultHandler {
 
     String getOwningModId();
 
+    boolean isValidRecipeInput(ItemStack input);
+
+    String getNEIOverlayText();
+
 }

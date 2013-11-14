@@ -39,6 +39,9 @@ public class ShapelessHeldCoreRecipe implements IHeldCoreRecipe {
             else if (ingredient instanceof String) {
                 this.ingredients.add(OreDictionary.getOres((String) ingredient));
             }
+            else if (ingredient instanceof ItemStack[]) {
+                this.ingredients.add(Arrays.asList((ItemStack[]) ingredient));
+            }
             else {
                 StringBuilder str = new StringBuilder("Invalid shapeless HeldCore recipe: ");
                 for (Object tmp : ingredients) {
@@ -93,7 +96,7 @@ public class ShapelessHeldCoreRecipe implements IHeldCoreRecipe {
 
                     List<ItemStack> next = req.next();
 
-                    for (ItemStack item : (ArrayList<ItemStack>) next) {
+                    for (ItemStack item : next) {
                         match = match || this.checkItemEquals(item, slot);
                     }
 

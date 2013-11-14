@@ -1,6 +1,8 @@
 
 package me.heldplayer.util.HeldCore.nei.recipe;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -13,6 +15,7 @@ import codechicken.core.gui.GuiDraw;
 import codechicken.nei.NEIClientUtils;
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.ShapedRecipeHandler;
 
 @SuppressWarnings("unchecked")
@@ -159,7 +162,7 @@ public class ShapelessHeldCoreRecipeHandler extends ShapedRecipeHandler {
             if (recipe == null) {
                 continue;
             }
-            if (recipe.contains(recipe.ingredients, ingredient)) {
+            if (recipe.contains(recipe.ingredients, ingredient) && recipe.recipe.handler.isValidRecipeInput(ingredient)) {
                 recipe.setIngredientPermutation(recipe.ingredients, ingredient);
                 this.arecipes.add(recipe);
             }
@@ -194,6 +197,28 @@ public class ShapelessHeldCoreRecipeHandler extends ShapedRecipeHandler {
         if (recipe != null && recipe.recipe != null && recipe.recipe.handler != null) {
             GuiDraw.drawStringC(recipe.recipe.handler.getOwningModName(), 124, 8, 0x404040, false);
         }
+    }
+
+    @Override
+    public List<String> handleItemTooltip(GuiRecipe gui, ItemStack stack, List<String> currenttip, int recipeId) {
+        CachedShapelessRecipe recipe = (CachedShapelessRecipe) this.arecipes.get(recipeId);
+
+        currenttip = super.handleItemTooltip(gui, stack, currenttip, recipeId);
+
+        Point mousepos = GuiDraw.getMousePosition();
+        Point relMouse = new Point(mousepos.x - gui.guiLeft, mousepos.y - gui.guiTop);
+
+        Point recipepos = gui.getRecipePosition(recipeId);
+
+        if (recipe != null && currenttip.isEmpty() && stack == null && new Rectangle(recipepos.x, recipepos.y, 166, 60).contains(relMouse)) {
+            String tooltip = recipe.recipe.handler.getNEIOverlayText();
+
+            if (tooltip != null) {
+                currenttip.add(tooltip);
+            }
+        }
+
+        return currenttip;
     }
 
 }
