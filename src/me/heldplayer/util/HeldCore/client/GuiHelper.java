@@ -283,4 +283,16 @@ public final class GuiHelper {
         tes.draw();
     }
 
+    public static void drawTexturedModalRect(int startX, int startY, int u, int v, int width, int height) {
+        float f = 0.00390625F;
+        float f1 = 0.00390625F;
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV((double) (startX + 0), (double) (startY + height), 0.0D, (double) ((float) (u + 0) * f), (double) ((float) (v + height) * f1));
+        tessellator.addVertexWithUV((double) (startX + width), (double) (startY + height), 0.0D, (double) ((float) (u + width) * f), (double) ((float) (v + height) * f1));
+        tessellator.addVertexWithUV((double) (startX + width), (double) (startY + 0), 0.0D, (double) ((float) (u + width) * f), (double) ((float) (v + 0) * f1));
+        tessellator.addVertexWithUV((double) (startX + 0), (double) (startY + 0), 0.0D, (double) ((float) (u + 0) * f), (double) ((float) (v + 0) * f1));
+        tessellator.draw();
+    }
+
 }
