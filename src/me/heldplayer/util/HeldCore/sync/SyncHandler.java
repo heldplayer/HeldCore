@@ -189,7 +189,7 @@ public class SyncHandler implements ITickHandler {
                 while (i2.hasNext()) {
                     ISyncable syncable = i2.next();
 
-                    if (syncable.getOwner().isInvalid()) {
+                    if (syncable.getOwner().isNotValid()) {
                         i2.remove();
                         HeldCore.log.log(Level.FINE, "Untracked " + syncable.toString());
                         continue;

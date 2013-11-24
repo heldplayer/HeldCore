@@ -9,7 +9,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 public interface ISyncableObjectOwner {
 
-    boolean isInvalid();
+    boolean isNotValid();
 
     List<ISyncable> getSyncables();
 
