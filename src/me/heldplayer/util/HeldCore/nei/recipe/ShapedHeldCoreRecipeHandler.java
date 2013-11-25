@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.List;
 
 import me.heldplayer.util.HeldCore.crafting.ShapedHeldCoreRecipe;
-import me.heldplayer.util.HeldCore.nei.recipe.ShapelessHeldCoreRecipeHandler.CachedShapelessRecipe;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiCrafting;
 import net.minecraft.inventory.Container;
@@ -271,7 +270,7 @@ public class ShapedHeldCoreRecipeHandler extends TemplateRecipeHandler {
 
     @Override
     public List<String> handleItemTooltip(GuiRecipe gui, ItemStack stack, List<String> currenttip, int recipeId) {
-        CachedShapelessRecipe recipe = (CachedShapelessRecipe) this.arecipes.get(recipeId);
+        CachedShapedRecipe recipe = (CachedShapedRecipe) this.arecipes.get(recipeId);
 
         currenttip = super.handleItemTooltip(gui, stack, currenttip, recipeId);
 
