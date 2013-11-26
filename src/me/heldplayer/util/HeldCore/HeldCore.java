@@ -115,6 +115,7 @@ public class HeldCore implements IConnectionHandler {
     @Override
     public void connectionClosed(INetworkManager manager) {
         SyncHandler.stopTracking(manager);
+        SyncHandler.clientSyncables.clear();
     }
 
     @Override
