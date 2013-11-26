@@ -6,7 +6,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import me.heldplayer.util.HeldCore.HeldCore;
+import me.heldplayer.util.HeldCore.Objects;
 import me.heldplayer.util.HeldCore.packet.HeldCorePacket;
 import me.heldplayer.util.HeldCore.sync.ISyncable;
 import me.heldplayer.util.HeldCore.sync.SyncHandler;
@@ -44,7 +44,7 @@ public class Packet3TrackingUpdate extends HeldCorePacket {
                 }
             }
             catch (IOException e) {
-                HeldCore.log.log(Level.WARNING, "Failed synchronizing object", e);
+                Objects.log.log(Level.WARNING, "Failed synchronizing object", e);
             }
 
             this.data = bos.toByteArray();
@@ -89,7 +89,7 @@ public class Packet3TrackingUpdate extends HeldCorePacket {
             }
         }
         catch (IOException e) {
-            HeldCore.log.log(Level.WARNING, "Failed synchronizing object", e);
+            Objects.log.log(Level.WARNING, "Failed synchronizing object", e);
         }
     }
 

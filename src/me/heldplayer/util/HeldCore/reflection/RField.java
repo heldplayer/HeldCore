@@ -4,7 +4,7 @@ package me.heldplayer.util.HeldCore.reflection;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 
-import me.heldplayer.util.HeldCore.HeldCore;
+import me.heldplayer.util.HeldCore.Objects;
 
 @SuppressWarnings("unchecked")
 public class RField<T, V> {
@@ -25,11 +25,11 @@ public class RField<T, V> {
         try {
             V result = (V) this.field.get(classInstance);
 
-            HeldCore.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.field.getName() + "] Fetched field value");
+            Objects.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.field.getName() + "] Fetched field value");
             return result;
         }
         catch (Exception e) {
-            HeldCore.log.log(Level.WARNING, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.field.getName() + "] Exception while getting field value", e);
+            Objects.log.log(Level.WARNING, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.field.getName() + "] Exception while getting field value", e);
         }
 
         return null;

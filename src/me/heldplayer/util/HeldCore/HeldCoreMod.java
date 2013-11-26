@@ -14,6 +14,10 @@ public abstract class HeldCoreMod {
 
     public abstract HeldCoreProxy getProxy();
 
+    public boolean shouldReport() {
+        return true;
+    }
+
     public void preInit(FMLPreInitializationEvent event) {
         this.config.load();
         this.config.saveOnChange();
@@ -22,10 +26,13 @@ public abstract class HeldCoreMod {
     }
 
     public void init(FMLInitializationEvent event) {
-        ModInfo info = this.getModInfo();
+        if (shouldReport()) {
+            ModInfo info = this.getModInfo();
 
-        HeldCore.initializeReporter(info.modId, info.modVersion);
-        Updater.initializeUpdater(info.modId, info.modVersion);
+            HeldCore.initializeReporter(info.modId, info.modVersion);
+            Updater.initializeUpdater(info.modId, info.modVersion);
+
+        }
 
         this.getProxy().init(event);
     }

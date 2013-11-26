@@ -6,7 +6,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import me.heldplayer.util.HeldCore.HeldCore;
+import me.heldplayer.util.HeldCore.Objects;
 import me.heldplayer.util.HeldCore.packet.HeldCorePacket;
 import me.heldplayer.util.HeldCore.sync.ISyncableObjectOwner;
 import me.heldplayer.util.HeldCore.sync.SyncHandler;
@@ -47,7 +47,7 @@ public class Packet2TrackingBegin extends HeldCorePacket {
                 this.object.writeSetup(dos);
             }
             catch (IOException e) {
-                HeldCore.log.log(Level.WARNING, "Failed synchronizing object", e);
+                Objects.log.log(Level.WARNING, "Failed synchronizing object", e);
             }
 
             this.data = bos.toByteArray();
@@ -96,7 +96,7 @@ public class Packet2TrackingBegin extends HeldCorePacket {
                     SyncHandler.clientSyncables.addAll(this.object.getSyncables());
                 }
                 catch (IOException e) {
-                    HeldCore.log.log(Level.WARNING, "Failed synchronizing object", e);
+                    Objects.log.log(Level.WARNING, "Failed synchronizing object", e);
                 }
             }
         }

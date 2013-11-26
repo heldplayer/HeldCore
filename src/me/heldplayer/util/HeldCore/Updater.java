@@ -71,8 +71,8 @@ public class Updater implements Runnable {
                     int newest = Integer.parseInt(lastVersion[i]);
                     int old = Integer.parseInt(version[i]);
                     if (newest > old) {
-                        HeldCore.log.log(Level.INFO, "The mod '" + this.modId + "' has a new version available!");
-                        HeldCore.log.log(Level.INFO, "   Current version: " + this.modVersion + "  new version: " + latestVersion);
+                        Objects.log.log(Level.INFO, "The mod '" + this.modId + "' has a new version available!");
+                        Objects.log.log(Level.INFO, "   Current version: " + this.modVersion + "  new version: " + latestVersion);
 
                         break;
                     }
@@ -91,7 +91,7 @@ public class Updater implements Runnable {
                 stream.close();
             }
             catch (Exception e2) {}
-            HeldCore.log.log(Level.SEVERE, "Update check failed for '" + this.modId + "': " + e.getMessage());
+            Objects.log.log(Level.SEVERE, "Update check failed for '" + this.modId + "': " + e.getMessage());
         }
         finally {
 

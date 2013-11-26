@@ -63,13 +63,13 @@ public class UsageReporter implements Runnable {
                 }
             }
             catch (MalformedURLException e) {
-                HeldCore.log.log(Level.SEVERE, "Failed reporting activation", e);
+                Objects.log.log(Level.SEVERE, "Failed reporting activation", e);
             }
             catch (IOException e) {
-                HeldCore.log.log(Level.SEVERE, "Failed reporting activation", e);
+                Objects.log.log(Level.SEVERE, "Failed reporting activation", e);
             }
             catch (RuntimeException e) {
-                HeldCore.log.log(Level.SEVERE, "Failed reporting activation: " + e.getMessage());
+                Objects.log.log(Level.SEVERE, "Failed reporting activation: " + e.getMessage());
             }
             finally {
                 if (request != null) {
@@ -90,7 +90,7 @@ public class UsageReporter implements Runnable {
             }
         }
         catch (Exception e) {
-            HeldCore.log.log(Level.SEVERE, "Failed reporting activation: " + e.getMessage());
+            Objects.log.log(Level.SEVERE, "Failed reporting activation: " + e.getMessage());
         }
         finally {
             if (request != null) {

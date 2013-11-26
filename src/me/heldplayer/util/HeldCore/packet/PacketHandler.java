@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
-import me.heldplayer.util.HeldCore.HeldCore;
+import me.heldplayer.util.HeldCore.Objects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetworkManager;
@@ -52,7 +52,7 @@ public abstract class PacketHandler implements IPacketHandler {
             return packet;
         }
         catch (Exception e) {
-            HeldCore.log.log(Level.WARNING, "[Networking] Failed instantiating packet", e);
+            Objects.log.log(Level.WARNING, "[Networking] Failed instantiating packet", e);
         }
 
         return null;
@@ -71,7 +71,7 @@ public abstract class PacketHandler implements IPacketHandler {
                 packet.read(dat);
             }
             catch (Exception e) {
-                HeldCore.log.log(Level.WARNING, "[Networking] Failed reading packet", e);
+                Objects.log.log(Level.WARNING, "[Networking] Failed reading packet", e);
             }
 
             packet.onData(manager, (EntityPlayer) player);
@@ -95,7 +95,7 @@ public abstract class PacketHandler implements IPacketHandler {
             packet.write(dos);
         }
         catch (Exception e) {
-            HeldCore.log.log(Level.WARNING, "[Networking] Failed writing packet", e);
+            Objects.log.log(Level.WARNING, "[Networking] Failed writing packet", e);
         }
 
         Packet250CustomPayload payload = new Packet250CustomPayload();
