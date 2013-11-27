@@ -153,6 +153,45 @@ public class SyncHandler implements ITickHandler {
         }
     }
 
+    public static void startTracking(ISyncableObjectOwner object) {
+        if (players.isEmpty()) {
+            return;
+        }
+
+        Iterator<PlayerTracker> i = players.iterator();
+
+        Objects.log.log(Level.FINE, "Starting to track " + object.toString() + " for everybody");
+        while (i.hasNext()) {
+            PlayerTracker tracker = i.next();
+            tracker.syncables.addAll(object.getSyncables());
+            tracker.syncableOwners.add(object);
+            tracker.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object)));
+        }
+    }
+
+    public static void stopTracking(ISyncableObjectOwner object) {
+        if (players.isEmpty()) {
+            return;
+        }
+
+        Iterator<PlayerTracker> i = players.iterator();
+
+        List<ISyncable> syncables = object.getSyncables();
+
+        Objects.log.log(Level.FINE, "Untracking " + object.toString() + " for everybody");
+
+        while (i.hasNext()) {
+            PlayerTracker tracker = i.next();
+
+            for (ISyncable syncable : syncables) {
+                tracker.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet5TrackingEnd(syncable)));
+
+                tracker.syncables.remove(syncable);
+            }
+            tracker.syncableOwners.remove(object);
+        }
+    }
+
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData) {}
 
