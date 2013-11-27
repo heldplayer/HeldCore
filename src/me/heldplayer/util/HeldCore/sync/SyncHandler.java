@@ -24,6 +24,7 @@ import cpw.mods.fml.common.TickType;
 public class SyncHandler implements ITickHandler {
 
     public static LinkedList<PlayerTracker> players = new LinkedList<PlayerTracker>();
+    public static LinkedList<ISyncableObjectOwner> globalObjects = new LinkedList<ISyncableObjectOwner>();
     public static int lastSyncId = 0;
     public static LinkedList<ISyncable> clientSyncables = new LinkedList<ISyncable>();
 
@@ -44,12 +45,19 @@ public class SyncHandler implements ITickHandler {
         }
 
         players.clear();
+        globalObjects.clear();
 
         lastSyncId = 0;
     }
 
     public static void startTracking(INetworkManager manager) {
-        players.add(new PlayerTracker(manager, HeldCore.refreshRate.getValue()));
+        PlayerTracker tracker = new PlayerTracker(manager, HeldCore.refreshRate.getValue());
+        players.add(tracker);
+        tracker.syncableOwners.addAll(globalObjects);
+        for (ISyncableObjectOwner object : globalObjects) {
+            tracker.syncables.addAll(object.getSyncables());
+            tracker.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object)));
+        }
     }
 
     public static void stopTracking(INetworkManager manager) {
@@ -154,6 +162,8 @@ public class SyncHandler implements ITickHandler {
     }
 
     public static void startTracking(ISyncableObjectOwner object) {
+        globalObjects.add(object);
+
         if (players.isEmpty()) {
             return;
         }
@@ -170,6 +180,8 @@ public class SyncHandler implements ITickHandler {
     }
 
     public static void stopTracking(ISyncableObjectOwner object) {
+        globalObjects.remove(object);
+
         if (players.isEmpty()) {
             return;
         }

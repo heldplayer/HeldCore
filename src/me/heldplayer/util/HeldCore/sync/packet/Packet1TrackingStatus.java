@@ -65,6 +65,7 @@ public class Packet1TrackingStatus extends HeldCorePacket {
         }
         else {
             byte[] data = new byte[in.readInt()];
+            in.readFully(data);
             this.identifier = new String(data);
         }
 
