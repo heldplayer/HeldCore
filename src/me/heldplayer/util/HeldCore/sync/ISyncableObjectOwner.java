@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import net.minecraft.world.World;
+
 import com.google.common.io.ByteArrayDataInput;
 
 public interface ISyncableObjectOwner {
@@ -16,6 +18,12 @@ public interface ISyncableObjectOwner {
     void readSetup(ByteArrayDataInput in) throws IOException;
 
     void writeSetup(DataOutputStream out) throws IOException;
+
+    String getIdentifier();
+
+    boolean isWorldBound();
+
+    World getWorld();
 
     int getPosX();
 

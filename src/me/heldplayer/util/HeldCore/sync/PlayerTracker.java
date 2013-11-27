@@ -14,11 +14,14 @@ public class PlayerTracker {
     public LinkedList<ISyncable> syncables;
     public LinkedList<ISyncableObjectOwner> syncableOwners;
     public INetworkManager manager;
+    public int ticks;
+    public int interval;
 
-    public PlayerTracker(INetworkManager manager) {
+    public PlayerTracker(INetworkManager manager, int interval) {
         this.manager = manager;
         this.syncables = new LinkedList<ISyncable>();
         this.syncableOwners = new LinkedList<ISyncableObjectOwner>();
+        this.interval = interval;
     }
 
     public EntityPlayerMP getPlayer() {

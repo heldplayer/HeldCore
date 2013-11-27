@@ -11,6 +11,8 @@ public class PacketHandler extends me.heldplayer.util.HeldCore.packet.PacketHand
         this.registerPacket(2, Packet2TrackingBegin.class);
         this.registerPacket(3, Packet3TrackingUpdate.class);
         this.registerPacket(4, Packet4InitiateClientTracking.class);
+        this.registerPacket(5, Packet5TrackingEnd.class);
+        this.registerPacket(6, Packet6SetInterval.class);
         instance = this;
     }
 
