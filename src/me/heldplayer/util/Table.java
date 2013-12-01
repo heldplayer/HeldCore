@@ -57,11 +57,15 @@ public class Table<K, V, W> {
     }
 
     public V getValue1(K key) {
-        return this.entries.get(key).getValue1();
+        Value<V, W> entry = this.entries.get(key);
+
+        return entry != null ? this.entries.get(key).getValue1() : null;
     }
 
     public W getValue2(K key) {
-        return this.entries.get(key).getValue2();
+        Value<V, W> entry = this.entries.get(key);
+
+        return entry != null ? this.entries.get(key).getValue2() : null;
     }
 
     public K getKey1(V value1) {

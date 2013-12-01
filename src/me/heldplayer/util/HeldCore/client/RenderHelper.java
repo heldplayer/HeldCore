@@ -4,9 +4,11 @@ package me.heldplayer.util.HeldCore.client;
 import me.heldplayer.util.HeldCore.MathHelper;
 import me.heldplayer.util.HeldCore.Vector;
 import me.heldplayer.util.HeldCore.VectorPool;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -33,6 +35,14 @@ public final class RenderHelper {
         }
 
         return (Icon) icon;
+    }
+
+    public static void bindTexture(ResourceLocation location) {
+        TextureManager texturemanager = MC.getRenderEngine();
+
+        if (texturemanager != null) {
+            texturemanager.bindTexture(location);
+        }
     }
 
     public static Vector[] getBezierPlanePoints(Vector[][] points, int pointCount) {
