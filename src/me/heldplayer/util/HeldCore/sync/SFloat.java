@@ -15,6 +15,10 @@ public class SFloat extends BaseSyncable {
         this.value = value;
     }
 
+    public SFloat(ISyncableObjectOwner owner) {
+        super(owner);
+    }
+
     public void setValue(float value) {
         this.value = value;
         this.hasChanged = true;

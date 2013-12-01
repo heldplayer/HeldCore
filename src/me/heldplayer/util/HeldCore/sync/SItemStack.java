@@ -19,6 +19,10 @@ public class SItemStack extends BaseSyncable {
         this.value = value;
     }
 
+    public SItemStack(ISyncableObjectOwner owner) {
+        super(owner);
+    }
+
     public void setValue(ItemStack value) {
         this.value = value;
         this.hasChanged = true;

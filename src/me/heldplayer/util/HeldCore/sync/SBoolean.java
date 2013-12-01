@@ -15,6 +15,10 @@ public class SBoolean extends BaseSyncable {
         this.value = value;
     }
 
+    public SBoolean(ISyncableObjectOwner owner) {
+        super(owner);
+    }
+
     public void setValue(boolean value) {
         this.value = value;
         this.hasChanged = true;

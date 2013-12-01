@@ -15,6 +15,10 @@ public class SString extends BaseSyncable {
         this.value = value;
     }
 
+    public SString(ISyncableObjectOwner owner) {
+        super(owner);
+    }
+
     public void setValue(String value) {
         this.value = value;
         this.hasChanged = true;
