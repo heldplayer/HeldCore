@@ -45,6 +45,13 @@ public class SItemStack extends BaseSyncable {
     }
 
     @Override
+    public void setValue(Object obj) {
+        if (obj instanceof ItemStack) {
+            this.setValue((ItemStack) obj);
+        }
+    }
+
+    @Override
     public String toString() {
         return "ItemStack: " + (this.value == null ? "null" : this.value.toString());
     }

@@ -84,6 +84,13 @@ public class SInventoryStack extends BaseSyncable {
     }
 
     @Override
+    public void setValue(Object obj) {
+        if (obj instanceof ItemStack) {
+            this.setValue((ItemStack) obj);
+        }
+    }
+
+    @Override
     public String toString() {
         ItemStack stack = this.inventory.getStackInSlot(this.slot);
         return "InventoryStack: " + (stack == null ? "null" : stack.toString());

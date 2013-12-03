@@ -39,6 +39,13 @@ public class SLong extends BaseSyncable {
     }
 
     @Override
+    public void setValue(Object obj) {
+        if (obj instanceof Number) {
+            this.setValue(((Number) obj).longValue());
+        }
+    }
+
+    @Override
     public String toString() {
         return "Long: " + this.value;
     }

@@ -39,6 +39,13 @@ public class SShort extends BaseSyncable {
     }
 
     @Override
+    public void setValue(Object obj) {
+        if (obj instanceof Number) {
+            this.setValue(((Number) obj).shortValue());
+        }
+    }
+
+    @Override
     public String toString() {
         return "Short: " + this.value;
     }

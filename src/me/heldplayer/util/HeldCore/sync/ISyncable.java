@@ -22,4 +22,6 @@ public interface ISyncable {
 
     int getId();
 
+    void setValue(Object obj);
+
 }

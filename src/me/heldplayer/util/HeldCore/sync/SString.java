@@ -43,6 +43,13 @@ public class SString extends BaseSyncable {
     }
 
     @Override
+    public void setValue(Object obj) {
+        if (obj instanceof String) {
+            this.setValue((String) obj);
+        }
+    }
+
+    @Override
     public String toString() {
         return "String: " + this.value;
     }

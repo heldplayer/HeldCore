@@ -39,6 +39,13 @@ public class SDouble extends BaseSyncable {
     }
 
     @Override
+    public void setValue(Object obj) {
+        if (obj instanceof Number) {
+            this.setValue(((Number) obj).doubleValue());
+        }
+    }
+
+    @Override
     public String toString() {
         return "Double: " + this.value;
     }

@@ -39,6 +39,13 @@ public class SFloat extends BaseSyncable {
     }
 
     @Override
+    public void setValue(Object obj) {
+        if (obj instanceof Number) {
+            this.setValue(((Number) obj).floatValue());
+        }
+    }
+
+    @Override
     public String toString() {
         return "Float: " + this.value;
     }

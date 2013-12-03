@@ -39,6 +39,13 @@ public class SBoolean extends BaseSyncable {
     }
 
     @Override
+    public void setValue(Object obj) {
+        if (obj instanceof Boolean) {
+            this.setValue(((Boolean) obj).booleanValue());
+        }
+    }
+
+    @Override
     public String toString() {
         return "Boolean: " + this.value;
     }
