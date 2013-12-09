@@ -10,6 +10,7 @@ import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.ResourceManager;
 import net.minecraft.client.settings.GameSettings;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,44 +18,53 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public final class MC {
 
+    private static Minecraft mc;
+
     public static Minecraft getMinecraft() {
-        return Minecraft.getMinecraft();
+        if (mc == null) {
+            mc = Minecraft.getMinecraft();
+        }
+        return mc;
     }
 
     public static EffectRenderer getEffectRenderer() {
-        return Minecraft.getMinecraft().effectRenderer;
+        return getMinecraft().effectRenderer;
     }
 
     public static EntityRenderer getEntityRenderer() {
-        return Minecraft.getMinecraft().entityRenderer;
+        return getMinecraft().entityRenderer;
     }
 
     public static FontRenderer getFontRenderer() {
-        return Minecraft.getMinecraft().fontRenderer;
+        return getMinecraft().fontRenderer;
     }
 
     public static GameSettings getGameSettings() {
-        return Minecraft.getMinecraft().gameSettings;
+        return getMinecraft().gameSettings;
     }
 
     public static TextureManager getRenderEngine() {
-        return Minecraft.getMinecraft().renderEngine;
+        return getMinecraft().renderEngine;
     }
 
     public static RenderGlobal getRenderGlobal() {
-        return Minecraft.getMinecraft().renderGlobal;
+        return getMinecraft().renderGlobal;
     }
 
     public static SoundManager getSoundManager() {
-        return Minecraft.getMinecraft().sndManager;
+        return getMinecraft().sndManager;
     }
 
     public static EntityClientPlayerMP getPlayer() {
-        return Minecraft.getMinecraft().thePlayer;
+        return getMinecraft().thePlayer;
     }
 
     public static WorldClient getWorld() {
-        return Minecraft.getMinecraft().theWorld;
+        return getMinecraft().theWorld;
+    }
+
+    public static ResourceManager getResourceManager() {
+        return getMinecraft().getResourceManager();
     }
 
 }
