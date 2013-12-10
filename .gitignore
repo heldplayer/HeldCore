@@ -14,7 +14,7 @@ local.properties
 .settings/
 .gradle/
 build/
-config/
+/HeldCore/config/
 eclipse/
 mods/
 resourcepacks/

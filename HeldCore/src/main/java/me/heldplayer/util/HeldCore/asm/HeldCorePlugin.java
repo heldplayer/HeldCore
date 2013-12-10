@@ -11,12 +11,6 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 public class HeldCorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
-    @Deprecated
-    public String[] getLibraryRequestClass() {
-        return null;
-    }
-
-    @Override
     public String[] getASMTransformerClass() {
         return new String[] { "me.heldplayer.util.HeldCore.asm.HeldCoreAccessTransformer" };
     }
