@@ -21,7 +21,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(name = Objects.MOD_NAME, modid = Objects.MOD_ID, version = Objects.MOD_VERSION)
+@Mod(name = Objects.MOD_NAME, modid = Objects.MOD_ID)
 @NetworkMod(clientSideRequired = false, serverSideRequired = false, channels = { Objects.MOD_CHANNEL }, packetHandler = PacketHandler.class)
 public class HeldCore extends HeldCoreMod {
 

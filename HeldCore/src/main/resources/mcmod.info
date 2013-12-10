@@ -2,7 +2,7 @@
 {
   "modid" : "HeldCore",
   "name" : "HeldCore",
-  "version" : "@VERSION@",
+  "version" : "${version}",
   "authors": [
     "heldplayer"
   ],
