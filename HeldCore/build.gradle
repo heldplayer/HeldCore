@@ -1,8 +1,10 @@
+// Reference: https://github.com/SlimeKnights/TinkersConstruct/blob/master/build.gradle
+
 buildscript {
     repositories {
         mavenCentral()
         maven {
-            name = "forge"
+            name = "ForgeFS"
             url = "http://files.minecraftforge.net/maven"
         }
     }
@@ -11,14 +13,64 @@ buildscript {
     }
 }
 
+repositories {
+    ivy {
+        name 'Forge FS legacy'
+        artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
+    }
+    ivy {
+        name 'CB FS'
+        artifactPattern "http://www.chickenbones.craftsaddle.org/Files/New_Versions/1.6.4/[module]-dev%20[revision].[ext]"
+    }
+    maven {
+        name 'ForgeFS'
+        url 'http://files.minecraftforge.net/maven'
+    }
+    maven {
+        name 'MinecraftS3'
+        url 'http://s3.amazonaws.com/Minecraft.Download/libraries'
+    }
+}
+
 apply plugin: 'forge'
 
+// define the properties file
+ext.configFile = file "build.properties"
+
+configFile.withReader {
+    // read config.  it shall from now on be referenced as simply config or as project.config
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
+ext.artifact_version_override = 'NotUsed'
+//gitignored config file -- if this has the entry for override it will override the version for local builds
+//create a file called version.properties with the line artifact_version_override=NotUsed
+//replace not used w/ version #'s for manual local overrides
+ext.configFile2 = file "version.properties"
+if (configFile2.exists()){
+    configFile2.withReader {
+        def prop2 = new Properties()
+        prop2.load(it)
+        ext.GIVersionFL = new ConfigSlurper().parse prop2
+        if (GIVersionFL != null){
+            project.artifact_version_override = GIVersionFL.artifact_version_override
+        }
+    }
+}
+
 version = "1.0"
-group= "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "modid"
+group= "me.heldplayer.util" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "HeldCore"
 
 minecraft {
 	version = "1.6.4-9.11.1.964"
+}
+
+dependencies {
+    compile name: 'CodeChickenLib', version: "${config.minecraft_version}-${config.CCLIB_version}", ext: 'jar'
+    compile name: 'CodeChickenCore', version: "${config.CCC_version}", ext: 'jar'
+    compile name: 'NotEnoughItems', version: "${config.NEI_version}", type: 'jar'
 }
 
 processResources
