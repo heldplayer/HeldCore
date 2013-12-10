@@ -1,6 +1,3 @@
-/HeldCore/.project
-/HeldCore/bin/
-
 *.tmp
 *.bak
 *.swp
@@ -10,8 +7,10 @@
 *.bin
 
 /HeldCore/.classpath
-/HeldCore/.settings/
+/HeldCore/.project
 /HeldCore/.gradle/
+/HeldCore/.settings/
+/HeldCore/bin/
 /HeldCore/build/
 /HeldCore/config/
 /HeldCore/eclipse/
