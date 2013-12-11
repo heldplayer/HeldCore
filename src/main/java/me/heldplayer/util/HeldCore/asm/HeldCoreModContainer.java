@@ -3,6 +3,8 @@ package me.heldplayer.util.HeldCore.asm;
 
 import java.util.Arrays;
 
+import me.heldplayer.util.HeldCore.Objects;
+
 import com.google.common.eventbus.EventBus;
 
 import cpw.mods.fml.common.DummyModContainer;
@@ -16,7 +18,7 @@ public class HeldCoreModContainer extends DummyModContainer {
         ModMetadata meta = this.getMetadata();
         meta.modId = "HeldCore-Core";
         meta.name = "HeldCore-Core";
-        meta.version = "@VERSION@";
+        meta.version = Objects.MOD_VERSION;
         meta.authorList = Arrays.asList("heldplayer");
         meta.description = "Coremod for HeldCore";
     }
