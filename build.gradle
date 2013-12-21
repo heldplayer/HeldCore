@@ -43,7 +43,7 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
-version = config.super_number + "." + config.major_number + "." + config.minor_number + "." + config.build_number
+version = config.minecraft_version + "-" + config.super_number + "." + config.major_number + "." + config.minor_number + "." + config.build_number
 group= "me.heldplayer.util" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "HeldCore"
 
@@ -71,7 +71,7 @@ processResources
         // replace version and mcversion
         expand 'version': config.super_number + "." + config.major_number + "." + config.minor_number + "." + config.build_number
     }
-        
+
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
@@ -136,7 +136,12 @@ task("incrementBuild")
     // increment build number
     doFirst {
         // increment
-        config.build_number = (config.build_number.toString().toInteger()) + 1
+        if (config.build_number.toString().toInteger() < 8) {
+            config.build_number = "0" + ((config.build_number.toString().toInteger()) + 1)
+        }
+        else {
+            config.build_number = (config.build_number.toString().toInteger()) + 1
+        }
         
         // write back to the file
         configFile.withWriter {
@@ -150,8 +155,13 @@ task("incrementMinor")
     // increment build number
     doFirst {
         // increment
-        config.build_number = 0
-        config.minor_number = (config.minor_number.toString().toInteger()) + 1
+        config.build_number = "00"
+        if (config.build_number.toString().toInteger() < 8) {
+            config.minor_number = "0" + ((config.minor_number.toString().toInteger()) + 1)
+        }
+        else {
+            config.minor_number = (config.minor_number.toString().toInteger()) + 1
+        }
         
         // write back to the file
         configFile.withWriter {
@@ -165,9 +175,14 @@ task("incrementMajor")
     // increment build number
     doFirst {
         // increment
-        config.build_number = 0
-        config.minor_number = 0
-        config.major_number = (config.major_number.toString().toInteger()) + 1
+        config.build_number = "00"
+        config.minor_number = "00"
+        if (config.build_number.toString().toInteger() < 8) {
+            config.major_number = "0" + ((config.major_number.toString().toInteger()) + 1)
+        }
+        else {
+            config.major_number = (config.major_number.toString().toInteger()) + 1
+        }
         
         // write back to the file
         configFile.withWriter {
@@ -188,10 +203,21 @@ task("release", type: Copy)
     onlyIf {
         return project.release_location != "."
     }
-}
-
-task("buildWrapper")
-{
-    dependsOn "incrementBuild"
-    dependsOn "build"
+    
+    // increment build number
+    doFirst {
+        // increment
+        config.build_number = "00"
+        if (config.build_number.toString().toInteger() < 8) {
+            config.minor_number = "0" + ((config.minor_number.toString().toInteger()) + 1)
+        }
+        else {
+            config.minor_number = (config.minor_number.toString().toInteger()) + 1
+        }
+        
+        // write back to the file
+        configFile.withWriter {
+            config.toProperties().store(it, "")
+        }
+    }
 }
