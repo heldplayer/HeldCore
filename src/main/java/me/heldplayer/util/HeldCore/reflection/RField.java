@@ -25,7 +25,7 @@ public class RField<T, V> {
         try {
             V result = (V) this.field.get(classInstance);
 
-            Objects.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.field.getName() + "] Fetched field value");
+            //Objects.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.field.getName() + "] Fetched field value");
             return result;
         }
         catch (Exception e) {

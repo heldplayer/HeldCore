@@ -20,7 +20,7 @@ public class RConstructor<T> {
         try {
             T result = this.constructor.newInstance(args);
 
-            Objects.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + "] Called constructor");
+            //Objects.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + "] Called constructor");
             return result;
         }
         catch (Exception e) {

@@ -25,7 +25,7 @@ public class RMethod<T, V> {
         try {
             V result = (V) this.method.invoke(classInstance, args);
 
-            Objects.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.method.getName() + "] Called method");
+            //Objects.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.method.getName() + "] Called method");
             return result;
         }
         catch (Exception e) {
