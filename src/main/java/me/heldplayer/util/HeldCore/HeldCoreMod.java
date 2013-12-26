@@ -30,8 +30,6 @@ public abstract class HeldCoreMod {
             ModInfo info = this.getModInfo();
 
             HeldCore.initializeReporter(info.modId, info.modVersion);
-            Updater.initializeUpdater(info.modId, info.modVersion);
-
         }
 
         this.getProxy().init(event);
