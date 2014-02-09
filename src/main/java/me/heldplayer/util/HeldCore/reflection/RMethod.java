@@ -2,9 +2,6 @@
 package me.heldplayer.util.HeldCore.reflection;
 
 import java.lang.reflect.Method;
-import java.util.logging.Level;
-
-import me.heldplayer.util.HeldCore.Objects;
 
 @SuppressWarnings("unchecked")
 public class RMethod<T, V> {
@@ -25,12 +22,9 @@ public class RMethod<T, V> {
         try {
             V result = (V) this.method.invoke(classInstance, args);
 
-            //Objects.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.method.getName() + "] Called method");
             return result;
         }
-        catch (Exception e) {
-            Objects.log.log(Level.WARNING, "Reflection: [" + this.clazz.clazz.getName() + ":" + this.method.getName() + "] Exception while calling method", e);
-        }
+        catch (Exception e) {}
 
         return null;
     }

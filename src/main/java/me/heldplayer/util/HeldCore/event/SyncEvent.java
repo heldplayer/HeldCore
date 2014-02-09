@@ -1,8 +1,8 @@
 
 package me.heldplayer.util.HeldCore.event;
 
+import cpw.mods.fml.common.eventhandler.Event;
 import me.heldplayer.util.HeldCore.sync.ISyncableObjectOwner;
-import net.minecraftforge.event.Event;
 
 public class SyncEvent extends Event {
 

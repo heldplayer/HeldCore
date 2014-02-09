@@ -7,7 +7,7 @@ import me.heldplayer.util.HeldCore.VectorPool;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -24,7 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public final class RenderHelper {
 
-    public static Icon getIconSafe(Icon icon, boolean block) {
+    public static IIcon getIconSafe(IIcon icon, boolean block) {
         if (icon == null) {
             if (block) {
                 icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
@@ -34,7 +34,7 @@ public final class RenderHelper {
             }
         }
 
-        return (Icon) icon;
+        return (IIcon) icon;
     }
 
     public static void bindTexture(ResourceLocation location) {
@@ -75,7 +75,7 @@ public final class RenderHelper {
         return result;
     }
 
-    public static void renderBezierPlane(Vector[][] points, Icon icon, int pointCount) {
+    public static void renderBezierPlane(Vector[][] points, IIcon icon, int pointCount) {
         Vector[] result = getBezierPlanePoints(points, pointCount);
 
         GL11.glBegin(GL11.GL_QUADS);

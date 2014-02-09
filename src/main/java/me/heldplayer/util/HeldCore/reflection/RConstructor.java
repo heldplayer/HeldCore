@@ -2,9 +2,6 @@
 package me.heldplayer.util.HeldCore.reflection;
 
 import java.lang.reflect.Constructor;
-import java.util.logging.Level;
-
-import me.heldplayer.util.HeldCore.Objects;
 
 public class RConstructor<T> {
 
@@ -20,12 +17,9 @@ public class RConstructor<T> {
         try {
             T result = this.constructor.newInstance(args);
 
-            //Objects.log.log(Level.FINE, "Reflection: [" + this.clazz.clazz.getName() + "] Called constructor");
             return result;
         }
-        catch (Exception e) {
-            Objects.log.log(Level.WARNING, "Reflection: [" + this.clazz.clazz.getName() + "] Exception while calling constructor", e);
-        }
+        catch (Exception e) {}
 
         return null;
     }

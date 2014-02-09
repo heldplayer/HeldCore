@@ -10,7 +10,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
+
+import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.relauncher.Side;
 
@@ -63,13 +64,13 @@ public class UsageReporter implements Runnable {
                 }
             }
             catch (MalformedURLException e) {
-                Objects.log.log(Level.SEVERE, "Failed reporting activation", e);
+                Objects.log.log(Level.WARN, "Failed reporting activation", e);
             }
             catch (IOException e) {
-                Objects.log.log(Level.SEVERE, "Failed reporting activation", e);
+                Objects.log.log(Level.WARN, "Failed reporting activation", e);
             }
             catch (RuntimeException e) {
-                Objects.log.log(Level.SEVERE, "Failed reporting activation: " + e.getMessage());
+                Objects.log.log(Level.WARN, "Failed reporting activation: " + e.getMessage());
             }
             finally {
                 if (request != null) {
@@ -90,7 +91,7 @@ public class UsageReporter implements Runnable {
             }
         }
         catch (Exception e) {
-            Objects.log.log(Level.SEVERE, "Failed reporting activation: " + e.getMessage());
+            Objects.log.log(Level.WARN, "Failed reporting activation: " + e.getMessage());
         }
         finally {
             if (request != null) {

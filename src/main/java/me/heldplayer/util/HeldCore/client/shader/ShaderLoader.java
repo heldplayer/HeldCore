@@ -2,10 +2,10 @@
 package me.heldplayer.util.HeldCore.client.shader;
 
 import java.io.BufferedReader;
-import java.util.logging.Level;
 
 import me.heldplayer.util.HeldCore.Objects;
 
+import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
@@ -49,7 +49,7 @@ public class ShaderLoader {
             vertexData = builder.toString();
         }
         catch (Exception e) {
-            Objects.log.log(Level.WARNING, "Failed finding vertex shader part for " + name);
+            Objects.log.log(Level.WARN, "Failed finding vertex shader part for " + name);
         }
 
         String fragmentData = null;
@@ -68,7 +68,7 @@ public class ShaderLoader {
             fragmentData = builder.toString();
         }
         catch (Exception e) {
-            Objects.log.log(Level.WARNING, "Failed finding fragment shader part for " + name);
+            Objects.log.log(Level.WARN, "Failed finding fragment shader part for " + name);
         }
 
         if (vertexData != null) {
@@ -76,8 +76,8 @@ public class ShaderLoader {
             GL20.glCompileShader(vertexId);
 
             if (GL20.glGetShaderi(vertexId, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-                Objects.log.log(Level.WARNING, "Failed compiling vertex shader for " + name);
-                Objects.log.log(Level.WARNING, GL20.glGetShaderInfoLog(vertexId, 1024));
+                Objects.log.log(Level.WARN, "Failed compiling vertex shader for " + name);
+                Objects.log.log(Level.WARN, GL20.glGetShaderInfoLog(vertexId, 1024));
 
                 return null;
             }
@@ -88,15 +88,15 @@ public class ShaderLoader {
             GL20.glCompileShader(fragmentId);
 
             if (GL20.glGetShaderi(fragmentId, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-                Objects.log.log(Level.WARNING, "Failed compiling fragment shader for " + name);
-                Objects.log.log(Level.WARNING, GL20.glGetShaderInfoLog(fragmentId, 1024));
+                Objects.log.log(Level.WARN, "Failed compiling fragment shader for " + name);
+                Objects.log.log(Level.WARN, GL20.glGetShaderInfoLog(fragmentId, 1024));
 
                 return null;
             }
         }
 
         if (vertexData == null && fragmentData == null) {
-            Objects.log.log(Level.WARNING, "Shader did not load for both vertex and fragment for " + name);
+            Objects.log.log(Level.WARN, "Shader did not load for both vertex and fragment for " + name);
 
             return null;
         }
@@ -110,8 +110,8 @@ public class ShaderLoader {
         GL20.glLinkProgram(programId);
 
         if (GL20.glGetProgrami(programId, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
-            Objects.log.log(Level.WARNING, "Failed linking shader for " + name);
-            Objects.log.log(Level.WARNING, GL20.glGetProgramInfoLog(programId, 1024));
+            Objects.log.log(Level.WARN, "Failed linking shader for " + name);
+            Objects.log.log(Level.WARN, GL20.glGetProgramInfoLog(programId, 1024));
 
             return null;
         }

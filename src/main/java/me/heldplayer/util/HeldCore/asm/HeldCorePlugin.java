@@ -12,7 +12,7 @@ public class HeldCorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] { "me.heldplayer.util.HeldCore.asm.HeldCoreAccessTransformer" };
+        return new String[] {};
     }
 
     @Override
@@ -31,6 +31,11 @@ public class HeldCorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
     @Override
     public Void call() throws Exception {
         return null;
+    }
+
+    @Override
+    public String getAccessTransformerClass() {
+        return "me.heldplayer.util.HeldCore.asm.HeldCoreAccessTransformer";
     }
 
 }

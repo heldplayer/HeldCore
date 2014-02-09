@@ -1,6 +1,7 @@
 
 package me.heldplayer.util.HeldCore.nei.recipe;
 
+/* FIXME
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -291,3 +292,4 @@ public class ShapedHeldCoreRecipeHandler extends TemplateRecipeHandler {
     }
 
 }
+*/

@@ -3,13 +3,16 @@ package me.heldplayer.util.HeldCore;
 
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.Logger;
 
 /**
  * ImRecording mod Objects
  * 
  */
 public final class Objects {
+
+    public static final String MOD_VERSION;
 
     static {
 
@@ -33,9 +36,8 @@ public final class Objects {
 
     }
 
-    public static final String MOD_ID = "HeldCore";
+    public static final String MOD_ID = "heldcore";
     public static final String MOD_NAME = "HeldCore";
-    public static final String MOD_VERSION;
     public static final String MOD_CHANNEL = "HeldCore";
     public static final String CLIENT_PROXY = "me.heldplayer.util.HeldCore.client.ClientProxy";
     public static final String SERVER_PROXY = "me.heldplayer.util.HeldCore.CommonProxy";

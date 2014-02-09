@@ -1,21 +1,13 @@
 
 package me.heldplayer.util.HeldCore.sync.packet;
 
-import java.io.DataOutputStream;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+
 import java.io.IOException;
 
-import me.heldplayer.util.HeldCore.event.SyncEvent;
 import me.heldplayer.util.HeldCore.packet.HeldCorePacket;
 import me.heldplayer.util.HeldCore.sync.ISyncableObjectOwner;
-import me.heldplayer.util.HeldCore.sync.SyncHandler;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.MinecraftForge;
-
-import com.google.common.io.ByteArrayDataInput;
-
 import cpw.mods.fml.relauncher.Side;
 
 public class Packet1TrackingStatus extends HeldCorePacket {
@@ -27,12 +19,12 @@ public class Packet1TrackingStatus extends HeldCorePacket {
     public int posZ;
     public boolean track;
 
-    public Packet1TrackingStatus(int packetId) {
-        super(packetId, null);
+    public Packet1TrackingStatus() {
+        super(null);
     }
 
     public Packet1TrackingStatus(ISyncableObjectOwner object, boolean track) {
-        super(1, null);
+        super(object != null ? object.getWorld() : null);
 
         this.track = track;
         if (object.isWorldBound()) {
@@ -55,7 +47,7 @@ public class Packet1TrackingStatus extends HeldCorePacket {
     }
 
     @Override
-    public void read(ByteArrayDataInput in) throws IOException {
+    public void read(ChannelHandlerContext context, ByteBuf in) throws IOException {
         this.isWordly = in.readBoolean();
 
         if (this.isWordly) {
@@ -65,7 +57,7 @@ public class Packet1TrackingStatus extends HeldCorePacket {
         }
         else {
             byte[] data = new byte[in.readInt()];
-            in.readFully(data);
+            in.readBytes(data);
             this.identifier = new String(data);
         }
 
@@ -73,7 +65,7 @@ public class Packet1TrackingStatus extends HeldCorePacket {
     }
 
     @Override
-    public void write(DataOutputStream out) throws IOException {
+    public void write(ChannelHandlerContext context, ByteBuf out) throws IOException {
         out.writeBoolean(this.isWordly);
 
         if (this.isWordly) {
@@ -84,44 +76,45 @@ public class Packet1TrackingStatus extends HeldCorePacket {
         else {
             byte[] data = this.identifier.getBytes();
             out.writeInt(data.length);
-            out.write(data);
+            out.writeBytes(data);
         }
 
         out.writeBoolean(this.track);
     }
 
-    @Override
-    public void onData(INetworkManager manager, EntityPlayer player) {
-        if (!(player instanceof EntityPlayerMP)) {
-            return;
-        }
-
-        if (this.isWordly) {
-            TileEntity tile = player.worldObj.getBlockTileEntity(this.posX, this.posY, this.posZ);
-            if (tile != null) {
-                if (tile instanceof ISyncableObjectOwner) {
-                    if (this.track) {
-                        SyncHandler.startTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
-                    }
-                    else {
-                        SyncHandler.stopTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
-                    }
-                }
-            }
-        }
-        else {
-            SyncEvent.RequestObject event = new SyncEvent.RequestObject(this.identifier);
-            MinecraftForge.EVENT_BUS.post(event);
-
-            if (event.result != null) {
-                if (this.track) {
-                    SyncHandler.startTracking(event.result, (EntityPlayerMP) player);
-                }
-                else {
-                    SyncHandler.stopTracking(event.result, (EntityPlayerMP) player);
-                }
-            }
-        }
-    }
+    // FIXME
+    //    @Override
+    //    public void onData(INetworkManager manager, EntityPlayer player) {
+    //        if (!(player instanceof EntityPlayerMP)) {
+    //            return;
+    //        }
+    //
+    //        if (this.isWordly) {
+    //            TileEntity tile = player.worldObj.getBlockTileEntity(this.posX, this.posY, this.posZ);
+    //            if (tile != null) {
+    //                if (tile instanceof ISyncableObjectOwner) {
+    //                    if (this.track) {
+    //                        SyncHandler.startTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
+    //                    }
+    //                    else {
+    //                        SyncHandler.stopTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        else {
+    //            SyncEvent.RequestObject event = new SyncEvent.RequestObject(this.identifier);
+    //            MinecraftForge.EVENT_BUS.post(event);
+    //
+    //            if (event.result != null) {
+    //                if (this.track) {
+    //                    SyncHandler.startTracking(event.result, (EntityPlayerMP) player);
+    //                }
+    //                else {
+    //                    SyncHandler.stopTracking(event.result, (EntityPlayerMP) player);
+    //                }
+    //            }
+    //        }
+    //    }
 
 }

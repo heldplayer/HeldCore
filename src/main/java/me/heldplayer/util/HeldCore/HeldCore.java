@@ -6,9 +6,15 @@ import java.io.IOException;
 
 import me.heldplayer.util.HeldCore.config.Config;
 import me.heldplayer.util.HeldCore.config.ConfigValue;
+import me.heldplayer.util.HeldCore.packet.PacketHandler;
 import me.heldplayer.util.HeldCore.sync.SyncHandler;
-import me.heldplayer.util.HeldCore.sync.packet.PacketHandler;
-import net.minecraftforge.common.Configuration;
+import me.heldplayer.util.HeldCore.sync.packet.Packet1TrackingStatus;
+import me.heldplayer.util.HeldCore.sync.packet.Packet2TrackingBegin;
+import me.heldplayer.util.HeldCore.sync.packet.Packet3TrackingUpdate;
+import me.heldplayer.util.HeldCore.sync.packet.Packet4InitiateClientTracking;
+import me.heldplayer.util.HeldCore.sync.packet.Packet5TrackingEnd;
+import me.heldplayer.util.HeldCore.sync.packet.Packet6SetInterval;
+import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -18,11 +24,9 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.relauncher.Side;
 
 @Mod(name = Objects.MOD_NAME, modid = Objects.MOD_ID)
-@NetworkMod(clientSideRequired = false, serverSideRequired = false, channels = { Objects.MOD_CHANNEL }, packetHandler = PacketHandler.class)
 public class HeldCore extends HeldCoreMod {
 
     @Instance(value = Objects.MOD_ID)
@@ -38,10 +42,16 @@ public class HeldCore extends HeldCoreMod {
     public static ConfigValue<Integer> refreshRate;
     public static ConfigValue<Integer> textureMapId;
 
+    public static PacketHandler packetHandler;
+
     @Override
+    @SuppressWarnings("unchecked")
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         Objects.log = event.getModLog();
+        event.getModMetadata().version = Objects.MOD_VERSION;
+
+        HeldCore.packetHandler = new PacketHandler("HeldCore", Packet1TrackingStatus.class, Packet2TrackingBegin.class, Packet3TrackingUpdate.class, Packet4InitiateClientTracking.class, Packet5TrackingEnd.class, Packet6SetInterval.class);
 
         configFolder = new File(event.getModConfigurationDirectory(), "HeldCore");
 

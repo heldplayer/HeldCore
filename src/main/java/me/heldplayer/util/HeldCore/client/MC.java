@@ -2,7 +2,6 @@
 package me.heldplayer.util.HeldCore.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -10,7 +9,6 @@ import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.resources.ResourceManager;
 import net.minecraft.client.settings.GameSettings;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -51,20 +49,12 @@ public final class MC {
         return getMinecraft().renderGlobal;
     }
 
-    public static SoundManager getSoundManager() {
-        return getMinecraft().sndManager;
-    }
-
     public static EntityClientPlayerMP getPlayer() {
         return getMinecraft().thePlayer;
     }
 
     public static WorldClient getWorld() {
         return getMinecraft().theWorld;
-    }
-
-    public static ResourceManager getResourceManager() {
-        return getMinecraft().getResourceManager();
     }
 
 }

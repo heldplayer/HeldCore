@@ -1,23 +1,18 @@
 
 package me.heldplayer.util.HeldCore.sync.packet;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.logging.Level;
 
 import me.heldplayer.util.HeldCore.Objects;
-import me.heldplayer.util.HeldCore.event.SyncEvent;
 import me.heldplayer.util.HeldCore.packet.HeldCorePacket;
 import me.heldplayer.util.HeldCore.sync.ISyncableObjectOwner;
-import me.heldplayer.util.HeldCore.sync.SyncHandler;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.MinecraftForge;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
+import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.relauncher.Side;
 
@@ -30,12 +25,12 @@ public class Packet2TrackingBegin extends HeldCorePacket {
     public int posZ;
     public byte[] data;
 
-    public Packet2TrackingBegin(int packetId) {
-        super(packetId, null);
+    public Packet2TrackingBegin() {
+        super(null);
     }
 
     public Packet2TrackingBegin(ISyncableObjectOwner object) {
-        super(2, null);
+        super(object != null ? object.getWorld() : null);
 
         if (object == null) {
             throw new NullPointerException("Object mustn't be null");
@@ -61,7 +56,7 @@ public class Packet2TrackingBegin extends HeldCorePacket {
             object.writeSetup(dos);
         }
         catch (IOException e) {
-            Objects.log.log(Level.WARNING, "Failed synchronizing object", e);
+            Objects.log.log(Level.WARN, "Failed synchronizing object", e);
         }
 
         this.data = bos.toByteArray();
@@ -73,7 +68,7 @@ public class Packet2TrackingBegin extends HeldCorePacket {
     }
 
     @Override
-    public void read(ByteArrayDataInput in) throws IOException {
+    public void read(ChannelHandlerContext context, ByteBuf in) throws IOException {
         this.isWordly = in.readBoolean();
 
         if (this.isWordly) {
@@ -83,16 +78,16 @@ public class Packet2TrackingBegin extends HeldCorePacket {
         }
         else {
             byte[] data = new byte[in.readInt()];
-            in.readFully(data);
+            in.readBytes(data);
             this.identifier = new String(data);
         }
 
         this.data = new byte[in.readInt()];
-        in.readFully(this.data);
+        in.readBytes(this.data);
     }
 
     @Override
-    public void write(DataOutputStream out) throws IOException {
+    public void write(ChannelHandlerContext context, ByteBuf out) throws IOException {
         out.writeBoolean(this.isWordly);
 
         if (this.isWordly) {
@@ -103,52 +98,53 @@ public class Packet2TrackingBegin extends HeldCorePacket {
         else {
             byte[] data = this.identifier.getBytes();
             out.writeInt(data.length);
-            out.write(data);
+            out.writeBytes(data);
         }
 
         out.writeInt(this.data.length);
-        out.write(this.data);
+        out.writeBytes(this.data);
     }
 
-    @Override
-    public void onData(INetworkManager manager, EntityPlayer player) {
-        if (this.isWordly) {
-            TileEntity tile = player.worldObj.getBlockTileEntity(this.posX, this.posY, this.posZ);
-            if (tile != null) {
-                if (tile instanceof ISyncableObjectOwner) {
-                    ISyncableObjectOwner object = (ISyncableObjectOwner) tile;
-                    try {
-                        ByteArrayDataInput dat = ByteStreams.newDataInput(this.data);
-
-                        object.readSetup(dat);
-
-                        SyncHandler.clientSyncables.addAll(object.getSyncables());
-                    }
-                    catch (IOException e) {
-                        Objects.log.log(Level.WARNING, "Failed synchronizing object", e);
-                    }
-                }
-            }
-        }
-        else {
-            SyncEvent.RequestObject event = new SyncEvent.RequestObject(this.identifier);
-            MinecraftForge.EVENT_BUS.post(event);
-
-            if (event.result != null) {
-                ISyncableObjectOwner object = event.result;
-
-                try {
-                    ByteArrayDataInput dat = ByteStreams.newDataInput(this.data);
-
-                    object.readSetup(dat);
-
-                    SyncHandler.clientSyncables.addAll(object.getSyncables());
-                }
-                catch (IOException e) {
-                    Objects.log.log(Level.WARNING, "Failed synchronizing object", e);
-                }
-            }
-        }
-    }
+    // FIXME
+    //    @Override
+    //    public void onData(INetworkManager manager, EntityPlayer player) {
+    //        if (this.isWordly) {
+    //            TileEntity tile = player.worldObj.getBlockTileEntity(this.posX, this.posY, this.posZ);
+    //            if (tile != null) {
+    //                if (tile instanceof ISyncableObjectOwner) {
+    //                    ISyncableObjectOwner object = (ISyncableObjectOwner) tile;
+    //                    try {
+    //                        ByteArrayDataInput dat = ByteStreams.newDataInput(this.data);
+    //
+    //                        object.readSetup(dat);
+    //
+    //                        SyncHandler.clientSyncables.addAll(object.getSyncables());
+    //                    }
+    //                    catch (IOException e) {
+    //                        Objects.log.log(Level.WARNING, "Failed synchronizing object", e);
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        else {
+    //            SyncEvent.RequestObject event = new SyncEvent.RequestObject(this.identifier);
+    //            MinecraftForge.EVENT_BUS.post(event);
+    //
+    //            if (event.result != null) {
+    //                ISyncableObjectOwner object = event.result;
+    //
+    //                try {
+    //                    ByteArrayDataInput dat = ByteStreams.newDataInput(this.data);
+    //
+    //                    object.readSetup(dat);
+    //
+    //                    SyncHandler.clientSyncables.addAll(object.getSyncables());
+    //                }
+    //                catch (IOException e) {
+    //                    Objects.log.log(Level.WARNING, "Failed synchronizing object", e);
+    //                }
+    //            }
+    //        }
+    //    }
 
 }

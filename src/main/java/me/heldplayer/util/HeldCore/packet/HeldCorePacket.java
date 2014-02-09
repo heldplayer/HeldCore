@@ -1,24 +1,19 @@
 
 package me.heldplayer.util.HeldCore.packet;
 
-import java.io.DataOutputStream;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+
 import java.io.IOException;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.INetworkManager;
 import net.minecraft.world.World;
-
-import com.google.common.io.ByteArrayDataInput;
-
 import cpw.mods.fml.relauncher.Side;
 
 public abstract class HeldCorePacket {
 
-    public final int packetId;
     public final World world;
 
-    public HeldCorePacket(int packetId, World world) {
-        this.packetId = packetId;
+    public HeldCorePacket(World world) {
         this.world = world;
     }
 
@@ -28,10 +23,10 @@ public abstract class HeldCorePacket {
 
     public abstract Side getSendingSide();
 
-    public abstract void read(ByteArrayDataInput in) throws IOException;
+    public abstract void read(ChannelHandlerContext context, ByteBuf in) throws IOException;
 
-    public abstract void write(DataOutputStream out) throws IOException;
+    public abstract void write(ChannelHandlerContext context, ByteBuf out) throws IOException;
 
-    public abstract void onData(INetworkManager manager, EntityPlayer player);
+    // FIXME? public abstract void onData(INetworkManager manager, EntityPlayer player);
 
 }

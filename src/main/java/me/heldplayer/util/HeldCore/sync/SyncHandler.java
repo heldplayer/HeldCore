@@ -2,26 +2,27 @@
 package me.heldplayer.util.HeldCore.sync;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
 
 import me.heldplayer.util.HeldCore.HeldCore;
 import me.heldplayer.util.HeldCore.Objects;
 import me.heldplayer.util.HeldCore.sync.packet.Packet2TrackingBegin;
 import me.heldplayer.util.HeldCore.sync.packet.Packet3TrackingUpdate;
 import me.heldplayer.util.HeldCore.sync.packet.Packet5TrackingEnd;
-import me.heldplayer.util.HeldCore.sync.packet.PacketHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.INetworkManager;
+import net.minecraft.network.INetHandler;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.TickType;
 
-public class SyncHandler implements ITickHandler {
+import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
+
+public class SyncHandler {
 
     public static LinkedList<PlayerTracker> players = new LinkedList<PlayerTracker>();
     public static LinkedList<ISyncableObjectOwner> globalObjects = new LinkedList<ISyncableObjectOwner>();
@@ -41,7 +42,7 @@ public class SyncHandler implements ITickHandler {
             tracker.syncableOwners.clear();
             tracker.syncables = null;
             tracker.syncableOwners = null;
-            tracker.manager = null;
+            tracker.handler = null;
         }
 
         players.clear();
@@ -50,17 +51,18 @@ public class SyncHandler implements ITickHandler {
         lastSyncId = 0;
     }
 
-    public static void startTracking(INetworkManager manager) {
+    public static void startTracking(INetHandler manager) {
         PlayerTracker tracker = new PlayerTracker(manager, HeldCore.refreshRate.getValue());
         players.add(tracker);
         tracker.syncableOwners.addAll(globalObjects);
         for (ISyncableObjectOwner object : globalObjects) {
             tracker.syncables.addAll(object.getSyncables());
-            tracker.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object)));
+            HeldCore.packetHandler.sendPacketToPlayer(new Packet2TrackingBegin(object), tracker.getPlayer());
+            // tracker.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object)));
         }
     }
 
-    public static void stopTracking(INetworkManager manager) {
+    public static void stopTracking(INetHandler manager) {
         if (players.isEmpty()) {
             return;
         }
@@ -69,12 +71,12 @@ public class SyncHandler implements ITickHandler {
 
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
-            if (tracker.manager == manager) {
+            if (tracker.handler == manager) {
                 tracker.syncables.clear();
                 tracker.syncableOwners.clear();
                 tracker.syncables = null;
                 tracker.syncableOwners = null;
-                tracker.manager = null;
+                tracker.handler = null;
                 i.remove();
             }
         }
@@ -90,10 +92,11 @@ public class SyncHandler implements ITickHandler {
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
             if (tracker.getPlayer() == player) {
-                Objects.log.log(Level.FINE, "Starting to track " + object.toString());
+                Objects.log.log(Level.TRACE, "Starting to track " + object.toString());
                 tracker.syncables.addAll(object.getSyncables());
                 tracker.syncableOwners.add(object);
-                tracker.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object)));
+                HeldCore.packetHandler.sendPacketToPlayer(new Packet2TrackingBegin(object), tracker.getPlayer());
+                // tracker.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object)));
             }
         }
     }
@@ -110,10 +113,11 @@ public class SyncHandler implements ITickHandler {
             if (tracker.getPlayer() == player) {
                 List<ISyncable> syncables = object.getSyncables();
                 for (ISyncable syncable : syncables) {
-                    tracker.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet5TrackingEnd(syncable)));
+                    HeldCore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
+                    // tracker.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet5TrackingEnd(syncable)));
 
                     if (tracker.syncables.remove(syncable)) {
-                        Objects.log.log(Level.FINE, "Untracked " + syncable.toString() + " by request");
+                        Objects.log.log(Level.TRACE, "Untracked " + syncable.toString() + " by request");
                     }
                 }
                 tracker.syncableOwners.remove(object);
@@ -136,7 +140,7 @@ public class SyncHandler implements ITickHandler {
             }
 
             if (tracker.syncableOwners.contains(object)) {
-                Objects.log.log(Level.FINE, "Dynamically tracking " + syncable.toString());
+                Objects.log.log(Level.TRACE, "Dynamically tracking " + syncable.toString());
                 tracker.syncables.add(syncable);
             }
         }
@@ -155,8 +159,9 @@ public class SyncHandler implements ITickHandler {
                 PlayerTracker tracker = i.next();
 
                 tracker.syncables.remove(syncable);
-                tracker.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet5TrackingEnd(syncable)));
-                Objects.log.log(Level.FINE, "Dynamically untracked " + syncable.toString());
+                HeldCore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
+                // tracker.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet5TrackingEnd(syncable)));
+                Objects.log.log(Level.TRACE, "Dynamically untracked " + syncable.toString());
             }
         }
     }
@@ -170,12 +175,13 @@ public class SyncHandler implements ITickHandler {
 
         Iterator<PlayerTracker> i = players.iterator();
 
-        Objects.log.log(Level.FINE, "Starting to track " + object.toString() + " for everybody");
+        Objects.log.log(Level.TRACE, "Starting to track " + object.toString() + " for everybody");
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
             tracker.syncables.addAll(object.getSyncables());
             tracker.syncableOwners.add(object);
-            tracker.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object)));
+            HeldCore.packetHandler.sendPacketToPlayer(new Packet2TrackingBegin(object), tracker.getPlayer());
+            // tracker.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object)));
         }
     }
 
@@ -190,13 +196,14 @@ public class SyncHandler implements ITickHandler {
 
         List<ISyncable> syncables = object.getSyncables();
 
-        Objects.log.log(Level.FINE, "Untracking " + object.toString() + " for everybody");
+        Objects.log.log(Level.TRACE, "Untracking " + object.toString() + " for everybody");
 
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
 
             for (ISyncable syncable : syncables) {
-                tracker.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet5TrackingEnd(syncable)));
+                HeldCore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
+                // tracker.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet5TrackingEnd(syncable)));
 
                 tracker.syncables.remove(syncable);
             }
@@ -204,13 +211,10 @@ public class SyncHandler implements ITickHandler {
         }
     }
 
-    @Override
-    public void tickStart(EnumSet<TickType> type, Object... tickData) {}
-
-    @Override
-    public void tickEnd(EnumSet<TickType> type, Object... tickData) {
-        if (type.equals(EnumSet.of(TickType.WORLD))) {
-            World world = (World) tickData[0];
+    @SubscribeEvent
+    public void onWorldTick(WorldTickEvent event) {
+        if (event.phase == Phase.END) {
+            World world = event.world;
 
             if (world.isRemote) {
                 return;
@@ -245,9 +249,10 @@ public class SyncHandler implements ITickHandler {
                     ISyncable syncable = i2.next();
 
                     if (syncable.getOwner().isNotValid()) {
-                        player.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet5TrackingEnd(syncable)));
+                        HeldCore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), player.getPlayer());
+                        // player.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet5TrackingEnd(syncable)));
                         i2.remove();
-                        Objects.log.log(Level.FINE, "Untracked " + syncable.toString());
+                        Objects.log.log(Level.TRACE, "Untracked " + syncable.toString());
                         continue;
                     }
 
@@ -265,7 +270,8 @@ public class SyncHandler implements ITickHandler {
                 if (changedList != null) {
                     ISyncable[] syncables = changedList.toArray(new ISyncable[changedList.size()]);
 
-                    player.manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet3TrackingUpdate(syncables)));
+                    HeldCore.packetHandler.sendPacketToPlayer(new Packet3TrackingUpdate(syncables), player.getPlayer());
+                    // player.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet3TrackingUpdate(syncables)));
                 }
             }
 
@@ -275,16 +281,6 @@ public class SyncHandler implements ITickHandler {
                 }
             }
         }
-    }
-
-    @Override
-    public EnumSet<TickType> ticks() {
-        return EnumSet.of(TickType.WORLD);
-    }
-
-    @Override
-    public String getLabel() {
-        return "Objects Syncing";
     }
 
 }

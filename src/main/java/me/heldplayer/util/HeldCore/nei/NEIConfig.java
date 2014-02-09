@@ -1,11 +1,7 @@
 
 package me.heldplayer.util.HeldCore.nei;
 
-import me.heldplayer.util.HeldCore.nei.recipe.ShapedHeldCoreRecipeHandler;
-import me.heldplayer.util.HeldCore.nei.recipe.ShapelessHeldCoreRecipeHandler;
-import codechicken.nei.api.API;
-import codechicken.nei.api.IConfigureNEI;
-
+/* FIXME
 public class NEIConfig implements IConfigureNEI {
 
     public static ShapedHeldCoreRecipeHandler shapedHeldCore;
@@ -33,3 +29,4 @@ public class NEIConfig implements IConfigureNEI {
     }
 
 }
+*/

@@ -1,8 +1,7 @@
 
 package me.heldplayer.util.HeldCore.config;
 
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.Property;
+import net.minecraftforge.common.config.Property;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -71,15 +70,7 @@ public class ConfigValue<T> {
             this.value = this.config.config.get(this.category, this.name, (Double) this.deff, this.comment);
         }
         if (this.mode == 3) {
-            if (this.category.equalsIgnoreCase(Configuration.CATEGORY_BLOCK)) {
-                this.value = this.config.config.getBlock(this.category, this.name, (Integer) this.deff, this.comment);
-            }
-            else if (this.category.equalsIgnoreCase(Configuration.CATEGORY_ITEM)) {
-                this.value = this.config.config.getItem(this.category, this.name, (Integer) this.deff, this.comment);
-            }
-            else {
-                this.value = this.config.config.get(this.category, this.name, (Integer) this.deff, this.comment);
-            }
+            this.value = this.config.config.get(this.category, this.name, (Integer) this.deff, this.comment);
         }
         if (this.mode == 4) {
             this.value = this.config.config.get(this.category, this.name, (String) this.deff, this.comment);

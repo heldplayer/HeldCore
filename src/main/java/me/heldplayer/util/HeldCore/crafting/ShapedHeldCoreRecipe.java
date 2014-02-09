@@ -196,7 +196,7 @@ public class ShapedHeldCoreRecipe implements IHeldCoreRecipe {
         if (input == null && target != null || input != null && target == null) {
             return false;
         }
-        return (target.itemID == input.itemID && (target.getItemDamage() == OreDictionary.WILDCARD_VALUE || target.getItemDamage() == input.getItemDamage()));
+        return (target.getItem() == input.getItem() && (target.getItemDamage() == OreDictionary.WILDCARD_VALUE || target.getItemDamage() == input.getItemDamage()));
     }
 
     public ShapedHeldCoreRecipe setMirrored(boolean mirror) {
