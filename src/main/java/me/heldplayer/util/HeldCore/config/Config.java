@@ -5,7 +5,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import net.minecraftforge.common.config.Configuration;
-
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 /**

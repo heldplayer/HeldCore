@@ -25,7 +25,7 @@ public class Shader {
      * Binds the shader
      */
     public void bindShader() {
-        prevShader = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+        Shader.prevShader = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
         GL20.glUseProgram(this.programId);
     }
 
@@ -39,8 +39,8 @@ public class Shader {
      * Unbinds the current shader and returns to the previous shader
      */
     public static void unbindShader() {
-        GL20.glUseProgram(prevShader);
-        prevShader = 0;
+        GL20.glUseProgram(Shader.prevShader);
+        Shader.prevShader = 0;
     }
 
 }

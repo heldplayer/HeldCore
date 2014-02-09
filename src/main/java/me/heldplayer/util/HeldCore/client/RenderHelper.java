@@ -34,7 +34,7 @@ public final class RenderHelper {
             }
         }
 
-        return (IIcon) icon;
+        return icon;
     }
 
     public static void bindTexture(ResourceLocation location) {
@@ -76,7 +76,7 @@ public final class RenderHelper {
     }
 
     public static void renderBezierPlane(Vector[][] points, IIcon icon, int pointCount) {
-        Vector[] result = getBezierPlanePoints(points, pointCount);
+        Vector[] result = RenderHelper.getBezierPlanePoints(points, pointCount);
 
         GL11.glBegin(GL11.GL_QUADS);
         for (int i = 0; i < pointCount; i++) {

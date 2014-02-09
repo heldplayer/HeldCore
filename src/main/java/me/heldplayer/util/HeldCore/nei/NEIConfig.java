@@ -1,6 +1,7 @@
 
 package me.heldplayer.util.HeldCore.nei;
 
+// @formatter:off
 /* FIXME
 public class NEIConfig implements IConfigureNEI {
 
@@ -30,3 +31,4 @@ public class NEIConfig implements IConfigureNEI {
 
 }
 */
+// @formatter:on

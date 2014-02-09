@@ -13,14 +13,17 @@ import cpw.mods.fml.relauncher.Side;
 
 public class CommonProxy extends HeldCoreProxy {
 
+    @Override
     public void preInit(FMLPreInitializationEvent event) {}
 
+    @Override
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
 
         FMLCommonHandler.instance().bus().register(this);
     }
 
+    @Override
     public void postInit(FMLPostInitializationEvent event) {
         FMLCommonHandler.instance().bus().register(new SyncHandler());
     }

@@ -42,7 +42,7 @@ public final class Objects {
     public static final String CLIENT_PROXY = "me.heldplayer.util.HeldCore.client.ClientProxy";
     public static final String SERVER_PROXY = "me.heldplayer.util.HeldCore.CommonProxy";
 
-    public static final ModInfo MOD_INFO = new ModInfo(MOD_ID, MOD_NAME, MOD_VERSION);
+    public static final ModInfo MOD_INFO = new ModInfo(Objects.MOD_ID, Objects.MOD_NAME, Objects.MOD_VERSION);
 
     public static Logger log;
 

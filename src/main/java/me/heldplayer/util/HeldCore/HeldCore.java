@@ -53,22 +53,22 @@ public class HeldCore extends HeldCoreMod {
 
         HeldCore.packetHandler = new PacketHandler("HeldCore", Packet1TrackingStatus.class, Packet2TrackingBegin.class, Packet3TrackingUpdate.class, Packet4InitiateClientTracking.class, Packet5TrackingEnd.class, Packet6SetInterval.class);
 
-        configFolder = new File(event.getModConfigurationDirectory(), "HeldCore");
+        HeldCore.configFolder = new File(event.getModConfigurationDirectory(), "HeldCore");
 
-        if (!configFolder.exists()) {
-            configFolder.mkdir();
+        if (!HeldCore.configFolder.exists()) {
+            HeldCore.configFolder.mkdir();
         }
 
         // Config
-        modPack = new ConfigValue<String>("modPack", Configuration.CATEGORY_GENERAL, null, "", "If this mod is running in a modpack, please set this config value to the name of the modpack");
-        optOut = new ConfigValue<Boolean>("optOut", Configuration.CATEGORY_GENERAL, null, Boolean.FALSE, "Set this to true to opt-out from statistics gathering. If you are configuring this mod for a modpack, please leave it set to false");
-        refreshRate = new ConfigValue<Integer>("refreshRate", Configuration.CATEGORY_GENERAL, null, 5, "The refresh-rate used for syncing objects between server and client. A higher refresh-rate will decrease bandwidth and CPU usage, but will also cause objects to appear to lag");
-        textureMapId = new ConfigValue<Integer>("textureMapId", Configuration.CATEGORY_GENERAL, Side.CLIENT, 10, "The ID of the texture map that HeldCore assigns");
+        HeldCore.modPack = new ConfigValue<String>("modPack", Configuration.CATEGORY_GENERAL, null, "", "If this mod is running in a modpack, please set this config value to the name of the modpack");
+        HeldCore.optOut = new ConfigValue<Boolean>("optOut", Configuration.CATEGORY_GENERAL, null, Boolean.FALSE, "Set this to true to opt-out from statistics gathering. If you are configuring this mod for a modpack, please leave it set to false");
+        HeldCore.refreshRate = new ConfigValue<Integer>("refreshRate", Configuration.CATEGORY_GENERAL, null, 5, "The refresh-rate used for syncing objects between server and client. A higher refresh-rate will decrease bandwidth and CPU usage, but will also cause objects to appear to lag");
+        HeldCore.textureMapId = new ConfigValue<Integer>("textureMapId", Configuration.CATEGORY_GENERAL, Side.CLIENT, 10, "The ID of the texture map that HeldCore assigns");
         this.config = new Config(event.getSuggestedConfigurationFile());
-        this.config.addConfigKey(modPack);
-        this.config.addConfigKey(optOut);
-        this.config.addConfigKey(refreshRate);
-        this.config.addConfigKey(textureMapId);
+        this.config.addConfigKey(HeldCore.modPack);
+        this.config.addConfigKey(HeldCore.optOut);
+        this.config.addConfigKey(HeldCore.refreshRate);
+        this.config.addConfigKey(HeldCore.textureMapId);
         this.config.load();
         this.config.saveOnChange();
 
@@ -93,17 +93,17 @@ public class HeldCore extends HeldCoreMod {
     }
 
     public static void initializeReporter(String modId, String modVersion) {
-        if (optOut.getValue()) {
+        if (HeldCore.optOut.getValue()) {
             return;
         }
         try {
-            File file = new File(configFolder, modId + ".version");
+            File file = new File(HeldCore.configFolder, modId + ".version");
 
             if (!file.exists()) {
                 file.createNewFile();
             }
 
-            UsageReporter reporter = new UsageReporter(modId, modVersion, modPack.getValue(), FMLCommonHandler.instance().getSide(), configFolder);
+            UsageReporter reporter = new UsageReporter(modId, modVersion, HeldCore.modPack.getValue(), FMLCommonHandler.instance().getSide(), HeldCore.configFolder);
 
             Thread thread = new Thread(reporter, "Mod usage reporter for " + modId);
             thread.setDaemon(true);
@@ -121,7 +121,7 @@ public class HeldCore extends HeldCoreMod {
 
     @Override
     public HeldCoreProxy getProxy() {
-        return proxy;
+        return HeldCore.proxy;
     }
 
     @Override

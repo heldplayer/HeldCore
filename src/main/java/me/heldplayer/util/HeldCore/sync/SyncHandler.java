@@ -30,11 +30,11 @@ public class SyncHandler {
     public static LinkedList<ISyncable> clientSyncables = new LinkedList<ISyncable>();
 
     public static void reset() {
-        if (players.isEmpty()) {
+        if (SyncHandler.players.isEmpty()) {
             return;
         }
 
-        Iterator<PlayerTracker> i = players.iterator();
+        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
 
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
@@ -45,17 +45,17 @@ public class SyncHandler {
             tracker.handler = null;
         }
 
-        players.clear();
-        globalObjects.clear();
+        SyncHandler.players.clear();
+        SyncHandler.globalObjects.clear();
 
-        lastSyncId = 0;
+        SyncHandler.lastSyncId = 0;
     }
 
     public static void startTracking(INetHandler manager) {
         PlayerTracker tracker = new PlayerTracker(manager, HeldCore.refreshRate.getValue());
-        players.add(tracker);
-        tracker.syncableOwners.addAll(globalObjects);
-        for (ISyncableObjectOwner object : globalObjects) {
+        SyncHandler.players.add(tracker);
+        tracker.syncableOwners.addAll(SyncHandler.globalObjects);
+        for (ISyncableObjectOwner object : SyncHandler.globalObjects) {
             tracker.syncables.addAll(object.getSyncables());
             HeldCore.packetHandler.sendPacketToPlayer(new Packet2TrackingBegin(object), tracker.getPlayer());
             // tracker.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object)));
@@ -63,11 +63,11 @@ public class SyncHandler {
     }
 
     public static void stopTracking(INetHandler manager) {
-        if (players.isEmpty()) {
+        if (SyncHandler.players.isEmpty()) {
             return;
         }
 
-        Iterator<PlayerTracker> i = players.iterator();
+        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
 
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
@@ -83,11 +83,11 @@ public class SyncHandler {
     }
 
     public static void startTracking(ISyncableObjectOwner object, EntityPlayerMP player) {
-        if (players.isEmpty()) {
+        if (SyncHandler.players.isEmpty()) {
             return;
         }
 
-        Iterator<PlayerTracker> i = players.iterator();
+        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
 
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
@@ -102,11 +102,11 @@ public class SyncHandler {
     }
 
     public static void stopTracking(ISyncableObjectOwner object, EntityPlayerMP player) {
-        if (players.isEmpty()) {
+        if (SyncHandler.players.isEmpty()) {
             return;
         }
 
-        Iterator<PlayerTracker> i = players.iterator();
+        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
 
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
@@ -126,11 +126,11 @@ public class SyncHandler {
     }
 
     public static void startTracking(ISyncableObjectOwner object, ISyncable syncable) {
-        if (players.isEmpty()) {
+        if (SyncHandler.players.isEmpty()) {
             return;
         }
 
-        Iterator<PlayerTracker> i = players.iterator();
+        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
 
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
@@ -147,13 +147,13 @@ public class SyncHandler {
     }
 
     public static void stopTracking(ISyncableObjectOwner object, ISyncable syncable) {
-        if (players.isEmpty()) {
+        if (SyncHandler.players.isEmpty()) {
             return;
         }
 
         List<ISyncable> syncables = object.getSyncables();
         if (syncables.contains(syncable)) {
-            Iterator<PlayerTracker> i = players.iterator();
+            Iterator<PlayerTracker> i = SyncHandler.players.iterator();
 
             while (i.hasNext()) {
                 PlayerTracker tracker = i.next();
@@ -167,13 +167,13 @@ public class SyncHandler {
     }
 
     public static void startTracking(ISyncableObjectOwner object) {
-        globalObjects.add(object);
+        SyncHandler.globalObjects.add(object);
 
-        if (players.isEmpty()) {
+        if (SyncHandler.players.isEmpty()) {
             return;
         }
 
-        Iterator<PlayerTracker> i = players.iterator();
+        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
 
         Objects.log.log(Level.TRACE, "Starting to track " + object.toString() + " for everybody");
         while (i.hasNext()) {
@@ -186,13 +186,13 @@ public class SyncHandler {
     }
 
     public static void stopTracking(ISyncableObjectOwner object) {
-        globalObjects.remove(object);
+        SyncHandler.globalObjects.remove(object);
 
-        if (players.isEmpty()) {
+        if (SyncHandler.players.isEmpty()) {
             return;
         }
 
-        Iterator<PlayerTracker> i = players.iterator();
+        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
 
         List<ISyncable> syncables = object.getSyncables();
 
@@ -220,11 +220,11 @@ public class SyncHandler {
                 return;
             }
 
-            if (players.isEmpty()) {
+            if (SyncHandler.players.isEmpty()) {
                 return;
             }
 
-            Iterator<PlayerTracker> i = players.iterator();
+            Iterator<PlayerTracker> i = SyncHandler.players.iterator();
 
             HashSet<ISyncable> allChanged = null;
 

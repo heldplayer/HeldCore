@@ -20,58 +20,58 @@ public final class VectorPool {
     private static int bigArraySize = 256;
 
     public static Vector getFreeVector() {
-        if (unusedVectors.size() == 0) {
+        if (VectorPool.unusedVectors.size() == 0) {
             Vector vector = new Vector();
-            usedVectors.add(vector);
+            VectorPool.usedVectors.add(vector);
             return vector;
         }
         else {
-            Vector vector = unusedVectors.remove(0);
+            Vector vector = VectorPool.unusedVectors.remove(0);
             vector.posX = 0.0D;
             vector.posY = 0.0D;
             vector.posZ = 0.0D;
-            usedVectors.add(vector);
+            VectorPool.usedVectors.add(vector);
             return vector;
         }
     }
 
     public static Vector getFreeVector(double x, double y, double z) {
-        if (unusedVectors.size() == 0) {
+        if (VectorPool.unusedVectors.size() == 0) {
             Vector vector = new Vector(x, y, z);
-            usedVectors.add(vector);
+            VectorPool.usedVectors.add(vector);
             return vector;
         }
         else {
-            Vector vector = unusedVectors.remove(0);
+            Vector vector = VectorPool.unusedVectors.remove(0);
             vector.posX = x;
             vector.posY = y;
             vector.posZ = z;
-            usedVectors.add(vector);
+            VectorPool.usedVectors.add(vector);
             return vector;
         }
     }
 
     public static Vector[] getFreeVectorArray(int size) {
-        LinkedList<Vector[]> used = usedBigVectorArrays;
-        LinkedList<Vector[]> unused = unusedBigVectorArrays;
+        LinkedList<Vector[]> used = VectorPool.usedBigVectorArrays;
+        LinkedList<Vector[]> unused = VectorPool.unusedBigVectorArrays;
         if (size <= 16) {
             size = 16;
-            used = usedTinyVectorArrays;
-            unused = unusedTinyVectorArrays;
+            used = VectorPool.usedTinyVectorArrays;
+            unused = VectorPool.unusedTinyVectorArrays;
         }
         else if (size <= 256) {
             size = 256;
-            used = usedSmallVectorArrays;
-            unused = unusedSmallVectorArrays;
+            used = VectorPool.usedSmallVectorArrays;
+            unused = VectorPool.unusedSmallVectorArrays;
         }
         else {
-            if (size <= bigArraySize) {
-                size = bigArraySize;
+            if (size <= VectorPool.bigArraySize) {
+                size = VectorPool.bigArraySize;
             }
             else {
-                bigArraySize = size;
-                usedBigVectorArrays.clear();
-                unusedBigVectorArrays.clear();
+                VectorPool.bigArraySize = size;
+                VectorPool.usedBigVectorArrays.clear();
+                VectorPool.unusedBigVectorArrays.clear();
             }
         }
 
@@ -91,21 +91,21 @@ public final class VectorPool {
     }
 
     public static void unuseVectors() {
-        unusedVectors.clear();
-        unusedVectors.addAll(usedVectors);
-        usedVectors.clear();
+        VectorPool.unusedVectors.clear();
+        VectorPool.unusedVectors.addAll(VectorPool.usedVectors);
+        VectorPool.usedVectors.clear();
 
-        unusedTinyVectorArrays.clear();
-        unusedTinyVectorArrays.addAll(usedTinyVectorArrays);
-        usedTinyVectorArrays.clear();
+        VectorPool.unusedTinyVectorArrays.clear();
+        VectorPool.unusedTinyVectorArrays.addAll(VectorPool.usedTinyVectorArrays);
+        VectorPool.usedTinyVectorArrays.clear();
 
-        unusedSmallVectorArrays.clear();
-        unusedSmallVectorArrays.addAll(usedSmallVectorArrays);
-        usedSmallVectorArrays.clear();
+        VectorPool.unusedSmallVectorArrays.clear();
+        VectorPool.unusedSmallVectorArrays.addAll(VectorPool.usedSmallVectorArrays);
+        VectorPool.usedSmallVectorArrays.clear();
 
-        unusedBigVectorArrays.clear();
-        unusedBigVectorArrays.addAll(usedBigVectorArrays);
-        usedBigVectorArrays.clear();
+        VectorPool.unusedBigVectorArrays.clear();
+        VectorPool.unusedBigVectorArrays.addAll(VectorPool.usedBigVectorArrays);
+        VectorPool.usedBigVectorArrays.clear();
     }
 
 }

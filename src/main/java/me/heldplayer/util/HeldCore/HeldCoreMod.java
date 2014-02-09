@@ -26,7 +26,7 @@ public abstract class HeldCoreMod {
     }
 
     public void init(FMLInitializationEvent event) {
-        if (shouldReport()) {
+        if (this.shouldReport()) {
             ModInfo info = this.getModInfo();
 
             HeldCore.initializeReporter(info.modId, info.modVersion);

@@ -19,42 +19,42 @@ public final class MC {
     private static Minecraft mc;
 
     public static Minecraft getMinecraft() {
-        if (mc == null) {
-            mc = Minecraft.getMinecraft();
+        if (MC.mc == null) {
+            MC.mc = Minecraft.getMinecraft();
         }
-        return mc;
+        return MC.mc;
     }
 
     public static EffectRenderer getEffectRenderer() {
-        return getMinecraft().effectRenderer;
+        return MC.getMinecraft().effectRenderer;
     }
 
     public static EntityRenderer getEntityRenderer() {
-        return getMinecraft().entityRenderer;
+        return MC.getMinecraft().entityRenderer;
     }
 
     public static FontRenderer getFontRenderer() {
-        return getMinecraft().fontRenderer;
+        return MC.getMinecraft().fontRenderer;
     }
 
     public static GameSettings getGameSettings() {
-        return getMinecraft().gameSettings;
+        return MC.getMinecraft().gameSettings;
     }
 
     public static TextureManager getRenderEngine() {
-        return getMinecraft().renderEngine;
+        return MC.getMinecraft().renderEngine;
     }
 
     public static RenderGlobal getRenderGlobal() {
-        return getMinecraft().renderGlobal;
+        return MC.getMinecraft().renderGlobal;
     }
 
     public static EntityClientPlayerMP getPlayer() {
-        return getMinecraft().thePlayer;
+        return MC.getMinecraft().thePlayer;
     }
 
     public static WorldClient getWorld() {
-        return getMinecraft().theWorld;
+        return MC.getMinecraft().theWorld;
     }
 
 }

@@ -8,24 +8,24 @@ public final class MathHelper {
 
     static {
         for (int i = 0; i < 65536; ++i) {
-            sinTable[i] = (float) Math.sin((double) i * Math.PI * 2.0D / 65536.0D);
+            MathHelper.sinTable[i] = (float) Math.sin(i * Math.PI * 2.0D / 65536.0D);
         }
 
-        bezierValues[0] = 1;
+        MathHelper.bezierValues[0] = 1;
     }
 
     /**
      * Returns the sin of an angle in Quaternary degrees
      */
     public static float sin(float angle) {
-        return sinTable[(int) (angle * 16384.0F) & 65535];
+        return MathHelper.sinTable[(int) (angle * 16384.0F) & 65535];
     }
 
     /**
      * Returns the sin of an angle in Quaternary degrees
      */
     public static float cos(float angle) {
-        return sinTable[(int) (angle * 16384.0F + 16384.0F) & 65535];
+        return MathHelper.sinTable[(int) (angle * 16384.0F + 16384.0F) & 65535];
     }
 
     /**
@@ -78,7 +78,7 @@ public final class MathHelper {
     }
 
     public static float sqrt(float par0) {
-        return (float) Math.sqrt((double) par0);
+        return (float) Math.sqrt(par0);
     }
 
     public static float sqrt(double par0) {
@@ -86,11 +86,11 @@ public final class MathHelper {
     }
 
     public static float lerp(float origin, float target, int steps, int maxSteps) {
-        return origin + (target - origin) * (float) steps / (float) maxSteps;
+        return origin + (target - origin) * steps / maxSteps;
     }
 
     public static double lerp(double origin, double target, int steps, int maxSteps) {
-        return origin + (target - origin) * (double) steps / (double) maxSteps;
+        return origin + (target - origin) * steps / maxSteps;
     }
 
     /**
@@ -105,12 +105,12 @@ public final class MathHelper {
             actualInput++;
         }
 
-        for (int i = 1; i < bezierValues.length; i++) {
+        for (int i = 1; i < MathHelper.bezierValues.length; i++) {
             if (i > actualInput - 1) {
-                bezierValues[i] = 0;
+                MathHelper.bezierValues[i] = 0;
             }
             else {
-                bezierValues[i] = bezierValues[i - 1] * (actualInput - i) / i;
+                MathHelper.bezierValues[i] = MathHelper.bezierValues[i - 1] * (actualInput - i) / i;
             }
         }
 
@@ -120,7 +120,7 @@ public final class MathHelper {
         for (int i = 0; i < actualInput; i++) {
             points[i] = input[i].clone();
 
-            points[i].multiply(bezierValues[i]);
+            points[i].multiply(MathHelper.bezierValues[i]);
 
             for (int j = i; j < actualInput - 1; j++) {
                 points[i].multiply(t);

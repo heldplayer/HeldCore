@@ -15,6 +15,9 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 
+// Thanks AtomicStryker for your example classes!
+// https://code.google.com/p/atomicstrykers-minecraft-mods/source/browse/Minions/src/main/java/atomicstryker/minions/common/network/NetworkHelper.java
+// https://code.google.com/p/atomicstrykers-minecraft-mods/source/browse/Minions/src/main/java/atomicstryker/minions/common/network/PacketDispatcher.java
 public class PacketHandler {
 
     private final FMLEmbeddedChannel clientOutboundChannel;
@@ -22,45 +25,45 @@ public class PacketHandler {
 
     public PacketHandler(String channelName, Class<? extends HeldCorePacket>... handledPacketClasses) {
         EnumMap<Side, FMLEmbeddedChannel> channelPair = NetworkRegistry.INSTANCE.newChannel(channelName, new ChannelHandler(handledPacketClasses));
-        clientOutboundChannel = channelPair.get(Side.CLIENT);
-        serverOutboundChannel = channelPair.get(Side.SERVER);
+        this.clientOutboundChannel = channelPair.get(Side.CLIENT);
+        this.serverOutboundChannel = channelPair.get(Side.SERVER);
     }
 
     public void sendPacketToServer(HeldCorePacket packet) {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
-            clientOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
-            clientOutboundChannel.writeOutbound(packet);
+            this.clientOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
+            this.clientOutboundChannel.writeOutbound(packet);
         }
     }
 
     public void sendPacketToPlayer(HeldCorePacket packet, EntityPlayer player) {
         if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
-            serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
-            serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
-            serverOutboundChannel.writeOutbound(packet);
+            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
+            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
+            this.serverOutboundChannel.writeOutbound(packet);
         }
     }
 
     public void sendPacketToAllPlayers(HeldCorePacket packet) {
         if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
-            serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
-            serverOutboundChannel.writeOutbound(packet);
+            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
+            this.serverOutboundChannel.writeOutbound(packet);
         }
     }
 
     public void sendPacketToAllAroundPoint(HeldCorePacket packet, TargetPoint tp) {
         if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
-            serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
-            serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(tp);
-            serverOutboundChannel.writeOutbound(packet);
+            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
+            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(tp);
+            this.serverOutboundChannel.writeOutbound(packet);
         }
     }
 
     public void sendPacketToAllInDimension(HeldCorePacket packet, int dimension) {
         if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
-            serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
-            serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimension);
-            serverOutboundChannel.writeOutbound(packet);
+            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
+            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimension);
+            this.serverOutboundChannel.writeOutbound(packet);
         }
     }
 
@@ -68,7 +71,7 @@ public class PacketHandler {
 
         public ChannelHandler(Class<? extends HeldCorePacket>... handledPacketClasses) {
             for (int i = 0; i < handledPacketClasses.length; i++) {
-                addDiscriminator(i, handledPacketClasses[i]);
+                this.addDiscriminator(i, handledPacketClasses[i]);
             }
         }
 
