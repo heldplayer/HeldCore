@@ -5,9 +5,12 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import me.heldplayer.util.HeldCore.packet.HeldCorePacket;
 import me.heldplayer.util.HeldCore.sync.ISyncable;
+import me.heldplayer.util.HeldCore.sync.SyncHandler;
+import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.relauncher.Side;
 
 public class Packet5TrackingEnd extends HeldCorePacket {
@@ -39,17 +42,16 @@ public class Packet5TrackingEnd extends HeldCorePacket {
         out.writeInt(this.id);
     }
 
-    // FIXME
-    //    @Override
-    //    public void onData(INetworkManager manager, EntityPlayer player) {
-    //        Iterator<ISyncable> i = SyncHandler.clientSyncables.iterator();
-    //
-    //        while (i.hasNext()) {
-    //            ISyncable syncable = i.next();
-    //            if (syncable.getId() == this.id) {
-    //                i.remove();
-    //            }
-    //        }
-    //    }
+    @Override
+    public void onData(ChannelHandlerContext context, EntityPlayer player) {
+        Iterator<ISyncable> i = SyncHandler.clientSyncables.iterator();
+
+        while (i.hasNext()) {
+            ISyncable syncable = i.next();
+            if (syncable.getId() == this.id) {
+                i.remove();
+            }
+        }
+    }
 
 }

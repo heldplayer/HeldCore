@@ -5,7 +5,6 @@ import me.heldplayer.util.HeldCore.Assets;
 import me.heldplayer.util.HeldCore.CommonProxy;
 import me.heldplayer.util.HeldCore.HeldCore;
 import me.heldplayer.util.HeldCore.sync.SyncHandler;
-import me.heldplayer.util.HeldCore.sync.packet.Packet6SetInterval;
 import net.minecraft.client.renderer.texture.TextureMap;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -25,7 +24,7 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public void onClientConnectedToServer(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        HeldCore.packetHandler.sendPacketToServer(new Packet6SetInterval(Integer.valueOf(HeldCore.refreshRate.getValue())));
+        SyncHandler.initializationCounter = 20;
     }
 
     @SubscribeEvent

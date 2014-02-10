@@ -6,8 +6,14 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.io.IOException;
 
+import me.heldplayer.util.HeldCore.event.SyncEvent;
 import me.heldplayer.util.HeldCore.packet.HeldCorePacket;
 import me.heldplayer.util.HeldCore.sync.ISyncableObjectOwner;
+import me.heldplayer.util.HeldCore.sync.SyncHandler;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.relauncher.Side;
 
 public class Packet1TrackingStatus extends HeldCorePacket {
@@ -82,39 +88,38 @@ public class Packet1TrackingStatus extends HeldCorePacket {
         out.writeBoolean(this.track);
     }
 
-    // FIXME
-    //    @Override
-    //    public void onData(INetworkManager manager, EntityPlayer player) {
-    //        if (!(player instanceof EntityPlayerMP)) {
-    //            return;
-    //        }
-    //
-    //        if (this.isWordly) {
-    //            TileEntity tile = player.worldObj.getBlockTileEntity(this.posX, this.posY, this.posZ);
-    //            if (tile != null) {
-    //                if (tile instanceof ISyncableObjectOwner) {
-    //                    if (this.track) {
-    //                        SyncHandler.startTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
-    //                    }
-    //                    else {
-    //                        SyncHandler.stopTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        else {
-    //            SyncEvent.RequestObject event = new SyncEvent.RequestObject(this.identifier);
-    //            MinecraftForge.EVENT_BUS.post(event);
-    //
-    //            if (event.result != null) {
-    //                if (this.track) {
-    //                    SyncHandler.startTracking(event.result, (EntityPlayerMP) player);
-    //                }
-    //                else {
-    //                    SyncHandler.stopTracking(event.result, (EntityPlayerMP) player);
-    //                }
-    //            }
-    //        }
-    //    }
+    @Override
+    public void onData(ChannelHandlerContext context, EntityPlayer player) {
+        if (!(player instanceof EntityPlayerMP)) {
+            return;
+        }
+
+        if (this.isWordly) {
+            TileEntity tile = player.worldObj.getTileEntity(this.posX, this.posY, this.posZ);
+            if (tile != null) {
+                if (tile instanceof ISyncableObjectOwner) {
+                    if (this.track) {
+                        SyncHandler.startTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
+                    }
+                    else {
+                        SyncHandler.stopTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
+                    }
+                }
+            }
+        }
+        else {
+            SyncEvent.RequestObject event = new SyncEvent.RequestObject(this.identifier);
+            MinecraftForge.EVENT_BUS.post(event);
+
+            if (event.result != null) {
+                if (this.track) {
+                    SyncHandler.startTracking(event.result, (EntityPlayerMP) player);
+                }
+                else {
+                    SyncHandler.stopTracking(event.result, (EntityPlayerMP) player);
+                }
+            }
+        }
+    }
 
 }

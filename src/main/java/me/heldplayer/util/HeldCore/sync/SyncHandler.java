@@ -12,6 +12,7 @@ import me.heldplayer.util.HeldCore.Objects;
 import me.heldplayer.util.HeldCore.sync.packet.Packet2TrackingBegin;
 import me.heldplayer.util.HeldCore.sync.packet.Packet3TrackingUpdate;
 import me.heldplayer.util.HeldCore.sync.packet.Packet5TrackingEnd;
+import me.heldplayer.util.HeldCore.sync.packet.Packet6SetInterval;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.world.World;
@@ -19,8 +20,8 @@ import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 
 public class SyncHandler {
 
@@ -58,7 +59,6 @@ public class SyncHandler {
         for (ISyncableObjectOwner object : SyncHandler.globalObjects) {
             tracker.syncables.addAll(object.getSyncables());
             HeldCore.packetHandler.sendPacketToPlayer(new Packet2TrackingBegin(object), tracker.getPlayer());
-            // tracker.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object)));
         }
     }
 
@@ -96,7 +96,6 @@ public class SyncHandler {
                 tracker.syncables.addAll(object.getSyncables());
                 tracker.syncableOwners.add(object);
                 HeldCore.packetHandler.sendPacketToPlayer(new Packet2TrackingBegin(object), tracker.getPlayer());
-                // tracker.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object)));
             }
         }
     }
@@ -114,7 +113,6 @@ public class SyncHandler {
                 List<ISyncable> syncables = object.getSyncables();
                 for (ISyncable syncable : syncables) {
                     HeldCore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
-                    // tracker.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet5TrackingEnd(syncable)));
 
                     if (tracker.syncables.remove(syncable)) {
                         Objects.log.log(Level.TRACE, "Untracked " + syncable.toString() + " by request");
@@ -160,7 +158,6 @@ public class SyncHandler {
 
                 tracker.syncables.remove(syncable);
                 HeldCore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
-                // tracker.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet5TrackingEnd(syncable)));
                 Objects.log.log(Level.TRACE, "Dynamically untracked " + syncable.toString());
             }
         }
@@ -181,7 +178,6 @@ public class SyncHandler {
             tracker.syncables.addAll(object.getSyncables());
             tracker.syncableOwners.add(object);
             HeldCore.packetHandler.sendPacketToPlayer(new Packet2TrackingBegin(object), tracker.getPlayer());
-            // tracker.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet2TrackingBegin(object)));
         }
     }
 
@@ -203,7 +199,6 @@ public class SyncHandler {
 
             for (ISyncable syncable : syncables) {
                 HeldCore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
-                // tracker.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet5TrackingEnd(syncable)));
 
                 tracker.syncables.remove(syncable);
             }
@@ -211,73 +206,86 @@ public class SyncHandler {
         }
     }
 
+    public static int initializationCounter = 0;
+
     @SubscribeEvent
-    public void onWorldTick(WorldTickEvent event) {
-        if (event.phase == Phase.END) {
-            World world = event.world;
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (initializationCounter > 0) {
+            initializationCounter--;
 
-            if (world.isRemote) {
-                return;
+            if (initializationCounter == 0) {
+                HeldCore.packetHandler.sendPacketToServer(new Packet6SetInterval(Integer.valueOf(HeldCore.refreshRate.getValue())));
             }
+        }
+    }
 
-            if (SyncHandler.players.isEmpty()) {
-                return;
-            }
+    @SubscribeEvent
+    public void onWorldTick(TickEvent.WorldTickEvent event) {
+        if (event.phase == Phase.START) {
+            if (event.side.isServer()) {
+                World world = event.world;
 
-            Iterator<PlayerTracker> i = SyncHandler.players.iterator();
-
-            HashSet<ISyncable> allChanged = null;
-
-            while (i.hasNext()) {
-                PlayerTracker player = i.next();
-
-                player.ticks++;
-                if (player.ticks <= player.interval) {
+                if (world.isRemote) {
                     return;
                 }
-                player.ticks = 0;
 
-                if (player.syncables.isEmpty()) {
-                    continue;
+                if (SyncHandler.players.isEmpty()) {
+                    return;
                 }
 
-                ArrayList<ISyncable> changedList = null;
+                Iterator<PlayerTracker> i = SyncHandler.players.iterator();
 
-                Iterator<ISyncable> i2 = player.syncables.iterator();
+                HashSet<ISyncable> allChanged = null;
 
-                while (i2.hasNext()) {
-                    ISyncable syncable = i2.next();
+                while (i.hasNext()) {
+                    PlayerTracker player = i.next();
 
-                    if (syncable.getOwner().isNotValid()) {
-                        HeldCore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), player.getPlayer());
-                        // player.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet5TrackingEnd(syncable)));
-                        i2.remove();
-                        Objects.log.log(Level.TRACE, "Untracked " + syncable.toString());
+                    player.ticks++;
+                    if (player.ticks <= player.interval) {
+                        return;
+                    }
+                    player.ticks = 0;
+
+                    if (player.syncables.isEmpty()) {
                         continue;
                     }
 
-                    if (syncable.hasChanged()) {
-                        if (changedList == null) {
-                            changedList = new ArrayList<ISyncable>();
-                            allChanged = new HashSet<ISyncable>();
+                    ArrayList<ISyncable> changedList = null;
+
+                    Iterator<ISyncable> i2 = player.syncables.iterator();
+
+                    while (i2.hasNext()) {
+                        ISyncable syncable = i2.next();
+
+                        if (syncable.getOwner().isNotValid()) {
+                            HeldCore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), player.getPlayer());
+                            i2.remove();
+                            Objects.log.log(Level.TRACE, "Untracked " + syncable.toString());
+                            continue;
                         }
 
-                        changedList.add(syncable);
-                        allChanged.add(syncable);
+                        if (syncable.hasChanged()) {
+                            if (changedList == null) {
+                                changedList = new ArrayList<ISyncable>();
+                                allChanged = new HashSet<ISyncable>();
+                            }
+
+                            changedList.add(syncable);
+                            allChanged.add(syncable);
+                        }
+                    }
+
+                    if (changedList != null) {
+                        ISyncable[] syncables = changedList.toArray(new ISyncable[changedList.size()]);
+
+                        HeldCore.packetHandler.sendPacketToPlayer(new Packet3TrackingUpdate(syncables), player.getPlayer());
                     }
                 }
 
-                if (changedList != null) {
-                    ISyncable[] syncables = changedList.toArray(new ISyncable[changedList.size()]);
-
-                    HeldCore.packetHandler.sendPacketToPlayer(new Packet3TrackingUpdate(syncables), player.getPlayer());
-                    // player.handler.addToSendQueue(PacketHandler.instance.createPacket(new Packet3TrackingUpdate(syncables)));
-                }
-            }
-
-            if (allChanged != null) {
-                for (ISyncable syncable : allChanged) {
-                    syncable.setChanged(false);
+                if (allChanged != null) {
+                    for (ISyncable syncable : allChanged) {
+                        syncable.setChanged(false);
+                    }
                 }
             }
         }

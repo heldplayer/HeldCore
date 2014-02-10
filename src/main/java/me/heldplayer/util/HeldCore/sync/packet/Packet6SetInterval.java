@@ -5,8 +5,13 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import me.heldplayer.util.HeldCore.packet.HeldCorePacket;
+import me.heldplayer.util.HeldCore.sync.PlayerTracker;
+import me.heldplayer.util.HeldCore.sync.SyncHandler;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.relauncher.Side;
 
 public class Packet6SetInterval extends HeldCorePacket {
@@ -38,18 +43,19 @@ public class Packet6SetInterval extends HeldCorePacket {
         out.writeInt(this.interval);
     }
 
-    // FIXME
-    //    @Override
-    //    public void onData(INetworkManager manager, EntityPlayer player) {
-    //        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
-    //
-    //        while (i.hasNext()) {
-    //            PlayerTracker tracker = i.next();
-    //
-    //            if (tracker.manager == manager) {
-    //                tracker.interval = this.interval > tracker.interval ? this.interval : tracker.interval;
-    //            }
-    //        }
-    //    }
+    @Override
+    public void onData(ChannelHandlerContext context, EntityPlayer player) {
+        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
+
+        while (i.hasNext()) {
+            PlayerTracker tracker = i.next();
+
+            EntityPlayerMP playerMP = tracker.getPlayer();
+
+            if (playerMP == player) {
+                tracker.interval = this.interval > tracker.interval ? this.interval : tracker.interval;
+            }
+        }
+    }
 
 }

@@ -6,7 +6,9 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.util.EnumMap;
 
+import me.heldplayer.util.HeldCore.client.MC;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
@@ -32,6 +34,11 @@ public class PacketHandler {
     public void sendPacketToServer(HeldCorePacket packet) {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
             this.clientOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
+            EntityPlayer player = MC.getPlayer();
+            if (player != null) {
+                packet.senderName = player.getCommandSenderName();
+            }
+            packet.senderSide = Side.CLIENT;
             this.clientOutboundChannel.writeOutbound(packet);
         }
     }
@@ -40,6 +47,7 @@ public class PacketHandler {
         if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
             this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
             this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
+            packet.senderSide = Side.SERVER;
             this.serverOutboundChannel.writeOutbound(packet);
         }
     }
@@ -47,6 +55,7 @@ public class PacketHandler {
     public void sendPacketToAllPlayers(HeldCorePacket packet) {
         if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
             this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
+            packet.senderSide = Side.SERVER;
             this.serverOutboundChannel.writeOutbound(packet);
         }
     }
@@ -55,6 +64,7 @@ public class PacketHandler {
         if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
             this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
             this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(tp);
+            packet.senderSide = Side.SERVER;
             this.serverOutboundChannel.writeOutbound(packet);
         }
     }
@@ -63,6 +73,7 @@ public class PacketHandler {
         if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
             this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
             this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimension);
+            packet.senderSide = Side.SERVER;
             this.serverOutboundChannel.writeOutbound(packet);
         }
     }
@@ -77,17 +88,54 @@ public class PacketHandler {
 
         @Override
         public void encodeInto(ChannelHandlerContext context, HeldCorePacket packet, ByteBuf out) throws Exception {
+            if (packet.senderName != null) {
+                byte[] bytes = packet.senderName.getBytes();
+                out.writeInt(bytes.length);
+                out.writeBytes(bytes);
+            }
+            else {
+                out.writeInt(0);
+            }
+            if (packet.senderSide != null) {
+                out.writeInt(packet.senderSide.ordinal());
+            }
+            else {
+                Side side = packet.getSendingSide();
+                if (side != null) {
+                    out.writeInt(side.ordinal());
+                }
+                else {
+                    out.writeInt(Side.SERVER.ordinal());
+                }
+            }
             packet.write(context, out);
         }
 
         @Override
         public void decodeInto(ChannelHandlerContext context, ByteBuf in, HeldCorePacket packet) {
+            byte[] bytes = new byte[in.readInt()];
+            in.readBytes(bytes);
+            String playername = new String(bytes);
+            Side side = Side.values()[in.readInt()];
+
             try {
                 packet.read(context, in);
             }
             catch (Exception e) {
                 throw new RuntimeException("Failed reading packet", e);
             }
+
+            EntityPlayer player = null;
+            if (side.isServer()) {
+                player = MC.getPlayer();
+            }
+            else if (side.isClient()) {
+                if (playername != null) {
+                    player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playername);
+                }
+            }
+
+            packet.onData(context, player);
         }
 
     }

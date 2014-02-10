@@ -11,8 +11,13 @@ import java.io.IOException;
 import me.heldplayer.util.HeldCore.Objects;
 import me.heldplayer.util.HeldCore.packet.HeldCorePacket;
 import me.heldplayer.util.HeldCore.sync.ISyncable;
+import me.heldplayer.util.HeldCore.sync.SyncHandler;
+import net.minecraft.entity.player.EntityPlayer;
 
 import org.apache.logging.log4j.Level;
+
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteStreams;
 
 import cpw.mods.fml.relauncher.Side;
 
@@ -69,27 +74,26 @@ public class Packet3TrackingUpdate extends HeldCorePacket {
         out.writeBytes(this.data);
     }
 
-    // FIXME
-    //    @Override
-    //    public void onData(INetworkManager manager, EntityPlayer player) {
-    //        ByteArrayDataInput dat = ByteStreams.newDataInput(this.data);
-    //
-    //        try {
-    //            this.syncables = new ISyncable[dat.readInt()];
-    //            for (int i = 0; i < this.syncables.length; i++) {
-    //                int id = dat.readInt();
-    //                for (ISyncable syncable : SyncHandler.clientSyncables) {
-    //                    if (syncable.getId() == id) {
-    //                        this.syncables[i] = syncable;
-    //                        syncable.read(dat);
-    //                        syncable.getOwner().onDataChanged(syncable);
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        catch (IOException e) {
-    //            Objects.log.log(Level.WARNING, "Failed synchronizing object", e);
-    //        }
-    //    }
+    @Override
+    public void onData(ChannelHandlerContext context, EntityPlayer player) {
+        ByteArrayDataInput dat = ByteStreams.newDataInput(this.data);
+
+        try {
+            this.syncables = new ISyncable[dat.readInt()];
+            for (int i = 0; i < this.syncables.length; i++) {
+                int id = dat.readInt();
+                for (ISyncable syncable : SyncHandler.clientSyncables) {
+                    if (syncable.getId() == id) {
+                        this.syncables[i] = syncable;
+                        syncable.read(dat);
+                        syncable.getOwner().onDataChanged(syncable);
+                    }
+                }
+            }
+        }
+        catch (IOException e) {
+            Objects.log.log(Level.WARN, "Failed synchronizing object", e);
+        }
+    }
 
 }

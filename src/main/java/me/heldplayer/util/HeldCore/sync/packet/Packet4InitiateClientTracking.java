@@ -6,8 +6,13 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.io.IOException;
 
+import me.heldplayer.util.HeldCore.HeldCore;
+import me.heldplayer.util.HeldCore.event.SyncEvent;
 import me.heldplayer.util.HeldCore.packet.HeldCorePacket;
 import me.heldplayer.util.HeldCore.sync.ISyncableObjectOwner;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.relauncher.Side;
 
 public class Packet4InitiateClientTracking extends HeldCorePacket {
@@ -76,25 +81,24 @@ public class Packet4InitiateClientTracking extends HeldCorePacket {
         }
     }
 
-    // FIXME
-    //    @Override
-    //    public void onData(INetworkManager manager, EntityPlayer player) {
-    //        if (this.isWordly) {
-    //            TileEntity tile = player.worldObj.getBlockTileEntity(this.posX, this.posY, this.posZ);
-    //            if (tile != null) {
-    //                if (tile instanceof ISyncableObjectOwner) {
-    //                    manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet1TrackingStatus((ISyncableObjectOwner) tile, true)));
-    //                }
-    //            }
-    //        }
-    //        else {
-    //            SyncEvent.RequestObject event = new SyncEvent.RequestObject(this.identifier);
-    //            MinecraftForge.EVENT_BUS.post(event);
-    //
-    //            if (event.result != null) {
-    //                manager.addToSendQueue(PacketHandler.instance.createPacket(new Packet1TrackingStatus(event.result, true)));
-    //            }
-    //        }
-    //    }
+    @Override
+    public void onData(ChannelHandlerContext context, EntityPlayer player) {
+        if (this.isWordly) {
+            TileEntity tile = player.worldObj.getTileEntity(this.posX, this.posY, this.posZ);
+            if (tile != null) {
+                if (tile instanceof ISyncableObjectOwner) {
+                    HeldCore.packetHandler.sendPacketToServer(new Packet1TrackingStatus((ISyncableObjectOwner) tile, true));
+                }
+            }
+        }
+        else {
+            SyncEvent.RequestObject event = new SyncEvent.RequestObject(this.identifier);
+            MinecraftForge.EVENT_BUS.post(event);
+
+            if (event.result != null) {
+                HeldCore.packetHandler.sendPacketToServer(new Packet1TrackingStatus(event.result, true));
+            }
+        }
+    }
 
 }
