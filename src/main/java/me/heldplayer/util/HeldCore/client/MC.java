@@ -9,6 +9,7 @@ import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.settings.GameSettings;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -55,6 +56,10 @@ public final class MC {
 
     public static WorldClient getWorld() {
         return MC.getMinecraft().theWorld;
+    }
+
+    public static IResourceManager getResourceManager() {
+        return MC.getMinecraft().getResourceManager();
     }
 
 }
