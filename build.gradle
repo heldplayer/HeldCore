@@ -48,8 +48,8 @@ configFile.withReader {
 }
 
 version = config.minecraft_version + "-" + config.super_number + "." + config.major_number + "." + config.minor_number + "." + config.build_number
-group= "me.heldplayer.util" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "HeldCore"
+group= "net.specialattack.forge.core" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "SpACore"
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
@@ -85,8 +85,8 @@ processResources
 
 jar {
     manifest {
-        attributes 'FMLCorePlugin': 'me.heldplayer.util.HeldCore.asm.HeldCorePlugin'
-        attributes 'AccessTransformer': 'heldcore_at.cfg'
+        attributes 'FMLCorePlugin': 'net.specialattack.forge.core.asm.SpACorePlugin'
+        attributes 'AccessTransformer': 'spacore_at.cfg'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }

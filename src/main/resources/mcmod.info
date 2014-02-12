@@ -1,11 +1,12 @@
 [
-{
-  "modid" : "HeldCore",
-  "name" : "HeldCore",
-  "version" : "${version}",
-  "authors": [
-    "heldplayer"
-  ],
-  "url" : "http://dsiwars.specialattack.net/forums/viewtopic.php?t=3",
-}
+    {
+        "modid" : "spacore",
+        "name" : "SpACore",
+        "version" : "${version}",
+        "authors": [
+            "heldplayer",
+            "mbl111"
+        ],
+        "url" : "http://dsiwars.specialattack.net/forums/viewtopic.php?t=3",
+    }
 ]

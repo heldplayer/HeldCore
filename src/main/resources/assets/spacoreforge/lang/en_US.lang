@@ -1,0 +1,5 @@
+spacore:gui.container.fluid.empty=Empty
+spacore:gui.container.fluid.filled=%s / %s mb
+
+nei.recipe.shaped.spacore=Shaped SpACore
+nei.recipe.shapeless.spacore=Shapeless SpACore
