@@ -1,7 +1,7 @@
 
 package net.specialattack.forge.core.sync;
 
-abstract class BaseSyncable implements ISyncable {
+public abstract class BaseSyncable implements ISyncable {
 
     private ISyncableObjectOwner owner;
     protected boolean hasChanged;
