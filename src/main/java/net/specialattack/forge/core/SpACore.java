@@ -69,8 +69,6 @@ public class SpACore extends SpACoreMod {
         this.config.addConfigKey(SpACore.optOut);
         this.config.addConfigKey(SpACore.refreshRate);
         this.config.addConfigKey(SpACore.textureMapId);
-        this.config.load();
-        this.config.saveOnChange();
 
         super.preInit(event);
     }

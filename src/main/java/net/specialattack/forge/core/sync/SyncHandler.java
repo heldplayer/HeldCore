@@ -10,8 +10,8 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.world.World;
-import net.specialattack.forge.core.SpACore;
 import net.specialattack.forge.core.Objects;
+import net.specialattack.forge.core.SpACore;
 import net.specialattack.forge.core.sync.packet.Packet2TrackingBegin;
 import net.specialattack.forge.core.sync.packet.Packet3TrackingUpdate;
 import net.specialattack.forge.core.sync.packet.Packet5TrackingEnd;
@@ -29,6 +29,8 @@ public class SyncHandler {
     public static LinkedList<ISyncableObjectOwner> globalObjects = new LinkedList<ISyncableObjectOwner>();
     public static int lastSyncId = 0;
     public static LinkedList<ISyncable> clientSyncables = new LinkedList<ISyncable>();
+
+    public static boolean debug = true;
 
     public static void reset() {
         if (SyncHandler.players.isEmpty()) {
@@ -92,7 +94,8 @@ public class SyncHandler {
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
             if (tracker.getPlayer() == player) {
-                Objects.log.log(Level.TRACE, "Starting to track " + object.toString());
+                if (debug)
+                    Objects.log.log(Level.INFO, "Starting to track " + object.toString());
                 tracker.syncables.addAll(object.getSyncables());
                 tracker.syncableOwners.add(object);
                 SpACore.packetHandler.sendPacketToPlayer(new Packet2TrackingBegin(object), tracker.getPlayer());
@@ -115,7 +118,8 @@ public class SyncHandler {
                     SpACore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
 
                     if (tracker.syncables.remove(syncable)) {
-                        Objects.log.log(Level.TRACE, "Untracked " + syncable.toString() + " by request");
+                        if (debug)
+                            Objects.log.log(Level.INFO, "Untracked " + syncable.toString() + " by request");
                     }
                 }
                 tracker.syncableOwners.remove(object);
@@ -138,7 +142,8 @@ public class SyncHandler {
             }
 
             if (tracker.syncableOwners.contains(object)) {
-                Objects.log.log(Level.TRACE, "Dynamically tracking " + syncable.toString());
+                if (debug)
+                    Objects.log.log(Level.INFO, "Dynamically tracking " + syncable.toString());
                 tracker.syncables.add(syncable);
             }
         }
@@ -158,7 +163,8 @@ public class SyncHandler {
 
                 tracker.syncables.remove(syncable);
                 SpACore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
-                Objects.log.log(Level.TRACE, "Dynamically untracked " + syncable.toString());
+                if (debug)
+                    Objects.log.log(Level.INFO, "Dynamically untracked " + syncable.toString());
             }
         }
     }
@@ -172,7 +178,8 @@ public class SyncHandler {
 
         Iterator<PlayerTracker> i = SyncHandler.players.iterator();
 
-        Objects.log.log(Level.TRACE, "Starting to track " + object.toString() + " for everybody");
+        if (debug)
+            Objects.log.log(Level.INFO, "Starting to track " + object.toString() + " for everybody");
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
             tracker.syncables.addAll(object.getSyncables());
@@ -192,7 +199,8 @@ public class SyncHandler {
 
         List<ISyncable> syncables = object.getSyncables();
 
-        Objects.log.log(Level.TRACE, "Untracking " + object.toString() + " for everybody");
+        if (debug)
+            Objects.log.log(Level.INFO, "Untracking " + object.toString() + " for everybody");
 
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
@@ -260,7 +268,8 @@ public class SyncHandler {
                         if (syncable.getOwner().isNotValid()) {
                             SpACore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), player.getPlayer());
                             i2.remove();
-                            Objects.log.log(Level.TRACE, "Untracked " + syncable.toString());
+                            if (debug)
+                                Objects.log.log(Level.INFO, "Untracked " + syncable.toString());
                             continue;
                         }
 
