@@ -8,6 +8,7 @@ import java.util.EnumMap;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.client.MC;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
@@ -113,29 +114,34 @@ public class PacketHandler {
 
         @Override
         public void decodeInto(ChannelHandlerContext context, ByteBuf in, SpACorePacket packet) {
-            byte[] bytes = new byte[in.readInt()];
-            in.readBytes(bytes);
-            String playername = new String(bytes);
-            Side side = Side.values()[in.readInt()];
-
             try {
-                packet.read(context, in);
-            }
-            catch (Exception e) {
-                throw new RuntimeException("Failed reading packet", e);
-            }
+                byte[] bytes = new byte[in.readInt()];
+                in.readBytes(bytes);
+                String playername = new String(bytes);
+                Side side = Side.values()[in.readInt()];
 
-            EntityPlayer player = null;
-            if (side.isServer()) {
-                player = MC.getPlayer();
-            }
-            else if (side.isClient()) {
-                if (playername != null) {
-                    player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playername);
+                try {
+                    packet.read(context, in);
                 }
-            }
+                catch (Exception e) {
+                    throw new RuntimeException("Failed reading packet", e);
+                }
 
-            packet.onData(context, player);
+                EntityPlayer player = null;
+                if (side.isServer()) {
+                    player = MC.getPlayer();
+                }
+                else if (side.isClient()) {
+                    if (playername != null) {
+                        player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playername);
+                    }
+                }
+
+                packet.onData(context, player);
+            }
+            catch (Throwable e) {
+                Objects.log.warn("Failed reading packet", e);
+            }
         }
 
     }
