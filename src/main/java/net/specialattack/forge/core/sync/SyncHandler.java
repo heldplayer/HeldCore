@@ -10,6 +10,7 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.world.World;
+import net.minecraftforge.event.world.WorldEvent;
 import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.SpACore;
 import net.specialattack.forge.core.sync.packet.Packet2TrackingBegin;
@@ -33,6 +34,12 @@ public class SyncHandler {
     public static boolean debug = true;
 
     public static void reset() {
+        SyncHandler.globalObjects.clear();
+        SyncHandler.lastSyncId = 0;
+
+        if (debug)
+            Objects.log.log(Level.INFO, "Removed all server syncables");
+
         if (SyncHandler.players.isEmpty()) {
             return;
         }
@@ -41,6 +48,9 @@ public class SyncHandler {
 
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
+
+            if (debug)
+                Objects.log.log(Level.INFO, "Removing " + tracker.toString());
             tracker.syncables.clear();
             tracker.syncableOwners.clear();
             tracker.syncables = null;
@@ -49,9 +59,6 @@ public class SyncHandler {
         }
 
         SyncHandler.players.clear();
-        SyncHandler.globalObjects.clear();
-
-        SyncHandler.lastSyncId = 0;
     }
 
     public static void startTracking(INetHandler manager) {
@@ -215,6 +222,17 @@ public class SyncHandler {
     }
 
     public static int initializationCounter = 0;
+
+    @SubscribeEvent
+    public void onWorldUnload(WorldEvent.Unload event) {
+        if (event.world.isRemote) {
+            initializationCounter = 0;
+            clientSyncables.clear();
+
+            if (debug)
+                Objects.log.log(Level.INFO, "Removed all client syncables");
+        }
+    }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {

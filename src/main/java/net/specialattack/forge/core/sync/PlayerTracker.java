@@ -30,4 +30,10 @@ public class PlayerTracker {
         return null;
     }
 
+    @Override
+    public String toString() {
+        EntityPlayerMP player = getPlayer();
+        return "Player Tracker " + (player != null ? player.getCommandSenderName() : null);
+    }
+
 }

@@ -25,7 +25,9 @@ public class CommonProxy extends SpACoreProxy {
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
-        FMLCommonHandler.instance().bus().register(new SyncHandler());
+        SyncHandler syncHandler = new SyncHandler();
+        FMLCommonHandler.instance().bus().register(syncHandler);
+        MinecraftForge.EVENT_BUS.register(syncHandler);
     }
 
     public Side getSide() {
