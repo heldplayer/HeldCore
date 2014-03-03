@@ -93,6 +93,18 @@ public final class MathHelper {
         return origin + (target - origin) * steps / maxSteps;
     }
 
+    public static double partial(double start, double end, float partial) {
+        return end + (start - end) * (double) partial;
+    }
+
+    public static float partial(float start, float end, float partial) {
+        return end + (start - end) * partial;
+    }
+
+    public static int partial(int start, int end, float partial) {
+        return (int) ((float) end + (float) (start - end) * partial);
+    }
+
     /**
      * Gets a point on a bezier curve
      */
