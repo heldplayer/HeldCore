@@ -20,8 +20,10 @@ public class SString extends BaseSyncable {
     }
 
     public void setValue(String value) {
-        this.value = value;
-        this.hasChanged = true;
+        if (this.value != value) {
+            this.value = value;
+            this.hasChanged = true;
+        }
     }
 
     public String getValue() {

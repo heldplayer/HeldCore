@@ -20,8 +20,10 @@ public class SDouble extends BaseSyncable {
     }
 
     public void setValue(double value) {
-        this.value = value;
-        this.hasChanged = true;
+        if (this.value != value) {
+            this.value = value;
+            this.hasChanged = true;
+        }
     }
 
     public double getValue() {

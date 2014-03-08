@@ -24,8 +24,10 @@ public class SItemStack extends BaseSyncable {
     }
 
     public void setValue(ItemStack value) {
-        this.value = value;
-        this.hasChanged = true;
+        if (this.value != value && !ItemStack.areItemStacksEqual(this.value, value)) {
+            this.value = value;
+            this.hasChanged = true;
+        }
     }
 
     public ItemStack getValue() {

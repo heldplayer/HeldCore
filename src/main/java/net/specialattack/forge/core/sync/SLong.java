@@ -20,8 +20,10 @@ public class SLong extends BaseSyncable {
     }
 
     public void setValue(long value) {
-        this.value = value;
-        this.hasChanged = true;
+        if (this.value != value) {
+            this.value = value;
+            this.hasChanged = true;
+        }
     }
 
     public long getValue() {

@@ -20,8 +20,10 @@ public class SInteger extends BaseSyncable {
     }
 
     public void setValue(int value) {
-        this.value = value;
-        this.hasChanged = true;
+        if (this.value != value) {
+            this.value = value;
+            this.hasChanged = true;
+        }
     }
 
     public int getValue() {

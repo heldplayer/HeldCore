@@ -20,8 +20,10 @@ public class SFloat extends BaseSyncable {
     }
 
     public void setValue(float value) {
-        this.value = value;
-        this.hasChanged = true;
+        if (this.value != value) {
+            this.value = value;
+            this.hasChanged = true;
+        }
     }
 
     public float getValue() {

@@ -20,8 +20,10 @@ public class SBoolean extends BaseSyncable {
     }
 
     public void setValue(boolean value) {
-        this.value = value;
-        this.hasChanged = true;
+        if (this.value != value) {
+            this.value = value;
+            this.hasChanged = true;
+        }
     }
 
     public boolean getValue() {

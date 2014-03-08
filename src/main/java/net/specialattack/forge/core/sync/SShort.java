@@ -20,8 +20,10 @@ public class SShort extends BaseSyncable {
     }
 
     public void setValue(short value) {
-        this.value = value;
-        this.hasChanged = true;
+        if (this.value != value) {
+            this.value = value;
+            this.hasChanged = true;
+        }
     }
 
     public short getValue() {
