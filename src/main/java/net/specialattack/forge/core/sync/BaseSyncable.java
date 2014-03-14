@@ -1,6 +1,8 @@
 
 package net.specialattack.forge.core.sync;
 
+import net.specialattack.forge.core.Objects;
+
 public abstract class BaseSyncable implements ISyncable {
 
     private ISyncableObjectOwner owner;
@@ -36,6 +38,7 @@ public abstract class BaseSyncable implements ISyncable {
     public int getId() {
         if (this.id == -1) {
             this.id = SyncHandler.lastSyncId++;
+            Objects.log.info("Getting next ID (" + this.id + ") for " + this.toString()); // FIXME: debug code
         }
         return this.id;
     }
