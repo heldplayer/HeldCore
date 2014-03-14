@@ -94,15 +94,15 @@ public final class MathHelper {
     }
 
     public static double partial(double start, double end, float partial) {
-        return end + (start - end) * (double) partial;
+        return start + (end - start) * (double) partial;
     }
 
     public static float partial(float start, float end, float partial) {
-        return end + (start - end) * partial;
+        return start + (end - start) * partial;
     }
 
     public static int partial(int start, int end, float partial) {
-        return (int) ((float) end + (float) (start - end) * partial);
+        return (int) ((float) start + (float) (end - start) * partial);
     }
 
     /**
