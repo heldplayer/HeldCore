@@ -94,7 +94,7 @@ public final class MathHelper {
     }
 
     public static double partial(double start, double end, float partial) {
-        return start + (end - start) * (double) partial;
+        return start + (end - start) * partial;
     }
 
     public static float partial(float start, float end, float partial) {
@@ -102,7 +102,7 @@ public final class MathHelper {
     }
 
     public static int partial(int start, int end, float partial) {
-        return (int) ((float) start + (float) (end - start) * partial);
+        return (int) (start + (end - start) * partial);
     }
 
     /**

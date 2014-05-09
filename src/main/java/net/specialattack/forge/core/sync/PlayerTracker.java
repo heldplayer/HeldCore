@@ -32,7 +32,7 @@ public class PlayerTracker {
 
     @Override
     public String toString() {
-        EntityPlayerMP player = getPlayer();
+        EntityPlayerMP player = this.getPlayer();
         return "Player Tracker " + (player != null ? player.getCommandSenderName() : null);
     }
 

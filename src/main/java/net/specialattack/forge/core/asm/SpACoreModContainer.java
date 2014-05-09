@@ -5,7 +5,6 @@ import java.util.Arrays;
 
 import net.specialattack.forge.core.Objects;
 
-
 import com.google.common.eventbus.EventBus;
 
 import cpw.mods.fml.common.DummyModContainer;

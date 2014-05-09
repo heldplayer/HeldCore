@@ -37,8 +37,9 @@ public class SyncHandler {
         SyncHandler.globalObjects.clear();
         SyncHandler.lastSyncId = 0;
 
-        if (debug)
+        if (SyncHandler.debug) {
             Objects.log.log(Level.INFO, "Removed all server syncables");
+        }
 
         if (SyncHandler.players.isEmpty()) {
             return;
@@ -49,8 +50,9 @@ public class SyncHandler {
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
 
-            if (debug)
+            if (SyncHandler.debug) {
                 Objects.log.log(Level.INFO, "Removing " + tracker.toString());
+            }
             tracker.syncables.clear();
             tracker.syncableOwners.clear();
             tracker.syncables = null;
@@ -101,8 +103,9 @@ public class SyncHandler {
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
             if (tracker.getPlayer() == player) {
-                if (debug)
+                if (SyncHandler.debug) {
                     Objects.log.log(Level.INFO, "Starting to track " + object.toString());
+                }
                 tracker.syncables.addAll(object.getSyncables());
                 tracker.syncableOwners.add(object);
                 SpACore.packetHandler.sendPacketToPlayer(new Packet2TrackingBegin(object), tracker.getPlayer());
@@ -125,8 +128,9 @@ public class SyncHandler {
                     SpACore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
 
                     if (tracker.syncables.remove(syncable)) {
-                        if (debug)
+                        if (SyncHandler.debug) {
                             Objects.log.log(Level.INFO, "Untracked " + syncable.toString() + " by request");
+                        }
                     }
                 }
                 tracker.syncableOwners.remove(object);
@@ -149,8 +153,9 @@ public class SyncHandler {
             }
 
             if (tracker.syncableOwners.contains(object)) {
-                if (debug)
+                if (SyncHandler.debug) {
                     Objects.log.log(Level.INFO, "Dynamically tracking " + syncable.toString());
+                }
                 tracker.syncables.add(syncable);
             }
         }
@@ -170,8 +175,9 @@ public class SyncHandler {
 
                 tracker.syncables.remove(syncable);
                 SpACore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
-                if (debug)
+                if (SyncHandler.debug) {
                     Objects.log.log(Level.INFO, "Dynamically untracked " + syncable.toString());
+                }
             }
         }
     }
@@ -185,8 +191,9 @@ public class SyncHandler {
 
         Iterator<PlayerTracker> i = SyncHandler.players.iterator();
 
-        if (debug)
+        if (SyncHandler.debug) {
             Objects.log.log(Level.INFO, "Starting to track " + object.toString() + " for everybody");
+        }
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
             tracker.syncables.addAll(object.getSyncables());
@@ -206,8 +213,9 @@ public class SyncHandler {
 
         List<ISyncable> syncables = object.getSyncables();
 
-        if (debug)
+        if (SyncHandler.debug) {
             Objects.log.log(Level.INFO, "Untracking " + object.toString() + " for everybody");
+        }
 
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
@@ -226,20 +234,21 @@ public class SyncHandler {
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
         if (event.world.isRemote) {
-            initializationCounter = 0;
-            clientSyncables.clear();
+            SyncHandler.initializationCounter = 0;
+            SyncHandler.clientSyncables.clear();
 
-            if (debug)
+            if (SyncHandler.debug) {
                 Objects.log.log(Level.INFO, "Removed all client syncables");
+            }
         }
     }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (initializationCounter > 0) {
-            initializationCounter--;
+        if (SyncHandler.initializationCounter > 0) {
+            SyncHandler.initializationCounter--;
 
-            if (initializationCounter == 0) {
+            if (SyncHandler.initializationCounter == 0) {
                 SpACore.packetHandler.sendPacketToServer(new Packet6SetInterval(Integer.valueOf(SpACore.refreshRate.getValue())));
             }
         }
@@ -286,8 +295,9 @@ public class SyncHandler {
                         if (syncable.getOwner().isNotValid()) {
                             SpACore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), player.getPlayer());
                             i2.remove();
-                            if (debug)
+                            if (SyncHandler.debug) {
                                 Objects.log.log(Level.INFO, "Untracked " + syncable.toString());
+                            }
                             continue;
                         }
 
