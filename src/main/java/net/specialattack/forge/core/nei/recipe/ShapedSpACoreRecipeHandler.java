@@ -1,8 +1,30 @@
 
 package net.specialattack.forge.core.nei.recipe;
 
-// @formatter:off
-/* FIXME
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiCrafting;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
+import net.specialattack.forge.core.crafting.ShapedSpACoreRecipe;
+import codechicken.core.gui.GuiDraw;
+import codechicken.nei.NEIClientUtils;
+import codechicken.nei.NEIServerUtils;
+import codechicken.nei.PositionedStack;
+import codechicken.nei.api.DefaultOverlayRenderer;
+import codechicken.nei.api.IOverlayHandler;
+import codechicken.nei.api.IRecipeOverlayRenderer;
+import codechicken.nei.api.IStackPositioner;
+import codechicken.nei.recipe.GuiRecipe;
+import codechicken.nei.recipe.RecipeInfo;
+import codechicken.nei.recipe.TemplateRecipeHandler;
 
 @SuppressWarnings("unchecked")
 public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
@@ -161,7 +183,7 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
             if (irecipe instanceof ShapedSpACoreRecipe) {
                 recipe = new CachedShapedRecipe((ShapedSpACoreRecipe) irecipe);
             }
-            if (recipe == null || !recipe.contains(recipe.ingredients, ingredient.itemID)) {
+            if (recipe == null || !recipe.contains(recipe.ingredients, ingredient)) {
                 continue;
             }
             recipe.computeVisuals();
@@ -269,5 +291,3 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
     }
 
 }
-*/
-// @formatter:on

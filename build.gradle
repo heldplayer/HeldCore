@@ -13,7 +13,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
 
@@ -60,9 +60,10 @@ minecraft {
 }
 
 dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
     //compile name: 'CodeChickenLib', version: "${config.minecraft_version}-${config.CCLIB_version}", ext: 'jar'
-    //compile name: 'CodeChickenCore', version: "${config.CCC_version}", ext: 'jar'
-    //compile name: 'NotEnoughItems', version: "${config.NEI_version}", ext: 'jar'
+    //compile name: 'CodeChickenCore', version: "${config.minecraft_version}-${config.CCC_version}", ext: 'jar'
+    //compile name: 'NotEnoughItems', version: "${config.minecraft_version}-${config.NEI_version}", ext: 'jar'
 }
 
 processResources

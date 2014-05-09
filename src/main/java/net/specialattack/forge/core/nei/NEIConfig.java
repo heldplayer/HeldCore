@@ -1,8 +1,12 @@
 
 package net.specialattack.forge.core.nei;
 
-// @formatter:off
-/* FIXME
+import net.specialattack.forge.core.Objects;
+import net.specialattack.forge.core.nei.recipe.ShapedSpACoreRecipeHandler;
+import net.specialattack.forge.core.nei.recipe.ShapelessSpACoreRecipeHandler;
+import codechicken.nei.api.API;
+import codechicken.nei.api.IConfigureNEI;
+
 public class NEIConfig implements IConfigureNEI {
 
     public static ShapedSpACoreRecipeHandler shapedSpACore;
@@ -30,5 +34,3 @@ public class NEIConfig implements IConfigureNEI {
     }
 
 }
-*/
-// @formatter:on

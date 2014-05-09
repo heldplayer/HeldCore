@@ -1,8 +1,22 @@
 
 package net.specialattack.forge.core.nei.recipe;
 
-// @formatter:off
-/* FIXME
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
+import net.specialattack.forge.core.crafting.ShapelessSpACoreRecipe;
+import codechicken.core.gui.GuiDraw;
+import codechicken.nei.NEIClientUtils;
+import codechicken.nei.NEIServerUtils;
+import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.GuiRecipe;
+import codechicken.nei.recipe.ShapedRecipeHandler;
 
 @SuppressWarnings("unchecked")
 public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
@@ -208,5 +222,3 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
     }
 
 }
-*/
-// @formatter:on
