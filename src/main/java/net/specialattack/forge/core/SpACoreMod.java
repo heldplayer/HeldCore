@@ -22,6 +22,9 @@ public abstract class SpACoreMod {
         this.config.load();
         this.config.saveOnChange();
 
+        ModInfo info = this.getModInfo();
+        event.getModMetadata().version = info.modVersion;
+
         this.getProxy().preInit(event);
     }
 

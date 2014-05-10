@@ -25,12 +25,12 @@ public class NEIConfig implements IConfigureNEI {
 
     @Override
     public String getName() {
-        return "SpaCore";
+        return Objects.MOD_NAME;
     }
 
     @Override
     public String getVersion() {
-        return Objects.MOD_VERSION;
+        return Objects.MOD_INFO.modVersion;
     }
 
 }

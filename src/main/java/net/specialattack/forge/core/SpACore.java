@@ -49,7 +49,6 @@ public class SpACore extends SpACoreMod {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         Objects.log = event.getModLog();
-        event.getModMetadata().version = Objects.MOD_VERSION;
 
         SpACore.packetHandler = new PacketHandler("SpACore", Packet1TrackingStatus.class, Packet2TrackingBegin.class, Packet3TrackingUpdate.class, Packet4InitiateClientTracking.class, Packet5TrackingEnd.class, Packet6SetInterval.class);
 

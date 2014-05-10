@@ -18,7 +18,7 @@ public class SpACoreModContainer extends DummyModContainer {
         ModMetadata meta = this.getMetadata();
         meta.modId = "spacoreforge";
         meta.name = "SpACoreForge";
-        meta.version = Objects.MOD_VERSION;
+        meta.version = Objects.MOD_INFO.modVersion;
         meta.authorList = Arrays.asList("heldplayer", "mbl111");
         meta.description = "Coremod for SpACore";
     }
