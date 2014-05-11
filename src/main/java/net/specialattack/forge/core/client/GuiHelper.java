@@ -12,6 +12,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import net.specialattack.forge.core.Assets;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -184,11 +185,11 @@ public final class GuiHelper {
 
         if (stack != null && stack.amount > 0) {
             GuiHelper.reusableArrayList.add(stack.getFluid().getLocalizedName());
-            GuiHelper.reusableArrayList.add(StatCollector.translateToLocalFormatted("gui.container.fluid.filled", stack.amount, tank.getCapacity()).trim());
+            GuiHelper.reusableArrayList.add(StatCollector.translateToLocalFormatted(Assets.DOMAIN + "gui.container.fluid.filled", stack.amount, tank.getCapacity()).trim());
         }
         else {
-            GuiHelper.reusableArrayList.add("Empty");
-            GuiHelper.reusableArrayList.add(StatCollector.translateToLocalFormatted("gui.container.fluid.filled", 0, tank.getCapacity()).trim());
+            GuiHelper.reusableArrayList.add(StatCollector.translateToLocal(Assets.DOMAIN + "gui.container.fluid.empty"));
+            GuiHelper.reusableArrayList.add(StatCollector.translateToLocalFormatted(Assets.DOMAIN + "gui.container.fluid.filled", 0, tank.getCapacity()).trim());
         }
 
         return GuiHelper.reusableArrayList;
