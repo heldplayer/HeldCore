@@ -27,7 +27,7 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent event) {
         super.init(event);
 
-        MC.getRenderEngine().loadTextureMap(Assets.TEXTURE_MAP, new TextureMap(SpACore.textureMapId.getValue(), "textures/spacore/"));
+        MC.getRenderEngine().loadTextureMap(Assets.TEXTURE_MAP, new TextureMap(SpACore.textureMapId.getValue(), "textures/spacore"));
     }
 
     @SubscribeEvent
