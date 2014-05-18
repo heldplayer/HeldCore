@@ -38,7 +38,7 @@ public class SyncHandler {
         SyncHandler.lastSyncId = 0;
 
         if (SyncHandler.debug) {
-            Objects.log.log(Level.INFO, "Removed all server syncables");
+            Objects.log.log(Level.DEBUG, "Removed all server syncables");
         }
 
         if (SyncHandler.players.isEmpty()) {
@@ -51,7 +51,7 @@ public class SyncHandler {
             PlayerTracker tracker = i.next();
 
             if (SyncHandler.debug) {
-                Objects.log.log(Level.INFO, "Removing " + tracker.toString());
+                Objects.log.log(Level.DEBUG, "Removing " + tracker.toString());
             }
             tracker.syncables.clear();
             tracker.syncableOwners.clear();
@@ -104,7 +104,7 @@ public class SyncHandler {
             PlayerTracker tracker = i.next();
             if (tracker.getPlayer() == player) {
                 if (SyncHandler.debug) {
-                    Objects.log.log(Level.INFO, "Starting to track " + object.toString());
+                    Objects.log.log(Level.DEBUG, "Starting to track " + object.toString());
                 }
                 tracker.syncables.addAll(object.getSyncables());
                 tracker.syncableOwners.add(object);
@@ -129,7 +129,7 @@ public class SyncHandler {
 
                     if (tracker.syncables.remove(syncable)) {
                         if (SyncHandler.debug) {
-                            Objects.log.log(Level.INFO, "Untracked " + syncable.toString() + " by request");
+                            Objects.log.log(Level.DEBUG, "Untracked " + syncable.toString() + " by request");
                         }
                     }
                 }
@@ -154,7 +154,7 @@ public class SyncHandler {
 
             if (tracker.syncableOwners.contains(object)) {
                 if (SyncHandler.debug) {
-                    Objects.log.log(Level.INFO, "Dynamically tracking " + syncable.toString());
+                    Objects.log.log(Level.DEBUG, "Dynamically tracking " + syncable.toString());
                 }
                 tracker.syncables.add(syncable);
             }
@@ -176,7 +176,7 @@ public class SyncHandler {
                 tracker.syncables.remove(syncable);
                 SpACore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
                 if (SyncHandler.debug) {
-                    Objects.log.log(Level.INFO, "Dynamically untracked " + syncable.toString());
+                    Objects.log.log(Level.DEBUG, "Dynamically untracked " + syncable.toString());
                 }
             }
         }
@@ -192,7 +192,7 @@ public class SyncHandler {
         Iterator<PlayerTracker> i = SyncHandler.players.iterator();
 
         if (SyncHandler.debug) {
-            Objects.log.log(Level.INFO, "Starting to track " + object.toString() + " for everybody");
+            Objects.log.log(Level.DEBUG, "Starting to track " + object.toString() + " for everybody");
         }
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
@@ -214,7 +214,7 @@ public class SyncHandler {
         List<ISyncable> syncables = object.getSyncables();
 
         if (SyncHandler.debug) {
-            Objects.log.log(Level.INFO, "Untracking " + object.toString() + " for everybody");
+            Objects.log.log(Level.DEBUG, "Untracking " + object.toString() + " for everybody");
         }
 
         while (i.hasNext()) {
@@ -238,7 +238,7 @@ public class SyncHandler {
             SyncHandler.clientSyncables.clear();
 
             if (SyncHandler.debug) {
-                Objects.log.log(Level.INFO, "Removed all client syncables");
+                Objects.log.log(Level.DEBUG, "Removed all client syncables");
             }
         }
     }
@@ -296,7 +296,7 @@ public class SyncHandler {
                             SpACore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), player.getPlayer());
                             i2.remove();
                             if (SyncHandler.debug) {
-                                Objects.log.log(Level.INFO, "Untracked " + syncable.toString());
+                                Objects.log.log(Level.DEBUG, "Untracked " + syncable.toString());
                             }
                             continue;
                         }
