@@ -256,7 +256,7 @@ public class SyncHandler {
 
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent event) {
-        if (event.phase == Phase.START) {
+        if (event.phase == Phase.END) {
             if (event.side.isServer()) {
                 World world = event.world;
 
