@@ -10,9 +10,11 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.SpACore;
+import net.specialattack.forge.core.event.SyncEvent;
 import net.specialattack.forge.core.sync.packet.Packet2TrackingBegin;
 import net.specialattack.forge.core.sync.packet.Packet3TrackingUpdate;
 import net.specialattack.forge.core.sync.packet.Packet5TrackingEnd;
@@ -65,6 +67,10 @@ public class SyncHandler {
 
     public static void startTracking(INetHandler manager) {
         PlayerTracker tracker = new PlayerTracker(manager, SpACore.refreshRate.getValue());
+
+        SyncEvent.StartTracking event = new SyncEvent.StartTracking(tracker);
+        MinecraftForge.EVENT_BUS.post(event);
+
         SyncHandler.players.add(tracker);
         tracker.syncableOwners.addAll(SyncHandler.globalObjects);
         for (ISyncableObjectOwner object : SyncHandler.globalObjects) {
@@ -83,6 +89,9 @@ public class SyncHandler {
         while (i.hasNext()) {
             PlayerTracker tracker = i.next();
             if (tracker.handler == manager) {
+                SyncEvent.StopTracking event = new SyncEvent.StopTracking(tracker);
+                MinecraftForge.EVENT_BUS.post(event);
+
                 tracker.syncables.clear();
                 tracker.syncableOwners.clear();
                 tracker.syncables = null;
@@ -249,6 +258,9 @@ public class SyncHandler {
             SyncHandler.initializationCounter--;
 
             if (SyncHandler.initializationCounter == 0) {
+                SyncEvent.ClientStartSyncing clientEvent = new SyncEvent.ClientStartSyncing();
+                MinecraftForge.EVENT_BUS.post(clientEvent);
+
                 SpACore.packetHandler.sendPacketToServer(new Packet6SetInterval(Integer.valueOf(SpACore.refreshRate.getValue())));
             }
         }
