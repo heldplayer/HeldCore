@@ -41,6 +41,7 @@ public class SpACore extends SpACoreMod {
     public static ConfigValue<Boolean> optOut;
     public static ConfigValue<Integer> refreshRate;
     public static ConfigValue<Integer> textureMapId;
+    public static ConfigValue<Boolean> showReportBugs;
 
     public static PacketHandler packetHandler;
 
@@ -63,11 +64,13 @@ public class SpACore extends SpACoreMod {
         SpACore.optOut = new ConfigValue<Boolean>("optOut", Configuration.CATEGORY_GENERAL, null, Boolean.FALSE, "Set this to true to opt-out from statistics gathering. If you are configuring this mod for a modpack, please leave it set to false");
         SpACore.refreshRate = new ConfigValue<Integer>("refreshRate", Configuration.CATEGORY_GENERAL, null, 5, "The refresh-rate used for syncing objects between server and client. A higher refresh-rate will decrease bandwidth and CPU usage, but will also cause objects to appear to lag");
         SpACore.textureMapId = new ConfigValue<Integer>("textureMapId", Configuration.CATEGORY_GENERAL, Side.CLIENT, 10, "The ID of the texture map that SpACore assigns");
+        SpACore.showReportBugs = new ConfigValue<Boolean>("showReportBugs", Configuration.CATEGORY_GENERAL, Side.CLIENT, true, "Should the mod add a 'Report a bug' button to the menu?");
         this.config = new Config(event.getSuggestedConfigurationFile());
         this.config.addConfigKey(SpACore.modPack);
         this.config.addConfigKey(SpACore.optOut);
         this.config.addConfigKey(SpACore.refreshRate);
         this.config.addConfigKey(SpACore.textureMapId);
+        this.config.addConfigKey(SpACore.showReportBugs);
 
         super.preInit(event);
     }

@@ -1,0 +1,69 @@
+
+package net.specialattack.forge.core.client.gui;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
+import net.specialattack.forge.core.client.RenderHelper;
+
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+@SideOnly(Side.CLIENT)
+public class GuiButtonIcon extends GuiButton {
+
+    private IIcon icon;
+    private ResourceLocation iconMap;
+
+    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, IIcon icon, ResourceLocation iconMap) {
+        super(id, posX, posY, width, height, text);
+        this.icon = icon;
+        this.iconMap = iconMap;
+    }
+
+    @Override
+    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+        if (this.visible) {
+            FontRenderer font = mc.fontRenderer;
+            mc.getTextureManager().bindTexture(GuiButton.buttonTextures);
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+            int offsetV = this.getHoverState(this.field_146123_n);
+            GL11.glEnable(GL11.GL_BLEND);
+            OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + offsetV * 20, this.width / 2, this.height);
+            this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + offsetV * 20, this.width / 2, this.height);
+            this.mouseDragged(mc, mouseX, mouseY);
+            int textColor = 0xE0E0E0;
+
+            if (this.packedFGColour != 0) {
+                textColor = this.packedFGColour;
+            }
+            else if (!this.enabled) {
+                textColor = 0xA0A0A0;
+            }
+            else if (this.field_146123_n) {
+                textColor = 0xFFFFA0;
+            }
+
+            int iconX = this.width / 2 - 8;
+            int iconY = this.height / 2 - 8;
+
+            if (this.displayString != null && !this.displayString.isEmpty()) {
+                this.drawCenteredString(font, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, textColor);
+                iconX -= font.getStringWidth(this.displayString) / 2;
+            }
+
+            if (this.icon != null && this.iconMap != null) {
+                RenderHelper.bindTexture(this.iconMap);
+                this.drawTexturedModelRectFromIcon(iconX + this.xPosition, iconY + this.yPosition, this.icon, 16, 16);
+            }
+        }
+    }
+}

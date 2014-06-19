@@ -76,35 +76,46 @@ public class ClientProxy extends CommonProxy {
         TextureMap map = event.map;
 
         if (map.getTextureType() == SpACore.textureMapId.getValue()) {
-            iconReportBug = map.registerIcon("spacore:report-bug");
+            ClientProxy.iconReportBug = map.registerIcon("spacore:report-bug");
         }
     }
 
     @SubscribeEvent
     public void onInitGuiPost(InitGuiEvent.Post event) {
-        if (event.gui != null && event.gui instanceof GuiMainMenu) {
-            GuiButton button = new GuiButtonIcon(-123, 0, 0, 20, 20, "", iconReportBug, Assets.TEXTURE_MAP);
-            if (addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 - 124, event.gui.height / 4 + 96, 20, 20), button))
-                return;
-            if (addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 + 104, event.gui.height / 4 + 96, 20, 20), button))
-                return;
-            if (addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 + 104, event.gui.height / 4 + 132, 20, 20), button))
-                return;
-            if (addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 - 124, event.gui.height / 4 + 72, 20, 20), button))
-                return;
-            if (addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 + 104, event.gui.height / 4 + 72, 20, 20), button))
-                return;
-            if (addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 - 124, event.gui.height / 4 + 48, 20, 20), button))
-                return;
-            if (addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 + 104, event.gui.height / 4 + 48, 20, 20), button))
-                return;
+        if (SpACore.showReportBugs.getValue()) {
+            if (event.gui != null && event.gui instanceof GuiMainMenu) {
+                GuiButton button = new GuiButtonIcon(-123, 0, 0, 20, 20, "", ClientProxy.iconReportBug, Assets.TEXTURE_MAP);
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 - 124, event.gui.height / 4 + 96, 20, 20), button)) {
+                    return;
+                }
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 + 104, event.gui.height / 4 + 96, 20, 20), button)) {
+                    return;
+                }
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 + 104, event.gui.height / 4 + 132, 20, 20), button)) {
+                    return;
+                }
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 - 124, event.gui.height / 4 + 72, 20, 20), button)) {
+                    return;
+                }
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 + 104, event.gui.height / 4 + 72, 20, 20), button)) {
+                    return;
+                }
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 - 124, event.gui.height / 4 + 48, 20, 20), button)) {
+                    return;
+                }
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 + 104, event.gui.height / 4 + 48, 20, 20), button)) {
+                    return;
+                }
+            }
         }
     }
 
     @SubscribeEvent
     public void onActionPerformedPost(ActionPerformedEvent.Post event) {
-        if (event.button != null && event.button.id == -123 && event.gui != null && event.gui instanceof GuiMainMenu) {
-            MC.getMinecraft().displayGuiScreen(new GuiScreenReportBug());
+        if (SpACore.showReportBugs.getValue()) {
+            if (event.button != null && event.button.id == -123 && event.gui != null && event.gui instanceof GuiMainMenu) {
+                MC.getMinecraft().displayGuiScreen(new GuiScreenReportBug());
+            }
         }
     }
 
