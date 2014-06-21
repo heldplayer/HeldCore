@@ -348,6 +348,96 @@ public class GuiTextBox extends Gui {
         return currPos;
     }
 
+    public void moveCursorLine(boolean up, boolean shift) {
+        String prevLine = "";
+        int prevLineChar = 0;
+        int remainingChars = this.cursorPosition;
+        int prevX = 0;
+
+        // XXX
+        label:
+        for (int i = 0; i < this.chatLines.size(); i++) {
+            IChatComponent current = this.chatLines.get(i);
+            String text = current.getUnformattedText();
+            @SuppressWarnings("unchecked")
+            List<String> lines = this.font.listFormattedStringToWidth(text, this.getWidth());
+
+            int off = 0;
+            boolean firstLine = true;
+
+            for (String line : lines) {
+                if (remainingChars == Integer.MIN_VALUE) {
+                    String temp = font.trimStringToWidth(line, prevX);
+
+                    if (firstLine) {
+                        this.setCursorPosition(this.cursorPositionComponent + 1, temp.length());
+                    }
+                    else {
+                        this.setCursorPosition(this.cursorPositionComponent, off + temp.length());
+                    }
+
+                    return;
+                }
+                if (i == this.cursorPositionComponent && remainingChars >= 0) {
+                    if (remainingChars <= line.length()) {
+                        String sub = line.substring(0, remainingChars);
+                        if (up) {
+                            String temp = font.trimStringToWidth(prevLine, font.getStringWidth(sub));
+
+                            if (firstLine) {
+                                this.setCursorPosition(this.cursorPositionComponent - 1, prevLineChar + temp.length() - prevLine.length());
+                            }
+                            else {
+                                this.setCursorPosition(this.cursorPositionComponent, prevLineChar + temp.length() - prevLine.length());
+                            }
+                            break label;
+                        }
+                        else {
+                            remainingChars = Integer.MIN_VALUE;
+
+                            prevX = this.font.getStringWidth(sub);
+
+                            off += line.length();
+                            if (off < text.length() && text.charAt(off) == ' ') {
+                                off++;
+                                line += " ";
+                            }
+
+                            prevLineChar = off;
+                            prevLine = sub;
+                            firstLine = false;
+
+                            continue;
+                        }
+
+                        //cursorX += this.font.getStringWidth(sub);
+                        //break label;
+                    }
+
+                    if (remainingChars == 0) {
+                        //break label;
+                    }
+
+                    remainingChars -= line.length();
+                }
+                prevX = this.font.getStringWidth(line);
+
+                off += line.length();
+                if (off < text.length() && text.charAt(off) == ' ') {
+                    off++;
+                    line += " ";
+                    if (i == this.cursorPositionComponent) {
+                        remainingChars--;
+                    }
+                }
+
+                prevLineChar = off;
+                prevLine = line;
+                firstLine = false;
+            }
+        }
+    }
+
     public void moveCursorBy(int count) {
         if (count == 0) {
             return;
@@ -507,6 +597,7 @@ public class GuiTextBox extends Gui {
 
                         return true;
                     case 200: // Up arrow
+                        this.moveCursorLine(true, GuiScreen.isCtrlKeyDown());
                         return true;
                     case 203: // Left arrow
                         if (GuiScreen.isShiftKeyDown()) {
@@ -527,6 +618,7 @@ public class GuiTextBox extends Gui {
 
                         return true;
                     case 208: // Down arrow
+                        this.moveCursorLine(false, GuiScreen.isCtrlKeyDown());
                         return true;
                     case 205: // Right arrow
                         if (GuiScreen.isShiftKeyDown()) {
@@ -613,6 +705,7 @@ public class GuiTextBox extends Gui {
             int lineY = cursorPosY / this.font.FONT_HEIGHT;
             int remainingLines = -this.lineScrollOffset;
 
+            // XXX
             label:
             {
                 for (int i = 0; i < this.chatLines.size(); i++) {
@@ -670,6 +763,7 @@ public class GuiTextBox extends Gui {
 
                 int height = this.getHeight() / this.font.FONT_HEIGHT;
 
+                // XXX
                 //label:
                 for (int i = 0; i < this.chatLines.size(); i++) {
                     IChatComponent current = this.chatLines.get(i);
@@ -689,10 +783,10 @@ public class GuiTextBox extends Gui {
                             //break label;
                         }
                         else if (remainingLines >= 0) {
-                            if (i <= this.cursorPositionComponent) {
+                            if (i <= this.cursorPositionComponent && remainingChars >= 0) {
                                 cursorY += this.font.FONT_HEIGHT;
                             }
-                            if (i <= this.selectionEndComponent) {
+                            if (i <= this.selectionEndComponent && remainingCharsSel >= 0) {
                                 selectionEndY += this.font.FONT_HEIGHT;
                             }
                         }
@@ -730,6 +824,7 @@ public class GuiTextBox extends Gui {
                 int offsetY = 0;
                 remainingLines = -this.lineScrollOffset;
 
+                // XXX
                 label:
                 for (int i = 0; i < this.chatLines.size(); i++) {
                     IChatComponent current = this.chatLines.get(i);
@@ -949,6 +1044,7 @@ public class GuiTextBox extends Gui {
 
             int remainingChars = this.cursorPosition;
 
+            // XXX
             for (int i = 0; i < this.chatLines.size(); i++) {
                 IChatComponent current = this.chatLines.get(i);
                 String text = current.getUnformattedText();
