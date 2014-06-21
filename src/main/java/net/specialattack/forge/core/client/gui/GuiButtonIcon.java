@@ -17,12 +17,32 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiButtonIcon extends GuiButton {
 
-    private IIcon icon;
+    private IIcon normalIcon;
+    private IIcon hoverIcon;
+    private IIcon disabledIcon;
     private ResourceLocation iconMap;
 
-    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, IIcon icon, ResourceLocation iconMap) {
+    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, IIcon normalIcon, ResourceLocation iconMap) {
         super(id, posX, posY, width, height, text);
-        this.icon = icon;
+        this.normalIcon = normalIcon;
+        this.hoverIcon = normalIcon;
+        this.disabledIcon = normalIcon;
+        this.iconMap = iconMap;
+    }
+
+    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, IIcon normalIcon, IIcon hoverIcon, ResourceLocation iconMap) {
+        super(id, posX, posY, width, height, text);
+        this.normalIcon = normalIcon;
+        this.hoverIcon = hoverIcon;
+        this.disabledIcon = normalIcon;
+        this.iconMap = iconMap;
+    }
+
+    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, IIcon normalIcon, IIcon hoverIcon, IIcon disabledIcon, ResourceLocation iconMap) {
+        super(id, posX, posY, width, height, text);
+        this.normalIcon = normalIcon;
+        this.hoverIcon = hoverIcon;
+        this.disabledIcon = disabledIcon;
         this.iconMap = iconMap;
     }
 
@@ -42,14 +62,18 @@ public class GuiButtonIcon extends GuiButton {
             this.mouseDragged(mc, mouseX, mouseY);
             int textColor = 0xE0E0E0;
 
+            IIcon icon = this.normalIcon;
+
             if (this.packedFGColour != 0) {
                 textColor = this.packedFGColour;
             }
             else if (!this.enabled) {
                 textColor = 0xA0A0A0;
+                icon = this.disabledIcon;
             }
             else if (this.field_146123_n) {
                 textColor = 0xFFFFA0;
+                icon = this.hoverIcon;
             }
 
             int iconX = this.width / 2 - 8;
@@ -60,9 +84,9 @@ public class GuiButtonIcon extends GuiButton {
                 iconX -= font.getStringWidth(this.displayString) / 2;
             }
 
-            if (this.icon != null && this.iconMap != null) {
+            if (icon != null && this.iconMap != null) {
                 RenderHelper.bindTexture(this.iconMap);
-                this.drawTexturedModelRectFromIcon(iconX + this.xPosition, iconY + this.yPosition, this.icon, 16, 16);
+                this.drawTexturedModelRectFromIcon(iconX + this.xPosition, iconY + this.yPosition, icon, 16, 16);
             }
         }
     }
