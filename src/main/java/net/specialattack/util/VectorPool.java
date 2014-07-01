@@ -1,5 +1,5 @@
 
-package net.specialattack.forge.core;
+package net.specialattack.util;
 
 import java.util.LinkedList;
 

@@ -1,5 +1,6 @@
 
-package net.specialattack.forge.core;
+package net.specialattack.util;
+
 
 public final class MathHelper {
 
