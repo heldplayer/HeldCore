@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 
 import net.minecraftforge.common.config.Configuration;
+import net.specialattack.forge.core.client.MC;
 import net.specialattack.forge.core.config.Config;
 import net.specialattack.forge.core.config.ConfigValue;
 import net.specialattack.forge.core.packet.PacketHandler;
@@ -93,24 +94,23 @@ public class SpACore extends SpACoreMod {
     }
 
     public static void initializeReporter(String modId, String modVersion) {
-        if (SpACore.optOut.getValue()) {
-            return;
-        }
-        try {
-            File file = new File(SpACore.configFolder, modId + ".version");
+        if (SpACore.allowSnooping()) {
+            try {
+                File file = new File(SpACore.configFolder, modId + ".version");
 
-            if (!file.exists()) {
-                file.createNewFile();
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+
+                UsageReporter reporter = new UsageReporter(modId, modVersion, SpACore.modPack.getValue(), FMLCommonHandler.instance().getSide(), SpACore.configFolder);
+
+                Thread thread = new Thread(reporter, "Mod usage reporter for " + modId);
+                thread.setDaemon(true);
+                thread.start();
             }
-
-            UsageReporter reporter = new UsageReporter(modId, modVersion, SpACore.modPack.getValue(), FMLCommonHandler.instance().getSide(), SpACore.configFolder);
-
-            Thread thread = new Thread(reporter, "Mod usage reporter for " + modId);
-            thread.setDaemon(true);
-            thread.start();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -127,6 +127,10 @@ public class SpACore extends SpACoreMod {
     @Override
     public boolean shouldReport() {
         return false;
+    }
+
+    public static boolean allowSnooping() {
+        return MC.getGameSettings().snooperEnabled && !optOut.getValue();
     }
 
 }
