@@ -2,7 +2,9 @@
 package net.specialattack.forge.core.packet;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.util.EnumMap;
 
@@ -27,7 +29,7 @@ public class PacketHandler {
     private final FMLEmbeddedChannel serverOutboundChannel;
 
     public PacketHandler(String channelName, Class<? extends SpACorePacket>... handledPacketClasses) {
-        EnumMap<Side, FMLEmbeddedChannel> channelPair = NetworkRegistry.INSTANCE.newChannel(channelName, new ChannelHandler(handledPacketClasses));
+        EnumMap<Side, FMLEmbeddedChannel> channelPair = NetworkRegistry.INSTANCE.newChannel(channelName, new ChannelHandler(handledPacketClasses), new ClickMessageHandler());
         this.clientOutboundChannel = channelPair.get(Side.CLIENT);
         this.serverOutboundChannel = channelPair.get(Side.SERVER);
     }
@@ -119,6 +121,8 @@ public class PacketHandler {
                 in.readBytes(bytes);
                 String playername = new String(bytes);
                 Side side = Side.values()[in.readInt()];
+                packet.senderName = playername;
+                packet.senderSide = side;
 
                 try {
                     packet.read(context, in);
@@ -126,21 +130,34 @@ public class PacketHandler {
                 catch (Exception e) {
                     throw new RuntimeException("Failed reading packet", e);
                 }
+            }
+            catch (Throwable e) {
+                Objects.log.warn("Failed reading packet", e);
+            }
+        }
 
+    }
+
+    @Sharable
+    private class ClickMessageHandler extends SimpleChannelInboundHandler<SpACorePacket> {
+
+        @Override
+        protected void channelRead0(ChannelHandlerContext context, SpACorePacket packet) throws Exception {
+            try {
                 EntityPlayer player = null;
-                if (side.isServer()) {
+                if (packet.senderSide.isServer()) {
                     player = MC.getPlayer();
                 }
-                else if (side.isClient()) {
-                    if (playername != null) {
-                        player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playername);
+                else if (packet.senderSide.isClient()) {
+                    if (packet.senderName != null) {
+                        player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(packet.senderName);
                     }
                 }
 
                 packet.onData(context, player);
             }
             catch (Throwable e) {
-                Objects.log.warn("Failed reading packet", e);
+                Objects.log.warn("Failed handling packet", e);
             }
         }
 
