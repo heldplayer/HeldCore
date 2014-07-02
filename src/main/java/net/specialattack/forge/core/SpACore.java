@@ -16,6 +16,7 @@ import net.specialattack.forge.core.sync.packet.Packet3TrackingUpdate;
 import net.specialattack.forge.core.sync.packet.Packet4InitiateClientTracking;
 import net.specialattack.forge.core.sync.packet.Packet5TrackingEnd;
 import net.specialattack.forge.core.sync.packet.Packet6SetInterval;
+import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -27,7 +28,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(name = Objects.MOD_NAME, modid = Objects.MOD_ID)
+@Mod(name = Objects.MOD_NAME, modid = Objects.MOD_ID, guiFactory = Objects.GUI_FACTORY)
 public class SpACore extends SpACoreMod {
 
     @Instance(value = Objects.MOD_ID)
@@ -127,6 +128,12 @@ public class SpACore extends SpACoreMod {
     @Override
     public boolean shouldReport() {
         return false;
+    }
+
+    @Override
+    public boolean configChanged(OnConfigChangedEvent event) {
+        Objects.log.info("Configuration changed!");
+        return super.configChanged(event);
     }
 
     public static boolean allowSnooping() {

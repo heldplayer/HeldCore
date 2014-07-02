@@ -2,17 +2,24 @@
 package net.specialattack.forge.core;
 
 import net.specialattack.forge.core.config.Config;
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public abstract class SpACoreMod {
 
-    protected Config config;
+    public Config config;
 
     public abstract ModInfo getModInfo();
 
     public abstract SpACoreProxy getProxy();
+
+    public boolean configChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        return false;
+    }
 
     public boolean shouldReport() {
         return true;
@@ -36,10 +43,21 @@ public abstract class SpACoreMod {
         }
 
         this.getProxy().init(event);
+
+        FMLCommonHandler.instance().bus().register(this);
     }
 
     public void postInit(FMLPostInitializationEvent event) {
         this.getProxy().postInit(event);
+    }
+
+    @SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.modID.equals(this.getModInfo().modId)) {
+            if (this.configChanged(event)) {
+                this.config.save();
+            }
+        }
     }
 
 }

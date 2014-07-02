@@ -3,8 +3,12 @@ package net.specialattack.forge.core.config;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
+import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 /**
@@ -71,6 +75,16 @@ public class Config {
                 break;
             }
         }
+    }
+
+    public Configuration getConfig() {
+        return config;
+    }
+
+    // TODO: Build the config elements properly
+    @SuppressWarnings("rawtypes")
+    public List<IConfigElement> getConfigElements() {
+        return Arrays.asList((IConfigElement) new ConfigElement(config.getCategory(Configuration.CATEGORY_GENERAL)));
     }
 
 }

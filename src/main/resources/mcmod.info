@@ -8,5 +8,15 @@
             "mbl111"
         ],
         "url" : "http://dsiwars.specialattack.net/forums/viewtopic.php?t=3"
+    },
+    {
+        "modid" : "spacoreforge",
+        "name" : "SpACore",
+        "version" : "${version}",
+        "authors": [
+            "heldplayer",
+            "mbl111"
+        ],
+        "url" : "http://dsiwars.specialattack.net/forums/viewtopic.php?t=3"
     }
 ]
