@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -36,7 +37,7 @@ public class SItemStack extends BaseSyncable {
 
     @Override
     public void read(ByteArrayDataInput in) throws IOException {
-        NBTTagCompound tag = CompressedStreamTools.read(in);
+        NBTTagCompound tag = CompressedStreamTools.func_152456_a(in, NBTSizeTracker.field_152451_a);
         this.value = ItemStack.loadItemStackFromNBT(tag);
     }
 

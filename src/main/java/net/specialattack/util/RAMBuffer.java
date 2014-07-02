@@ -34,7 +34,7 @@ public class RAMBuffer {
     }
 
     public void addSection(RAMBuffer.Sections section) {
-        if (section.sectionSize > capacity) {
+        if (section.sectionSize > this.capacity) {
             throw new IllegalArgumentException("Section size must be smaller than or equal to buffer size");
         }
 
@@ -322,7 +322,7 @@ public class RAMBuffer {
 
         public void setStoredSectionCount(int size) {
             byte[][] temp = this.sections;
-            this.sections = new byte[size][sectionSize];
+            this.sections = new byte[size][this.sectionSize];
             for (int i = 0; i < temp.length && i < this.sections.length; i++) {
                 this.sections[this.sections.length - i - 1] = temp[temp.length - i - 1];
             }

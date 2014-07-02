@@ -1,7 +1,6 @@
 
 package net.specialattack.util;
 
-
 public class Vector {
 
     public double posX;

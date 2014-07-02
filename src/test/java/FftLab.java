@@ -27,23 +27,23 @@ public class FftLab extends java.applet.Applet {
     @Override
     public void init() {
         FftLabController controller = new FftLabController();
-        setLayout(new BorderLayout());
-        mainPanel = new MainPanel(controller.fRealView, controller.fImagView, controller.gRealView, controller.gImagView);
-        add("Center", mainPanel);
-        controlPanel = new ControlPanel(controller);
-        add("South", controlPanel);
+        this.setLayout(new BorderLayout());
+        this.mainPanel = new MainPanel(controller.fRealView, controller.fImagView, controller.gRealView, controller.gImagView);
+        this.add("Center", this.mainPanel);
+        this.controlPanel = new ControlPanel(controller);
+        this.add("South", this.controlPanel);
     }
 
     @Override
     public void start() {
-        mainPanel.enable();
-        controlPanel.enable();
+        this.mainPanel.enable();
+        this.controlPanel.enable();
     }
 
     @Override
     public void stop() {
-        mainPanel.disable();
-        controlPanel.disable();
+        this.mainPanel.disable();
+        this.controlPanel.disable();
     }
 
     @Override
@@ -71,14 +71,14 @@ public class FftLab extends java.applet.Applet {
 class MainPanel extends Panel {
 
     public MainPanel(SamplesView fRealView, SamplesView fImagView, SamplesView gRealView, SamplesView gImagView) {
-        setLayout(new GridLayout(2, 1, 1, 1));
-        add(new ComplexSamplesPanel(fRealView, fImagView, "f(x)"));
-        add(new ComplexSamplesPanel(gRealView, gImagView, "F(k)"));
+        this.setLayout(new GridLayout(2, 1, 1, 1));
+        this.add(new ComplexSamplesPanel(fRealView, fImagView, "f(x)"));
+        this.add(new ComplexSamplesPanel(gRealView, gImagView, "F(k)"));
     }
 
     @Override
     public void paint(Graphics g) {
-        Dimension d = size();
+        Dimension d = this.size();
         g.setColor(Color.blue);
         g.draw3DRect(0, 0, d.width - 1, d.height - 1, true);
     }
@@ -92,18 +92,18 @@ class MainPanel extends Panel {
 class ComplexSamplesPanel extends Panel {
 
     public ComplexSamplesPanel(SamplesView realView, SamplesView imagView, String label) {
-        setLayout(new BorderLayout());
-        add("North", new Label(label, Label.CENTER));
+        this.setLayout(new BorderLayout());
+        this.add("North", new Label(label, Label.CENTER));
         Panel panel = new Panel();
         panel.setLayout(new GridLayout(1, 2, 1, 1));
         panel.add(new SamplesPanel(realView, "Real"));
         panel.add(new SamplesPanel(imagView, "Imaginary"));
-        add("Center", panel);
+        this.add("Center", panel);
     }
 
     @Override
     public void paint(Graphics g) {
-        Dimension d = size();
+        Dimension d = this.size();
         g.setColor(Color.blue);
         g.draw3DRect(0, 0, d.width - 1, d.height - 1, true);
     }
@@ -117,14 +117,14 @@ class ComplexSamplesPanel extends Panel {
 class SamplesPanel extends Panel {
 
     public SamplesPanel(SamplesView view, String label) {
-        setLayout(new BorderLayout());
-        add("North", new Label(label, Label.CENTER));
-        add("Center", view);
+        this.setLayout(new BorderLayout());
+        this.add("North", new Label(label, Label.CENTER));
+        this.add("Center", view);
     }
 
     @Override
     public void paint(Graphics g) {
-        Dimension d = size();
+        Dimension d = this.size();
         g.setColor(Color.blue);
         g.draw3DRect(0, 0, d.width - 1, d.height - 1, true);
     }
@@ -142,27 +142,27 @@ class ControlPanel extends Panel {
 
     public ControlPanel(FftLabController c) {
         this.c = c;
-        add(new Checkbox("Origin Centered"));
-        length = new LabeledChoice("Length:");
-        length.choice.addItem("16");
-        length.choice.addItem("32");
-        length.choice.addItem("64");
-        length.choice.select("32");
-        add(length);
-        mode = new LabeledChoice("Editing:");
-        mode.choice.addItem("Draw");
-        mode.choice.addItem("Negate");
-        mode.choice.addItem("Zero");
-        mode.choice.addItem("Shift");
-        mode.choice.addItem("None");
-        mode.choice.select("Draw");
-        add(mode);
-        add(new Button("Zero All"));
+        this.add(new Checkbox("Origin Centered"));
+        this.length = new LabeledChoice("Length:");
+        this.length.choice.addItem("16");
+        this.length.choice.addItem("32");
+        this.length.choice.addItem("64");
+        this.length.choice.select("32");
+        this.add(this.length);
+        this.mode = new LabeledChoice("Editing:");
+        this.mode.choice.addItem("Draw");
+        this.mode.choice.addItem("Negate");
+        this.mode.choice.addItem("Zero");
+        this.mode.choice.addItem("Shift");
+        this.mode.choice.addItem("None");
+        this.mode.choice.select("Draw");
+        this.add(this.mode);
+        this.add(new Button("Zero All"));
     }
 
     @Override
     public void paint(Graphics g) {
-        Dimension d = size();
+        Dimension d = this.size();
         g.setColor(Color.blue);
         g.draw3DRect(0, 0, d.width - 1, d.height - 1, true);
     }
@@ -175,36 +175,36 @@ class ControlPanel extends Panel {
     @Override
     public boolean handleEvent(Event e) {
         if (e.target instanceof Button) {
-            c.zeroAll();
+            this.c.zeroAll();
             return true;
         }
         else if (e.target instanceof Checkbox) {
             Checkbox cb = (Checkbox) e.target;
-            c.setOriginCentered(cb.getState());
+            this.c.setOriginCentered(cb.getState());
             return true;
         }
         else if (e.target instanceof Choice) {
-            if (e.target == length.choice) {
-                String item = length.choice.getSelectedItem();
-                c.setLength(Integer.parseInt(item));
+            if (e.target == this.length.choice) {
+                String item = this.length.choice.getSelectedItem();
+                this.c.setLength(Integer.parseInt(item));
                 return true;
             }
-            else if (e.target == mode.choice) {
-                String item = mode.choice.getSelectedItem();
+            else if (e.target == this.mode.choice) {
+                String item = this.mode.choice.getSelectedItem();
                 if (item == "None") {
-                    c.setEditMode(SamplesView.EDIT_NONE);
+                    this.c.setEditMode(SamplesView.EDIT_NONE);
                 }
                 else if (item == "Draw") {
-                    c.setEditMode(SamplesView.EDIT_DRAW);
+                    this.c.setEditMode(SamplesView.EDIT_DRAW);
                 }
                 else if (item == "Negate") {
-                    c.setEditMode(SamplesView.EDIT_NEGATE);
+                    this.c.setEditMode(SamplesView.EDIT_NEGATE);
                 }
                 else if (item == "Zero") {
-                    c.setEditMode(SamplesView.EDIT_ZERO);
+                    this.c.setEditMode(SamplesView.EDIT_ZERO);
                 }
                 else if (item == "Shift") {
-                    c.setEditMode(SamplesView.EDIT_SHIFT);
+                    this.c.setEditMode(SamplesView.EDIT_SHIFT);
                 }
                 return true;
             }
@@ -222,9 +222,9 @@ class LabeledChoice extends Panel {
     public Choice choice;
 
     public LabeledChoice(String label) {
-        add(new Label(label, Label.RIGHT));
-        choice = new Choice();
-        add(choice);
+        this.add(new Label(label, Label.RIGHT));
+        this.choice = new Choice();
+        this.add(this.choice);
     }
 }
 
@@ -238,86 +238,87 @@ class FftLabController implements Observer {
 
     public FftLabController() {
 
-        int origin = (originCentered) ? length / 2 : 0;
-        fReal = new Samples(length, origin);
-        fImag = new Samples(length, origin);
-        gReal = new Samples(length, origin);
-        gImag = new Samples(length, origin);
-        initSamples();
+        int origin = (this.originCentered) ? this.length / 2 : 0;
+        this.fReal = new Samples(this.length, origin);
+        this.fImag = new Samples(this.length, origin);
+        this.gReal = new Samples(this.length, origin);
+        this.gImag = new Samples(this.length, origin);
+        this.initSamples();
 
-        fReal.addObserver(this);
-        fImag.addObserver(this);
-        gReal.addObserver(this);
-        gImag.addObserver(this);
+        this.fReal.addObserver(this);
+        this.fImag.addObserver(this);
+        this.gReal.addObserver(this);
+        this.gImag.addObserver(this);
 
-        fRealView = new SamplesView(fReal);
-        fImagView = new SamplesView(fImag);
-        gRealView = new SamplesView(gReal);
-        gImagView = new SamplesView(gImag);
-        updateSampleValues(fRealView, fImagView);
-        updateSampleValues(gRealView, gImagView);
+        this.fRealView = new SamplesView(this.fReal);
+        this.fImagView = new SamplesView(this.fImag);
+        this.gRealView = new SamplesView(this.gReal);
+        this.gImagView = new SamplesView(this.gImag);
+        this.updateSampleValues(this.fRealView, this.fImagView);
+        this.updateSampleValues(this.gRealView, this.gImagView);
     }
 
     public int getEditMode() {
-        return editMode;
+        return this.editMode;
     }
 
     public void setEditMode(int mode) {
-        editMode = mode;
-        fRealView.setEditMode(mode);
-        fImagView.setEditMode(mode);
-        gRealView.setEditMode(mode);
-        gImagView.setEditMode(mode);
+        this.editMode = mode;
+        this.fRealView.setEditMode(mode);
+        this.fImagView.setEditMode(mode);
+        this.gRealView.setEditMode(mode);
+        this.gImagView.setEditMode(mode);
     }
 
     public int getLength() {
-        return length;
+        return this.length;
     }
 
     public void setLength(int length) {
         this.length = length;
-        updateLengths();
-        updateOrigins();
-        initSamples();
-        updateSampleValues(fRealView, fImagView);
-        updateSampleValues(gRealView, gImagView);
-        repaintViews();
+        this.updateLengths();
+        this.updateOrigins();
+        this.initSamples();
+        this.updateSampleValues(this.fRealView, this.fImagView);
+        this.updateSampleValues(this.gRealView, this.gImagView);
+        this.repaintViews();
     }
 
     public boolean getOriginCentered() {
-        return originCentered;
+        return this.originCentered;
     }
 
     public void setOriginCentered(boolean centered) {
-        if (centered == originCentered)
+        if (centered == this.originCentered) {
             return;
-        originCentered = centered;
-        updateOrigins();
-        repaintViews();
+        }
+        this.originCentered = centered;
+        this.updateOrigins();
+        this.repaintViews();
     }
 
     public void zeroAll() {
-        fReal.zero();
-        fImag.zero();
-        gReal.zero();
-        gImag.zero();
-        repaintViews();
+        this.fReal.zero();
+        this.fImag.zero();
+        this.gReal.zero();
+        this.gImag.zero();
+        this.repaintViews();
     }
 
     @Override
     public void update(Observable o, Object arg) {
         Samples s = (Samples) o;
-        if (s == fReal || s == fImag) {
-            transform(1, fReal, fImag, gReal, gImag);
-            updateSampleValues(gRealView, gImagView);
-            gRealView.repaint();
-            gImagView.repaint();
+        if (s == this.fReal || s == this.fImag) {
+            this.transform(1, this.fReal, this.fImag, this.gReal, this.gImag);
+            this.updateSampleValues(this.gRealView, this.gImagView);
+            this.gRealView.repaint();
+            this.gImagView.repaint();
         }
         else {
-            transform(-1, gReal, gImag, fReal, fImag);
-            updateSampleValues(fRealView, fImagView);
-            fRealView.repaint();
-            fImagView.repaint();
+            this.transform(-1, this.gReal, this.gImag, this.fReal, this.fImag);
+            this.updateSampleValues(this.fRealView, this.fImagView);
+            this.fRealView.repaint();
+            this.fImagView.repaint();
         }
     }
 
@@ -329,26 +330,30 @@ class FftLabController implements Observer {
         float sv = 0.0f;
         float v[];
         v = real.values;
-        for (int i = 0; i < length; ++i) {
+        for (int i = 0; i < this.length; ++i) {
             float si = v[i];
-            if (-si > sv)
+            if (-si > sv) {
                 sv = -si;
-            else if (si > sv)
+            }
+            else if (si > sv) {
                 sv = si;
+            }
         }
         v = imag.values;
-        for (int i = 0; i < length; ++i) {
+        for (int i = 0; i < this.length; ++i) {
             float si = v[i];
-            if (-si > sv)
+            if (-si > sv) {
                 sv = -si;
-            else if (si > sv)
+            }
+            else if (si > sv) {
                 sv = si;
+            }
         }
         return sv;
     }
 
     private void updateSampleValues(SamplesView realView, SamplesView imagView) {
-        float sv = computeSampleValue(realView.samples, imagView.samples);
+        float sv = this.computeSampleValue(realView.samples, imagView.samples);
         realView.setSampleValue(sv);
         imagView.setSampleValue(sv);
     }
@@ -359,22 +364,22 @@ class FftLabController implements Observer {
         float br[] = bar.values;
         float bi[] = bai.values;
 
-        for (int i = 0; i < length; ++i) {
+        for (int i = 0; i < this.length; ++i) {
             br[i] = ar[i];
             bi[i] = ai[i];
         }
 
-        if (originCentered) {
-            for (int i = 1; i < length; i += 2) {
+        if (this.originCentered) {
+            for (int i = 1; i < this.length; i += 2) {
                 br[i] = -br[i];
                 bi[i] = -bi[i];
             }
         }
 
-        Fft.complexToComplex(sign, length, br, bi);
+        Fft.complexToComplex(sign, this.length, br, bi);
 
-        if (originCentered) {
-            for (int i = 1; i < length; i += 2) {
+        if (this.originCentered) {
+            for (int i = 1; i < this.length; i += 2) {
                 br[i] = -br[i];
                 bi[i] = -bi[i];
             }
@@ -382,46 +387,48 @@ class FftLabController implements Observer {
     }
 
     private void initSamples() {
-        fReal.values[fReal.origin + 1] = 1.0f;
-        transform(1, fReal, fImag, gReal, gImag);
+        this.fReal.values[this.fReal.origin + 1] = 1.0f;
+        this.transform(1, this.fReal, this.fImag, this.gReal, this.gImag);
     }
 
     private void updateLengths() {
         int length = this.length;
-        fReal.setLength(length);
-        fImag.setLength(length);
-        gReal.setLength(length);
-        gImag.setLength(length);
+        this.fReal.setLength(length);
+        this.fImag.setLength(length);
+        this.gReal.setLength(length);
+        this.gImag.setLength(length);
     }
 
     private void updateOrigins() {
-        int origin = (originCentered) ? length / 2 : 0;
-        int shift = origin - fReal.origin;
-        fReal.origin = origin;
-        fImag.origin = origin;
-        gReal.origin = origin;
-        gImag.origin = origin;
-        fReal.rotate(shift);
-        fImag.rotate(shift);
-        gReal.rotate(shift);
-        gImag.rotate(shift);
+        int origin = (this.originCentered) ? this.length / 2 : 0;
+        int shift = origin - this.fReal.origin;
+        this.fReal.origin = origin;
+        this.fImag.origin = origin;
+        this.gReal.origin = origin;
+        this.gImag.origin = origin;
+        this.fReal.rotate(shift);
+        this.fImag.rotate(shift);
+        this.gReal.rotate(shift);
+        this.gImag.rotate(shift);
     }
 
     private void repaintViews() {
-        fRealView.repaint();
-        fImagView.repaint();
-        gRealView.repaint();
-        gImagView.repaint();
+        this.fRealView.repaint();
+        this.fImagView.repaint();
+        this.gRealView.repaint();
+        this.gImagView.repaint();
     }
 
     private void shiftSamples(Samples s, int shift) {
-        float temp[] = new float[length];
-        int j = shift % length;
-        for (int i = 0; i < length; ++i, ++j) {
-            if (j < 0)
-                j += length;
-            if (j >= length)
-                j -= length;
+        float temp[] = new float[this.length];
+        int j = shift % this.length;
+        for (int i = 0; i < this.length; ++i, ++j) {
+            if (j < 0) {
+                j += this.length;
+            }
+            if (j >= this.length) {
+                j -= this.length;
+            }
             temp[j] = s.values[i];
         }
         s.values = temp;
@@ -454,9 +461,9 @@ class Fft {
 
         int mmax, istep;
         for (mmax = 1, istep = 2 * mmax; mmax < n; mmax = istep, istep = 2 * mmax) {
-            float delta = (float) sign * 3.141592654f / (float) mmax;
+            float delta = sign * 3.141592654f / mmax;
             for (int m = 0; m < mmax; ++m) {
-                float w = (float) m * delta;
+                float w = m * delta;
                 float wr = (float) Math.cos(w);
                 float wi = (float) Math.sin(w);
                 for (i = m; i < n; i += istep) {
@@ -488,26 +495,26 @@ class SamplesView extends Canvas {
     public Samples samples;
 
     public SamplesView(Samples s) {
-        samples = s;
-        setSampleValue(1.0f);
-        updateDrawingSizes();
-        setBackground(Color.yellow);
+        this.samples = s;
+        this.setSampleValue(1.0f);
+        this.updateDrawingSizes();
+        this.setBackground(Color.yellow);
     }
 
     public void setSampleValue(float v) {
-        int height = size().height;
-        sampleValue = (v != 0.0f) ? v : 1.0f;
-        sampleScale = -0.25f * height / sampleValue;
+        int height = this.size().height;
+        this.sampleValue = (v != 0.0f) ? v : 1.0f;
+        this.sampleScale = -0.25f * height / this.sampleValue;
     }
 
     public void setEditMode(int mode) {
-        editMode = mode;
+        this.editMode = mode;
     }
 
     @Override
     public void paint(Graphics g) {
-        updateDrawingSizes();
-        drawSamples(g);
+        this.updateDrawingSizes();
+        this.drawSamples(g);
     }
 
     @Override
@@ -517,89 +524,97 @@ class SamplesView extends Canvas {
 
     @Override
     public Dimension preferredSize() {
-        return minimumSize();
+        return this.minimumSize();
     }
 
     @Override
     public boolean mouseDown(Event e, int x, int y) {
-        if (editMode == EDIT_NONE)
+        if (this.editMode == SamplesView.EDIT_NONE) {
             return true;
-        lastDrag = -1;
-        return mouseDrag(e, x, y);
+        }
+        this.lastDrag = -1;
+        return this.mouseDrag(e, x, y);
     }
 
     @Override
     public boolean mouseDrag(Event e, int x, int y) {
-        if (editMode == EDIT_NONE)
+        if (this.editMode == SamplesView.EDIT_NONE) {
             return true;
+        }
 
-        if (x < 0 || x > size().width)
+        if (x < 0 || x > this.size().width) {
             return true;
-        if (y < sampleRadius || y > size().height - sampleRadius)
+        }
+        if (y < this.sampleRadius || y > this.size().height - this.sampleRadius) {
             return true;
+        }
 
-        int i = (int) ((float) (x - sampleStart) / (float) sampleWidth + 0.5);
-        if (i < 0)
+        int i = (int) ((float) (x - this.sampleStart) / (float) this.sampleWidth + 0.5);
+        if (i < 0) {
             i = 0;
-        if (i >= samples.values.length)
-            i = samples.values.length - 1;
+        }
+        if (i >= this.samples.values.length) {
+            i = this.samples.values.length - 1;
+        }
 
-        if (editMode == EDIT_NEGATE && i == lastDrag)
+        if (this.editMode == SamplesView.EDIT_NEGATE && i == this.lastDrag) {
             return true;
+        }
 
-        Graphics g = getGraphics();
+        Graphics g = this.getGraphics();
 
-        if (editMode == EDIT_SHIFT) {
-            if (i != lastDrag && lastDrag >= 0) {
-                g.setColor(getBackground());
-                drawSamples(g);
-                samples.rotate(i - lastDrag);
-                g.setColor(getForeground());
-                drawSamples(g);
+        if (this.editMode == SamplesView.EDIT_SHIFT) {
+            if (i != this.lastDrag && this.lastDrag >= 0) {
+                g.setColor(this.getBackground());
+                this.drawSamples(g);
+                this.samples.rotate(i - this.lastDrag);
+                g.setColor(this.getForeground());
+                this.drawSamples(g);
             }
-            lastDrag = i;
+            this.lastDrag = i;
             return true;
         }
 
-        g.setColor(getBackground());
-        drawOneSample(g, i);
-        if (editMode == EDIT_ZERO) {
-            samples.values[i] = 0.0f;
+        g.setColor(this.getBackground());
+        this.drawOneSample(g, i);
+        if (this.editMode == SamplesView.EDIT_ZERO) {
+            this.samples.values[i] = 0.0f;
         }
-        else if (editMode == EDIT_NEGATE) {
-            samples.values[i] = -samples.values[i];
+        else if (this.editMode == SamplesView.EDIT_NEGATE) {
+            this.samples.values[i] = -this.samples.values[i];
         }
         else {
-            samples.values[i] = (float) (y - sampleBase) / sampleScale;
+            this.samples.values[i] = (y - this.sampleBase) / this.sampleScale;
         }
-        g.setColor(getForeground());
-        drawOneSample(g, i);
-        lastDrag = i;
+        g.setColor(this.getForeground());
+        this.drawOneSample(g, i);
+        this.lastDrag = i;
 
         return true;
     }
 
     @Override
     public boolean mouseUp(Event e, int x, int y) {
-        if (editMode != EDIT_NONE)
-            samples.notifyObservers();
+        if (this.editMode != SamplesView.EDIT_NONE) {
+            this.samples.notifyObservers();
+        }
         return true;
     }
 
-    private int editMode = EDIT_DRAW;
+    private int editMode = SamplesView.EDIT_DRAW;
     private int sampleStart, sampleBase, sampleWidth, sampleRadius;
     private float sampleScale, sampleValue;
     private int lastDrag;
 
     private void drawOneSample(Graphics g, int i) {
-        int x = sampleStart + i * sampleWidth;
-        int y = sampleBase;
-        int r = sampleRadius;
-        int w = sampleWidth;
-        int h = (int) (samples.values[i] * sampleScale);
+        int x = this.sampleStart + i * this.sampleWidth;
+        int y = this.sampleBase;
+        int r = this.sampleRadius;
+        int w = this.sampleWidth;
+        int h = (int) (this.samples.values[i] * this.sampleScale);
         g.drawLine(x - w / 2, y, x + w / 2, y);
         g.drawLine(x, y, x, y + h);
-        if (i == samples.origin) {
+        if (i == this.samples.origin) {
             g.drawOval(x - r, y + h - r, 2 * r, 2 * r);
         }
         else {
@@ -608,23 +623,24 @@ class SamplesView extends Canvas {
     }
 
     private void drawSamples(Graphics g) {
-        for (int i = 0; i < samples.values.length; ++i) {
-            drawOneSample(g, i);
+        for (int i = 0; i < this.samples.values.length; ++i) {
+            this.drawOneSample(g, i);
         }
     }
 
     private void updateDrawingSizes() {
-        int width = size().width;
-        int height = size().height;
-        int nSamples = samples.values.length;
-        sampleWidth = (int) ((float) width / (float) (nSamples + 1));
-        sampleStart = (width - (nSamples - 1) * sampleWidth) / 2;
-        sampleBase = (int) (0.5f * height);
-        sampleScale = -0.25f * height / sampleValue;
-        sampleRadius = (int) (0.4f * sampleWidth);
+        int width = this.size().width;
+        int height = this.size().height;
+        int nSamples = this.samples.values.length;
+        this.sampleWidth = (int) ((float) width / (float) (nSamples + 1));
+        this.sampleStart = (width - (nSamples - 1) * this.sampleWidth) / 2;
+        this.sampleBase = (int) (0.5f * height);
+        this.sampleScale = -0.25f * height / this.sampleValue;
+        this.sampleRadius = (int) (0.4f * this.sampleWidth);
         int maxRadius = (int) (0.5f * height);
-        if (sampleRadius > maxRadius)
-            sampleRadius = maxRadius;
+        if (this.sampleRadius > maxRadius) {
+            this.sampleRadius = maxRadius;
+        }
     }
 }
 
@@ -638,39 +654,43 @@ class Samples extends Observable {
 
     public Samples(int length, int origin) {
         this.origin = origin;
-        values = new float[length];
-        zero();
+        this.values = new float[length];
+        this.zero();
     }
 
     public void setLength(int length) {
-        if (length == values.length)
+        if (length == this.values.length) {
             return;
-        values = new float[length];
-        zero();
+        }
+        this.values = new float[length];
+        this.zero();
     }
 
     public void zero() {
-        for (int i = 0; i < values.length; ++i)
-            values[i] = 0.0f;
+        for (int i = 0; i < this.values.length; ++i) {
+            this.values[i] = 0.0f;
+        }
     }
 
     public void rotate(int n) {
-        int length = values.length;
+        int length = this.values.length;
         float temp[] = new float[length];
         int j = n % length;
         for (int i = 0; i < length; ++i, ++j) {
-            if (j < 0)
+            if (j < 0) {
                 j += length;
-            if (j >= length)
+            }
+            if (j >= length) {
                 j -= length;
-            temp[j] = values[i];
+            }
+            temp[j] = this.values[i];
         }
-        values = temp;
+        this.values = temp;
     }
 
     @Override
     public void notifyObservers() {
-        setChanged();
+        this.setChanged();
         super.notifyObservers();
     }
 }

@@ -130,7 +130,7 @@ public class SpACore extends SpACoreMod {
     }
 
     public static boolean allowSnooping() {
-        return MC.getGameSettings().snooperEnabled && !optOut.getValue();
+        return MC.getGameSettings().snooperEnabled && !SpACore.optOut.getValue();
     }
 
 }

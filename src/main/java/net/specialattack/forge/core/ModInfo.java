@@ -29,7 +29,7 @@ public class ModInfo {
             version = "Error";
         }
         finally {
-            modVersion = version;
+            this.modVersion = version;
         }
     }
 

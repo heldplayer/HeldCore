@@ -367,7 +367,7 @@ public class GuiTextBox extends Gui {
 
             for (String line : lines) {
                 if (remainingChars == Integer.MIN_VALUE) {
-                    String temp = font.trimStringToWidth(line, prevX);
+                    String temp = this.font.trimStringToWidth(line, prevX);
 
                     if (firstLine) {
                         this.setCursorPosition(this.cursorPositionComponent + 1, temp.length());
@@ -382,7 +382,7 @@ public class GuiTextBox extends Gui {
                     if (remainingChars <= line.length()) {
                         String sub = line.substring(0, remainingChars);
                         if (up) {
-                            String temp = font.trimStringToWidth(prevLine, font.getStringWidth(sub));
+                            String temp = this.font.trimStringToWidth(prevLine, this.font.getStringWidth(sub));
 
                             if (firstLine) {
                                 this.setCursorPosition(this.cursorPositionComponent - 1, prevLineChar + temp.length() - prevLine.length());

@@ -170,11 +170,11 @@ public final class MathHelper {
 
         int mmax, istep;
         for (mmax = 1, istep = 2 * mmax; mmax < length; mmax = istep, istep = 2 * mmax) {
-            float delta = (float) sign * 2.0F / (float) mmax;
+            float delta = sign * 2.0F / mmax;
             for (int m = 0; m < mmax; m++) {
-                float w = (float) m * delta;
-                float wr = cos(w);
-                float wi = sin(w);
+                float w = m * delta;
+                float wr = MathHelper.cos(w);
+                float wi = MathHelper.sin(w);
                 for (i = m; i < length; i += istep) {
                     j = i + mmax;
                     float tempr = wr * ar[j] - wi * ai[j];

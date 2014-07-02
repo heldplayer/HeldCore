@@ -7,8 +7,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.util.EnumMap;
+import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.client.MC;
@@ -39,7 +41,7 @@ public class PacketHandler {
             this.clientOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
             EntityPlayer player = MC.getPlayer();
             if (player != null) {
-                packet.senderName = player.getCommandSenderName();
+                packet.sender = player.getUniqueID();
             }
             packet.senderSide = Side.CLIENT;
             this.clientOutboundChannel.writeOutbound(packet);
@@ -91,8 +93,8 @@ public class PacketHandler {
 
         @Override
         public void encodeInto(ChannelHandlerContext context, SpACorePacket packet, ByteBuf out) throws Exception {
-            if (packet.senderName != null) {
-                byte[] bytes = packet.senderName.getBytes();
+            if (packet.sender != null) {
+                byte[] bytes = packet.sender.toString().getBytes();
                 out.writeInt(bytes.length);
                 out.writeBytes(bytes);
             }
@@ -119,9 +121,9 @@ public class PacketHandler {
             try {
                 byte[] bytes = new byte[in.readInt()];
                 in.readBytes(bytes);
-                String playername = new String(bytes);
+                String player = new String(bytes);
                 Side side = Side.values()[in.readInt()];
-                packet.senderName = playername;
+                packet.sender = UUID.fromString(player);
                 packet.senderSide = side;
 
                 try {
@@ -149,8 +151,14 @@ public class PacketHandler {
                     player = MC.getPlayer();
                 }
                 else if (packet.senderSide.isClient()) {
-                    if (packet.senderName != null) {
-                        player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(packet.senderName);
+                    if (packet.sender != null) {
+                        for (Object obj : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+                            if (obj instanceof EntityPlayer) {
+                                if (((EntityPlayerMP) obj).getUniqueID().equals(packet.sender)) {
+                                    player = (EntityPlayer) obj;
+                                }
+                            }
+                        }
                     }
                 }
 

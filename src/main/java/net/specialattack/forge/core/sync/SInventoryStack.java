@@ -7,6 +7,7 @@ import java.io.IOException;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -65,7 +66,7 @@ public class SInventoryStack extends BaseSyncable {
             this.inventory.setInventorySlotContents(this.slot, null);
         }
         else {
-            NBTTagCompound tag = CompressedStreamTools.read(in);
+            NBTTagCompound tag = CompressedStreamTools.func_152456_a(in, NBTSizeTracker.field_152451_a);
             this.inventory.setInventorySlotContents(this.slot, ItemStack.loadItemStackFromNBT(tag));
         }
     }

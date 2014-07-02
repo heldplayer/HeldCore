@@ -5,7 +5,7 @@ import net.specialattack.util.RAMBuffer;
 public class RAMTest {
 
     public static void main(String[] params) {
-        testBasicBuffer();
+        RAMTest.testBasicBuffer();
     }
 
     private static void testBasicBuffer() {

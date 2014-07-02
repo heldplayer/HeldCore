@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -14,7 +15,7 @@ public abstract class SpACorePacket {
 
     public final World world;
     // Can somebody PLEASE give me a way to get these without having to include them every time?
-    public String senderName;
+    public UUID sender;
     public Side senderSide;
 
     public SpACorePacket(World world) {
