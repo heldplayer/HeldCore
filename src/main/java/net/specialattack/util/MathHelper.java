@@ -1,7 +1,6 @@
 
 package net.specialattack.util;
 
-
 public final class MathHelper {
 
     private static float[] sinTable = new float[65536];
@@ -146,6 +145,48 @@ public final class MathHelper {
         }
 
         return result;
+    }
+
+    public static void fastFourierTransform(int sign, int length, float[] ar, float[] ai) {
+        float scale = (float) Math.sqrt(1.0F / (double) length);
+
+        int i, j;
+        for (i = j = 0; i < length; i++) {
+            if (j >= i) {
+                float tempr = ar[j];
+                float tempi = ai[j];
+                ar[j] = ar[i] * scale;
+                ai[j] = ai[i] * scale;
+                ar[i] = tempr * scale;
+                ai[i] = tempi * scale;
+            }
+            int m = length / 2;
+            while (m >= 1 && j >= m) {
+                j -= m;
+                m /= 2;
+            }
+            j += m;
+        }
+
+        int mmax, istep;
+        for (mmax = 1, istep = 2 * mmax; mmax < length; mmax = istep, istep = 2 * mmax) {
+            float delta = (float) sign * 2.0F / (float) mmax;
+            for (int m = 0; m < mmax; m++) {
+                float w = (float) m * delta;
+                float wr = cos(w);
+                float wi = sin(w);
+                for (i = m; i < length; i += istep) {
+                    j = i + mmax;
+                    float tempr = wr * ar[j] - wi * ai[j];
+                    float tempi = wr * ai[j] + wi * ar[j];
+                    ar[j] = ar[i] - tempr;
+                    ai[j] = ai[i] - tempi;
+                    ar[i] += tempr;
+                    ai[i] += tempi;
+                }
+            }
+            mmax = istep;
+        }
     }
 
 }
