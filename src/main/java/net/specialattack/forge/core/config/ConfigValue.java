@@ -1,7 +1,14 @@
 
 package net.specialattack.forge.core.config;
 
+import java.util.List;
+import java.util.regex.Pattern;
+
 import net.minecraftforge.common.config.Property;
+import cpw.mods.fml.client.config.ConfigGuiType;
+import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
+import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
+import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -13,26 +20,33 @@ import cpw.mods.fml.relauncher.Side;
  * @param <T>
  *        The type of value that will be stored in this config
  */
-public class ConfigValue<T> {
+public class ConfigValue<T> implements IConfigElement<T> {
 
-    protected String category;
+    protected ConfigCategory<?> category;
     protected String name;
+    protected String unlocalizedName;
     protected T deff;
-    protected String comment;
     protected Property value;
-    protected Config config;
     protected Side side;
+    protected String comment;
+    protected boolean requiresWorldRestart;
+    protected boolean requiresMcRestart;
+    protected boolean showInGui = true;
 
     private int mode;
 
-    public ConfigValue(String name, String category, Side side, T deff, String comment) {
+    public ConfigValue(String name, String unlocalizedName, Side side, T deff, String comment) {
         this.name = name;
-        this.category = category;
+        this.unlocalizedName = unlocalizedName;
         this.side = side;
         this.deff = deff;
         this.comment = comment;
 
         this.mode = -1;
+
+        if (deff == null) {
+            throw new IllegalArgumentException("Default cannot be null");
+        }
 
         if (deff instanceof IConfigurable) {
             this.mode = 0;
@@ -49,9 +63,24 @@ public class ConfigValue<T> {
         if (deff.getClass() == String.class) {
             this.mode = 4;
         }
+        if (deff instanceof IConfigurable[]) {
+            this.mode = 5;
+        }
+        if (deff instanceof boolean[]) {
+            this.mode = 6;
+        }
+        if (deff instanceof double[]) {
+            this.mode = 7;
+        }
+        if (deff instanceof int[]) {
+            this.mode = 8;
+        }
+        if (deff instanceof String[]) {
+            this.mode = 9;
+        }
 
         if (this.mode == -1) {
-            throw new IncompatibleClassChangeError();
+            throw new IllegalStateException("Configuration type must be valid");
         }
     }
 
@@ -61,19 +90,38 @@ public class ConfigValue<T> {
         }
 
         if (this.mode == 0) {
-            this.value = this.config.config.get(this.category, this.name, ((IConfigurable) this.deff).serialize(), this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, ((IConfigurable) this.deff).serialize(), this.comment);
         }
         if (this.mode == 1) {
-            this.value = this.config.config.get(this.category, this.name, (Boolean) this.deff, this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, (Boolean) this.deff, this.comment);
         }
         if (this.mode == 2) {
-            this.value = this.config.config.get(this.category, this.name, (Double) this.deff, this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, (Double) this.deff, this.comment);
         }
         if (this.mode == 3) {
-            this.value = this.config.config.get(this.category, this.name, (Integer) this.deff, this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, (Integer) this.deff, this.comment);
         }
         if (this.mode == 4) {
-            this.value = this.config.config.get(this.category, this.name, (String) this.deff, this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, (String) this.deff, this.comment);
+        }
+        if (this.mode == 5) {
+            String[] values = new String[((IConfigurable[]) this.deff).length];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = ((IConfigurable[]) this.deff)[i].serialize();
+            }
+            this.value = this.category.config.config.get(this.category.name, this.name, values, this.comment);
+        }
+        if (this.mode == 6) {
+            this.value = this.category.config.config.get(this.category.name, this.name, (boolean[]) this.deff, this.comment);
+        }
+        if (this.mode == 7) {
+            this.value = this.category.config.config.get(this.category.name, this.name, (double[]) this.deff, this.comment);
+        }
+        if (this.mode == 8) {
+            this.value = this.category.config.config.get(this.category.name, this.name, (int[]) this.deff, this.comment);
+        }
+        if (this.mode == 9) {
+            this.value = this.category.config.config.get(this.category.name, this.name, (String[]) this.deff, this.comment);
         }
     }
 
@@ -107,6 +155,26 @@ public class ConfigValue<T> {
         if (this.mode == 4) {
             return (T) this.value.getString();
         }
+        if (this.mode == 5) {
+            String[] strValues = this.value.getStringList();
+            IConfigurable[] values = new IConfigurable[strValues.length];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = ((IConfigurable[]) this.deff)[0].load(strValues[i]);
+            }
+            return (T) values;
+        }
+        if (this.mode == 6) {
+            return (T) this.value.getBooleanList();
+        }
+        if (this.mode == 7) {
+            return (T) this.value.getDoubleList();
+        }
+        if (this.mode == 8) {
+            return (T) this.value.getIntList();
+        }
+        if (this.mode == 9) {
+            return (T) this.value.getString();
+        }
 
         return this.deff;
     }
@@ -131,6 +199,25 @@ public class ConfigValue<T> {
         if (this.mode == 4) {
             this.value.set((String) value);
         }
+        if (this.mode == 5) {
+            String[] values = new String[((IConfigurable[]) this.deff).length];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = ((IConfigurable[]) this.deff)[i].serialize();
+            }
+            this.value.set(values);
+        }
+        if (this.mode == 6) {
+            this.value.set((boolean[]) value);
+        }
+        if (this.mode == 7) {
+            this.value.set((double[]) value);
+        }
+        if (this.mode == 8) {
+            this.value.set((int[]) value);
+        }
+        if (this.mode == 9) {
+            this.value.set((String[]) value);
+        }
     }
 
     public boolean isChanged() {
@@ -139,6 +226,207 @@ public class ConfigValue<T> {
         }
 
         return this.value != null ? this.value.hasChanged() : false;
+    }
+
+    public ConfigValue<T> setRequiresMcRestart(boolean requiresMcRestart) {
+        this.requiresMcRestart = requiresMcRestart;
+        return this;
+    }
+
+    public ConfigValue<T> setRequiresWorldRestart(boolean requiresWorldRestart) {
+        this.requiresWorldRestart = requiresWorldRestart;
+        return this;
+    }
+
+    public ConfigValue<T> setShowInGui(boolean showInGui) {
+        this.showInGui = showInGui;
+        return this;
+    }
+
+    @Override
+    public boolean isProperty() {
+        return true;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Class<? extends IConfigEntry> getConfigEntryClass() {
+        return null;
+    }
+
+    @Override
+    public Class<? extends IArrayEntry> getArrayEntryClass() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public String getQualifiedName() {
+        return this.name;
+    }
+
+    @Override
+    public String getLanguageKey() {
+        return this.unlocalizedName;
+    }
+
+    @Override
+    public String getComment() {
+        return this.comment;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public List<IConfigElement> getChildElements() {
+        return null;
+    }
+
+    @Override
+    public ConfigGuiType getType() {
+        switch (this.mode) {
+        case 1:
+        case 6:
+            return ConfigGuiType.BOOLEAN;
+        case 2:
+        case 7:
+            return ConfigGuiType.DOUBLE;
+        case 3:
+        case 8:
+            return ConfigGuiType.INTEGER;
+        case 4:
+        case 9:
+        default:
+            return ConfigGuiType.STRING;
+        }
+    }
+
+    @Override
+    public boolean isList() {
+        return this.mode > 4 && this.mode < 10;
+    }
+
+    @Override
+    public boolean isListLengthFixed() {
+        return false;
+    }
+
+    @Override
+    public int getMaxListLength() {
+        return -1;
+    }
+
+    @Override
+    public boolean isDefault() {
+        return this.value.isDefault();
+    }
+
+    @Override
+    public Object getDefault() {
+        return this.deff;
+    }
+
+    @Override
+    public Object[] getDefaults() {
+        if (this.mode == 6) {
+            Boolean[] values = new Boolean[((boolean[]) this.deff).length];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = Boolean.valueOf(((boolean[]) this.deff)[i]);
+            }
+            return values;
+        }
+        else if (this.mode == 7) {
+            Double[] values = new Double[((double[]) this.deff).length];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = Double.valueOf(((double[]) this.deff)[i]);
+            }
+            return values;
+        }
+        else if (this.mode == 8) {
+            Integer[] values = new Integer[((int[]) this.deff).length];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = Integer.valueOf(((int[]) this.deff)[i]);
+            }
+            return values;
+        }
+        else if (this.mode == 9) {
+            return (IConfigurable[]) this.deff;
+        }
+        else {
+            return (String[]) this.deff;
+        }
+    }
+
+    @Override
+    public void setToDefault() {
+        this.value.setToDefault();
+    }
+
+    @Override
+    public boolean requiresWorldRestart() {
+        return this.requiresWorldRestart;
+    }
+
+    @Override
+    public boolean showInGui() {
+        return this.showInGui;
+    }
+
+    @Override
+    public boolean requiresMcRestart() {
+        return this.requiresMcRestart;
+    }
+
+    @Override
+    public Object get() {
+        return this.getValue();
+    }
+
+    @Override
+    public Object[] getList() {
+        return (Object[]) this.getValue();
+    }
+
+    @Override
+    public void set(T value) {
+        this.setValue(value);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void set(Object[] value) {
+        this.setValue((T) value);
+    }
+
+    @Override
+    public String[] getValidValues() {
+        if (this.mode == 0) {
+            return ((IConfigurable) this.deff).getValidValues();
+        }
+        if (this.mode == 6) {
+            return ((IConfigurable[]) this.deff)[0].getValidValues();
+        }
+        return this.value.getValidValues();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public T getMinValue() {
+        return (T) this.value.getMinValue();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public T getMaxValue() {
+        return (T) this.value.getMaxValue();
+    }
+
+    @Override
+    public Pattern getValidationPattern() {
+        return this.value.getValidationPattern();
     }
 
 }

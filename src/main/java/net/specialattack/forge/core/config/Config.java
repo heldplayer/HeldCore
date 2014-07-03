@@ -2,11 +2,8 @@
 package net.specialattack.forge.core.config;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -17,9 +14,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
  * @author heldplayer
  * 
  */
-public class Config {
+public class Config<T> extends ConfigCategory<T> {
 
-    protected ArrayList<ConfigValue<?>> keys;
     protected Configuration config;
 
     /**
@@ -30,29 +26,19 @@ public class Config {
      *        {@link FMLPreInitializationEvent#getSuggestedConfigurationFile()}
      */
     public Config(File file) {
-        this.keys = new ArrayList<ConfigValue<?>>();
+        super("", "root", "");
 
         this.config = new Configuration(file);
-    }
-
-    /**
-     * Adds a new config value to the configuration. Must be called before
-     * {@link #load()}
-     * 
-     * @param key
-     *        The key to add
-     */
-    public void addConfigKey(ConfigValue<?> key) {
-        this.keys.add(key);
-        key.config = this;
+        super.config = this;
     }
 
     /**
      * Loads the configuration
      */
+    @Override
     public void load() {
-        for (ConfigValue<?> key : this.keys) {
-            key.load();
+        for (ConfigCategory<?> category : this.children) {
+            category.load();
         }
     }
 
@@ -68,8 +54,8 @@ public class Config {
      * Saves the configuration if any key has been changed
      */
     public void saveOnChange() {
-        for (ConfigValue<?> key : this.keys) {
-            if (key.isChanged()) {
+        for (ConfigCategory<?> category : this.children) {
+            if (category.isChanged()) {
                 this.config.save();
 
                 break;
@@ -81,10 +67,12 @@ public class Config {
         return config;
     }
 
-    // TODO: Build the config elements properly
+    @Override
+    public void addValue(ConfigValue<?> value) {}
+
     @SuppressWarnings("rawtypes")
     public List<IConfigElement> getConfigElements() {
-        return Arrays.asList((IConfigElement) new ConfigElement(config.getCategory(Configuration.CATEGORY_GENERAL)));
+        return this.getChildElements();
     }
 
 }

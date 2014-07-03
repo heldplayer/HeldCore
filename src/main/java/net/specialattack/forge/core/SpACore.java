@@ -7,6 +7,7 @@ import java.io.IOException;
 import net.minecraftforge.common.config.Configuration;
 import net.specialattack.forge.core.client.MC;
 import net.specialattack.forge.core.config.Config;
+import net.specialattack.forge.core.config.ConfigCategory;
 import net.specialattack.forge.core.config.ConfigValue;
 import net.specialattack.forge.core.packet.PacketHandler;
 import net.specialattack.forge.core.sync.SyncHandler;
@@ -48,7 +49,7 @@ public class SpACore extends SpACoreMod {
     public static PacketHandler packetHandler;
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         Objects.log = event.getModLog();
@@ -62,17 +63,22 @@ public class SpACore extends SpACoreMod {
         }
 
         // Config
-        SpACore.modPack = new ConfigValue<String>("modPack", Configuration.CATEGORY_GENERAL, null, "", "If this mod is running in a modpack, please set this config value to the name of the modpack");
-        SpACore.optOut = new ConfigValue<Boolean>("optOut", Configuration.CATEGORY_GENERAL, null, Boolean.FALSE, "Set this to true to opt-out from statistics gathering. If you are configuring this mod for a modpack, please leave it set to false");
-        SpACore.refreshRate = new ConfigValue<Integer>("refreshRate", Configuration.CATEGORY_GENERAL, null, 5, "The refresh-rate used for syncing objects between server and client. A higher refresh-rate will decrease bandwidth and CPU usage, but will also cause objects to appear to lag");
-        SpACore.textureMapId = new ConfigValue<Integer>("textureMapId", Configuration.CATEGORY_GENERAL, Side.CLIENT, 10, "The ID of the texture map that SpACore assigns");
-        SpACore.showReportBugs = new ConfigValue<Boolean>("showReportBugs", Configuration.CATEGORY_GENERAL, Side.CLIENT, true, "Should the mod add a 'Report a bug' button to the menu?");
+        ConfigCategory<?> category = new ConfigCategory(Configuration.CATEGORY_GENERAL, "General", "General mod settings");
+        SpACore.modPack = new ConfigValue<String>("modPack", "config.spacore.modPack", null, "", "If this mod is running in a modpack, please set this config value to the name of the modpack");
+        SpACore.modPack.setShowInGui(false).setRequiresMcRestart(true);
+        SpACore.optOut = new ConfigValue<Boolean>("optOut", "config.spacore.optOut", null, Boolean.FALSE, "Set this to true to opt-out from statistics gathering. If you are configuring this mod for a modpack, please leave it set to false");
+        SpACore.optOut.setRequiresMcRestart(true);
+        SpACore.refreshRate = new ConfigValue<Integer>("refreshRate", "config.spacore.refreshRate", null, 5, "The refresh-rate used for syncing objects between server and client. A higher refresh-rate will decrease bandwidth and CPU usage, but will also cause objects to appear to lag");
+        SpACore.textureMapId = new ConfigValue<Integer>("textureMapId", "config.spacore.textureMapId", Side.CLIENT, 10, "The ID of the texture map that SpACore assigns");
+        SpACore.textureMapId.setRequiresMcRestart(true);
+        SpACore.showReportBugs = new ConfigValue<Boolean>("showReportBugs", "config.spacore.showReportBugs", Side.CLIENT, true, "Should the mod add a 'Report a bug' button to the menu?");
         this.config = new Config(event.getSuggestedConfigurationFile());
-        this.config.addConfigKey(SpACore.modPack);
-        this.config.addConfigKey(SpACore.optOut);
-        this.config.addConfigKey(SpACore.refreshRate);
-        this.config.addConfigKey(SpACore.textureMapId);
-        this.config.addConfigKey(SpACore.showReportBugs);
+        this.config.addCategory(category);
+        category.addValue(SpACore.modPack);
+        category.addValue(SpACore.optOut);
+        category.addValue(SpACore.refreshRate);
+        category.addValue(SpACore.textureMapId);
+        category.addValue(SpACore.showReportBugs);
 
         super.preInit(event);
     }

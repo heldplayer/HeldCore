@@ -9,7 +9,7 @@ import cpw.mods.fml.client.config.GuiConfig;
 public class GuiConfiguration extends GuiConfig {
 
     public GuiConfiguration(GuiScreen parent) {
-        super(parent, SpACore.instance.config.getConfigElements(), Objects.MOD_ID, false, false, GuiConfig.getAbridgedConfigPath(SpACore.instance.config.getConfig().toString()));
+        super(parent, SpACore.instance.config.getConfigElements(), Objects.MOD_ID, false, false, "SpACore Configuration");
     }
 
 }

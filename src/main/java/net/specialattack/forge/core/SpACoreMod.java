@@ -11,7 +11,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public abstract class SpACoreMod {
 
-    public Config config;
+    public Config<?> config;
 
     public abstract ModInfo getModInfo();
 

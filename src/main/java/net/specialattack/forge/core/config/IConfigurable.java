@@ -26,4 +26,6 @@ public interface IConfigurable {
      */
     public abstract IConfigurable load(String serialized);
 
+    public abstract String[] getValidValues();
+
 }
