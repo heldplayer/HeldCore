@@ -26,7 +26,7 @@ public class Config<T> extends ConfigCategory<T> {
      *        {@link FMLPreInitializationEvent#getSuggestedConfigurationFile()}
      */
     public Config(File file) {
-        super("", "root", "");
+        super("", "root", null, "");
 
         this.config = new Configuration(file);
         super.config = this;

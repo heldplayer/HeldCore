@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -25,6 +26,7 @@ import net.specialattack.forge.core.client.gui.GuiScreenReportBug;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.packet.Packet1TrackingStatus;
+import cpw.mods.fml.client.GuiModList;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -80,6 +82,7 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @SubscribeEvent
     public void onInitGuiPost(InitGuiEvent.Post event) {
         if (SpACore.showReportBugs.getValue()) {
@@ -108,13 +111,32 @@ public class ClientProxy extends CommonProxy {
                 }
             }
         }
+        if (SpACore.replaceModOptions.getValue()) {
+            if (event.gui != null && event.gui instanceof GuiIngameMenu) {
+                for (int i = 0; i < event.gui.buttonList.size(); i++) {
+                    Object obj = event.gui.buttonList.get(i);
+                    if (obj instanceof GuiButton && ((GuiButton) obj).id == 12) {
+                        event.gui.buttonList.remove(i);
+                        break;
+                    }
+                }
+                event.gui.buttonList.add(new GuiButton(12, event.gui.width / 2 + 2, event.gui.height / 4 + 80, 98, 20, "Mods"));
+            }
+        }
     }
 
     @SubscribeEvent
-    public void onActionPerformedPost(ActionPerformedEvent.Post event) {
+    public void onActionPerformedPost(ActionPerformedEvent.Pre event) {
         if (SpACore.showReportBugs.getValue()) {
             if (event.button != null && event.button.id == -123 && event.gui != null && event.gui instanceof GuiMainMenu) {
                 MC.getMinecraft().displayGuiScreen(new GuiScreenReportBug());
+                event.setCanceled(true);
+            }
+        }
+        if (SpACore.replaceModOptions.getValue()) {
+            if (event.button != null && event.button.id == 12 && event.gui != null && event.gui instanceof GuiIngameMenu) {
+                MC.getMinecraft().displayGuiScreen(new GuiModList(event.gui));
+                event.setCanceled(true);
             }
         }
     }

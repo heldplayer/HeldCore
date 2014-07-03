@@ -10,23 +10,26 @@ import cpw.mods.fml.client.config.ConfigGuiType;
 import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
 import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
 import cpw.mods.fml.client.config.IConfigElement;
+import cpw.mods.fml.relauncher.Side;
 
 public class ConfigCategory<T> implements IConfigElement<T> {
 
     protected String name;
-    protected String displayName;
+    protected String unlocalizedName;
     protected Config<?> config;
     protected ConfigCategory<?> parent;
     protected ArrayList<ConfigValue<?>> keys;
     protected ArrayList<ConfigCategory<?>> children;
     protected String comment;
+    protected Side side;
     protected boolean requiresWorldRestart;
     protected boolean requiresMcRestart;
     protected boolean showInGui = true;
 
-    public ConfigCategory(String name, String displayName, String comment) {
+    public ConfigCategory(String name, String unlocalizedName, Side side, String comment) {
         this.name = name;
-        this.displayName = displayName;
+        this.unlocalizedName = unlocalizedName;
+        this.side = side;
         this.comment = comment;
         this.keys = new ArrayList<ConfigValue<?>>();
         this.children = new ArrayList<ConfigCategory<?>>();
@@ -99,7 +102,7 @@ public class ConfigCategory<T> implements IConfigElement<T> {
 
     @Override
     public String getName() {
-        return this.displayName;
+        return this.name;
     }
 
     @Override
@@ -112,7 +115,7 @@ public class ConfigCategory<T> implements IConfigElement<T> {
 
     @Override
     public String getLanguageKey() {
-        return this.getQualifiedName();
+        return this.unlocalizedName;
     }
 
     @Override
@@ -124,8 +127,21 @@ public class ConfigCategory<T> implements IConfigElement<T> {
     @Override
     public List<IConfigElement> getChildElements() {
         ArrayList<IConfigElement> result = new ArrayList<IConfigElement>();
-        result.addAll(this.children);
-        result.addAll(this.keys);
+
+        for (ConfigCategory<?> category : this.children) {
+            if (category.side == Side.SERVER) {
+                continue;
+            }
+            result.add(category);
+        }
+
+        for (ConfigValue<?> key : this.keys) {
+            if (key.side == Side.SERVER) {
+                continue;
+            }
+            result.add(key);
+        }
+
         return result;
     }
 

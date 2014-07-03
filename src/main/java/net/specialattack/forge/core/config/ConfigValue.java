@@ -185,7 +185,7 @@ public class ConfigValue<T> implements IConfigElement<T> {
         }
 
         if (this.mode == 0) {
-            this.value.set(((IConfigurable) value).serialize());
+            this.value.set((String) value);
         }
         if (this.mode == 1) {
             this.value.set((Boolean) value);
@@ -382,7 +382,7 @@ public class ConfigValue<T> implements IConfigElement<T> {
 
     @Override
     public Object get() {
-        return this.getValue();
+        return this.value.getString();
     }
 
     @Override

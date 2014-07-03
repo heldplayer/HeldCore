@@ -4,8 +4,10 @@ spacore:gui.container.fluid.filled=%s / %s mb
 nei.recipe.shaped.spacore=Shaped SpACore
 nei.recipe.shapeless.spacore=Shapeless SpACore
 
-config.spacore.modPack=Mod pack name
-config.spacore.optOut=Opt out
-config.spacore.refreshRate=Update interval
-config.spacore.textureMapId=Texture map ID
-config.spacore.showReportBugs='Report Bug'?
+config.spacore.category.general=General
+config.spacore.key.modPack=Mod pack name
+config.spacore.key.optOut=Opt out
+config.spacore.key.refreshRate=Update interval
+config.spacore.key.textureMapId=Texture map ID
+config.spacore.key.showReportBugs='Report Bug'?
+config.spacore.key.replaceModOptions=Replace 'Mod Options'?
