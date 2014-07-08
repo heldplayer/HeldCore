@@ -1,9 +1,7 @@
-
 package net.specialattack.forge.core.client.gui;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-
 import org.lwjgl.input.Keyboard;
 
 public class GuiScreenReportBug extends GuiScreen {
@@ -18,20 +16,12 @@ public class GuiScreenReportBug extends GuiScreen {
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
-        Keyboard.enableRepeatEvents(true);
-        int i = this.width / 2;
-        int j = 32;
-
-        String text = this.title.getText();
-        this.title = new GuiTextField(this.fontRendererObj, i - 128, j, 256, 12);
-        this.title.setMaxStringLength(40);
-        this.title.setText(text);
-
-        text = this.content.getText();
-        this.content = new GuiTextBox(this.fontRendererObj, i - 128, j + 24, 256, 128);
-        this.content.setText(text);
+    public void drawScreen(int par1, int par2, float par3) {
+        this.drawDefaultBackground();
+        this.drawCenteredString(this.fontRendererObj, "Report a bug", this.width / 2, 15, 16777215);
+        super.drawScreen(par1, par2, par3);
+        this.title.drawTextBox();
+        this.content.drawTextBox();
     }
 
     @Override
@@ -51,12 +41,20 @@ public class GuiScreenReportBug extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int par1, int par2, float par3) {
-        this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, "Report a bug", this.width / 2, 15, 16777215);
-        super.drawScreen(par1, par2, par3);
-        this.title.drawTextBox();
-        this.content.drawTextBox();
+    public void initGui() {
+        super.initGui();
+        Keyboard.enableRepeatEvents(true);
+        int i = this.width / 2;
+        int j = 32;
+
+        String text = this.title.getText();
+        this.title = new GuiTextField(this.fontRendererObj, i - 128, j, 256, 12);
+        this.title.setMaxStringLength(40);
+        this.title.setText(text);
+
+        text = this.content.getText();
+        this.content = new GuiTextBox(this.fontRendererObj, i - 128, j + 24, 256, 128);
+        this.content.setText(text);
     }
 
 }

@@ -1,4 +1,3 @@
-
 package net.specialattack.util;
 
 public final class MathHelper {
@@ -12,20 +11,6 @@ public final class MathHelper {
         }
 
         MathHelper.bezierValues[0] = 1;
-    }
-
-    /**
-     * Returns the sin of an angle in Quaternary degrees
-     */
-    public static float sin(float angle) {
-        return MathHelper.sinTable[(int) (angle * 16384.0F) & 65535];
-    }
-
-    /**
-     * Returns the sin of an angle in Quaternary degrees
-     */
-    public static float cos(float angle) {
-        return MathHelper.sinTable[(int) (angle * 16384.0F + 16384.0F) & 65535];
     }
 
     /**
@@ -120,8 +105,7 @@ public final class MathHelper {
         for (int i = 1; i < MathHelper.bezierValues.length; i++) {
             if (i > actualInput - 1) {
                 MathHelper.bezierValues[i] = 0;
-            }
-            else {
+            } else {
                 MathHelper.bezierValues[i] = MathHelper.bezierValues[i - 1] * (actualInput - i) / i;
             }
         }
@@ -148,7 +132,7 @@ public final class MathHelper {
     }
 
     public static void fastFourierTransform(int sign, int length, float[] ar, float[] ai) {
-        float scale = (float) Math.sqrt(1.0F / (double) length);
+        float scale = 1.0F; //(float) Math.sqrt(1.0F / (double) length);
 
         int i, j;
         for (i = j = 0; i < length; i++) {
@@ -187,6 +171,20 @@ public final class MathHelper {
             }
             mmax = istep;
         }
+    }
+
+    /**
+     * Returns the sin of an angle in Quaternary degrees
+     */
+    public static float cos(float angle) {
+        return MathHelper.sinTable[(int) (angle * 16384.0F + 16384.0F) & 65535];
+    }
+
+    /**
+     * Returns the sin of an angle in Quaternary degrees
+     */
+    public static float sin(float angle) {
+        return MathHelper.sinTable[(int) (angle * 16384.0F) & 65535];
     }
 
 }

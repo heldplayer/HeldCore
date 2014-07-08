@@ -1,4 +1,3 @@
-
 package net.specialattack.forge.core.reflection;
 
 import java.lang.reflect.Constructor;
@@ -18,8 +17,8 @@ public class RConstructor<T> {
             T result = this.constructor.newInstance(args);
 
             return result;
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
 
         return null;
     }

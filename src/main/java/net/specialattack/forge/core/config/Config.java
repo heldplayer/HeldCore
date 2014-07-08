@@ -1,18 +1,16 @@
-
 package net.specialattack.forge.core.config;
+
+import cpw.mods.fml.client.config.IConfigElement;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
 import java.util.List;
 
-import net.minecraftforge.common.config.Configuration;
-import cpw.mods.fml.client.config.IConfigElement;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-
 /**
  * Class used for configurations
- * 
+ *
  * @author heldplayer
- * 
  */
 public class Config<T> extends ConfigCategory<T> {
 
@@ -20,26 +18,15 @@ public class Config<T> extends ConfigCategory<T> {
 
     /**
      * Creates a new Config instance from given file
-     * 
-     * @param file
-     *        The configuration file, usually from
-     *        {@link FMLPreInitializationEvent#getSuggestedConfigurationFile()}
+     *
+     * @param file The configuration file, usually from
+     *             {@link FMLPreInitializationEvent#getSuggestedConfigurationFile()}
      */
     public Config(File file) {
         super("", "root", null, "");
 
         this.config = new Configuration(file);
         super.config = this;
-    }
-
-    /**
-     * Loads the configuration
-     */
-    @Override
-    public void load() {
-        for (ConfigCategory<?> category : this.children) {
-            category.load();
-        }
     }
 
     /**
@@ -68,7 +55,18 @@ public class Config<T> extends ConfigCategory<T> {
     }
 
     @Override
-    public void addValue(ConfigValue<?> value) {}
+    public void addValue(ConfigValue<?> value) {
+    }
+
+    /**
+     * Loads the configuration
+     */
+    @Override
+    public void load() {
+        for (ConfigCategory<?> category : this.children) {
+            category.load();
+        }
+    }
 
     @SuppressWarnings("rawtypes")
     public List<IConfigElement> getConfigElements() {

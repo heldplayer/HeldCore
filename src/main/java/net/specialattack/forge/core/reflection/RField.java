@@ -1,4 +1,3 @@
-
 package net.specialattack.forge.core.reflection;
 
 import java.lang.reflect.Field;
@@ -23,8 +22,8 @@ public class RField<T, V> {
             V result = (V) this.field.get(classInstance);
 
             return result;
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
 
         return null;
     }

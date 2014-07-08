@@ -1,15 +1,12 @@
-
 package net.specialattack.forge.core.asm;
 
-import java.util.Arrays;
-
-import net.specialattack.forge.core.Objects;
-
 import com.google.common.eventbus.EventBus;
-
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.LoadController;
 import cpw.mods.fml.common.ModMetadata;
+import net.specialattack.forge.core.Objects;
+
+import java.util.Arrays;
 
 public class SpACoreModContainer extends DummyModContainer {
 

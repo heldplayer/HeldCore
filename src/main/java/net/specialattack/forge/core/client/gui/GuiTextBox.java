@@ -1,8 +1,7 @@
-
 package net.specialattack.forge.core.client.gui;
 
-import java.util.List;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -10,11 +9,9 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
-
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiTextBox extends Gui {
@@ -66,8 +63,7 @@ public class GuiTextBox extends Gui {
         for (IChatComponent line : this.chatLines) {
             if (first) {
                 first = false;
-            }
-            else {
+            } else {
                 result.append("\n");
             }
             result.append(line.getUnformattedText());
@@ -86,8 +82,7 @@ public class GuiTextBox extends Gui {
             int start = this.cursorPosition < this.selectionEnd ? this.cursorPosition : this.selectionEnd;
             int end = this.cursorPosition < this.selectionEnd ? this.selectionEnd : this.cursorPosition;
             return this.getCurrentLine().substring(start, end);
-        }
-        else {
+        } else {
             int startLine;
             int endLine;
             int startChar;
@@ -98,8 +93,7 @@ public class GuiTextBox extends Gui {
                 endLine = this.selectionEndComponent;
                 startChar = this.cursorPosition;
                 endChar = this.selectionEnd;
-            }
-            else {
+            } else {
                 startLine = this.selectionEndComponent;
                 endLine = this.cursorPositionComponent;
                 startChar = this.selectionEnd;
@@ -132,8 +126,7 @@ public class GuiTextBox extends Gui {
                 endLine = this.selectionEndComponent;
                 startChar = this.cursorPosition;
                 endChar = this.selectionEnd;
-            }
-            else {
+            } else {
                 startLine = this.selectionEndComponent;
                 endLine = this.cursorPositionComponent;
                 startChar = this.selectionEnd;
@@ -163,8 +156,7 @@ public class GuiTextBox extends Gui {
             do {
                 remaining = remaining.substring(0, remaining.length() - 1);
                 lineCount++;
-            }
-            while (remaining.endsWith("\n"));
+            } while (remaining.endsWith("\n"));
             String[] temp = new String[lines.length + lineCount];
             System.arraycopy(lines, 0, temp, 0, lines.length);
             for (int i = 0; i < lineCount; i++) {
@@ -200,18 +192,15 @@ public class GuiTextBox extends Gui {
                 if (i == lines.length - 1) {
                     this.chatLines.add(this.cursorPositionComponent, new ChatComponentText(line + endText));
                     this.setCursorPosition(this.cursorPositionComponent, line.length());
-                }
-                else if (i == 0) {
+                } else if (i == 0) {
                     this.chatLines.set(this.cursorPositionComponent, new ChatComponentText(startText + line));
                     this.cursorPositionComponent++;
-                }
-                else {
+                } else {
                     this.chatLines.add(this.cursorPositionComponent, new ChatComponentText(line));
                     this.cursorPositionComponent++;
                 }
             }
-        }
-        else {
+        } else {
             this.chatLines.set(this.cursorPositionComponent, new ChatComponentText(startText + lines[0] + endText));
             this.setCursorPosition(this.cursorPositionComponent, startText.length() + lines[0].length());
         }
@@ -221,16 +210,13 @@ public class GuiTextBox extends Gui {
         if (this.getCurrentLine().length() != 0) {
             if (this.selectionEnd != this.cursorPosition || this.selectionEndComponent != this.cursorPositionComponent) {
                 this.writeText("");
-            }
-            else {
+            } else {
                 this.deleteFromCursor(this.getNthWordFromCursor(direction) - this.cursorPosition);
             }
-        }
-        else {
+        } else {
             if (this.selectionEnd != this.cursorPosition) {
                 this.writeText("");
-            }
-            else {
+            } else {
                 if (this.chatLines.size() > 1) {
                     this.chatLines.remove(this.cursorPositionComponent);
                 }
@@ -248,8 +234,7 @@ public class GuiTextBox extends Gui {
             this.writeText("");
 
             this.setCursorPosition(this.cursorPositionComponent, this.cursorPosition);
-        }
-        else {
+        } else {
             boolean isNegative = amount < 0;
 
             if (isNegative) {
@@ -265,8 +250,7 @@ public class GuiTextBox extends Gui {
                     }
                     return;
                 }
-            }
-            else {
+            } else {
                 if (this.cursorPosition == this.getCurrentLine().length()) {
                     if (this.cursorPositionComponent + 1 < this.chatLines.size()) {
                         IChatComponent currLine = this.chatLines.get(this.cursorPositionComponent);
@@ -329,15 +313,13 @@ public class GuiTextBox extends Gui {
                 while (currPos > 0 && currentLine.charAt(currPos - 1) != 32) {
                     --currPos;
                 }
-            }
-            else {
+            } else {
                 int length = currentLine.length();
                 currPos = currentLine.indexOf(32, currPos);
 
                 if (currPos == -1) {
                     currPos = length;
-                }
-                else {
+                } else {
                     while (includeSpace && currPos < length && currentLine.charAt(currPos) == 32) {
                         ++currPos;
                     }
@@ -359,8 +341,7 @@ public class GuiTextBox extends Gui {
         for (int i = 0; i < this.chatLines.size(); i++) {
             IChatComponent current = this.chatLines.get(i);
             String text = current.getUnformattedText();
-            @SuppressWarnings("unchecked")
-            List<String> lines = this.font.listFormattedStringToWidth(text, this.getWidth());
+            @SuppressWarnings("unchecked") List<String> lines = this.font.listFormattedStringToWidth(text, this.getWidth());
 
             int off = 0;
             boolean firstLine = true;
@@ -371,8 +352,7 @@ public class GuiTextBox extends Gui {
 
                     if (firstLine) {
                         this.setCursorPosition(this.cursorPositionComponent + 1, temp.length());
-                    }
-                    else {
+                    } else {
                         this.setCursorPosition(this.cursorPositionComponent, off + temp.length());
                     }
 
@@ -386,13 +366,11 @@ public class GuiTextBox extends Gui {
 
                             if (firstLine) {
                                 this.setCursorPosition(this.cursorPositionComponent - 1, prevLineChar + temp.length() - prevLine.length());
-                            }
-                            else {
+                            } else {
                                 this.setCursorPosition(this.cursorPositionComponent, prevLineChar + temp.length() - prevLine.length());
                             }
                             break label;
-                        }
-                        else {
+                        } else {
                             remainingChars = Integer.MIN_VALUE;
 
                             prevX = this.font.getStringWidth(sub);
@@ -447,8 +425,7 @@ public class GuiTextBox extends Gui {
             this.cursorPositionComponent--;
             this.setCursorPositionEndRow();
             this.moveCursorBy(diff);
-        }
-        else if (this.cursorPosition + count > this.getCurrentLine().length()) {
+        } else if (this.cursorPosition + count > this.getCurrentLine().length()) {
             int diff = this.cursorPosition - this.getCurrentLine().length();
             int row = this.cursorPositionComponent++;
             this.setCursorPositionStartRow();
@@ -456,8 +433,7 @@ public class GuiTextBox extends Gui {
                 this.setCursorPositionEndRow();
             }
             this.moveCursorBy(diff);
-        }
-        else {
+        } else {
             this.setCursorPosition(this.cursorPositionComponent, this.cursorPosition + count);
         }
     }
@@ -473,8 +449,7 @@ public class GuiTextBox extends Gui {
                 this.setSelectionPositionEndRow();
                 this.moveSelectionBy(diff);
             }
-        }
-        else if (this.selectionEnd + count > this.getCurrentLineSelection().length()) {
+        } else if (this.selectionEnd + count > this.getCurrentLineSelection().length()) {
             int diff = this.selectionEnd - this.getCurrentLineSelection().length();
             int row = this.selectionEndComponent++;
             this.setSelectionPositionStartRow();
@@ -482,8 +457,7 @@ public class GuiTextBox extends Gui {
                 this.setSelectionPositionEndRow();
             }
             this.moveSelectionBy(diff);
-        }
-        else {
+        } else {
             this.setSelectionPos(this.selectionEndComponent, this.selectionEnd + count);
         }
     }
@@ -534,6 +508,144 @@ public class GuiTextBox extends Gui {
         this.setSelectionPos(0, 0);
     }
 
+    public void setSelectionPos(int row, int pos) {
+        int chatHeight = this.chatLines.size();
+
+        if (pos < 0) {
+            row--;
+
+            if (row < 0) {
+                row = 0;
+            }
+
+            if (row >= chatHeight) {
+                row = chatHeight - 1;
+            }
+
+            pos = this.getLine(row).length();
+        }
+
+        if (row < 0) {
+            row = 0;
+        }
+
+        if (row >= chatHeight) {
+            row = chatHeight - 1;
+        }
+
+        this.selectionEndComponent = row;
+        int length = this.getCurrentLineSelection().length();
+
+        if (pos > length) {
+            pos = length;
+        }
+
+        if (pos < 0) {
+            pos = 0;
+        }
+
+        this.selectionEnd = pos;
+
+        if (this.font != null) {
+            int totalLines = 0;
+            int selectedLine = 0;
+
+            int remainingChars = this.cursorPosition;
+
+            // XXX
+            for (int i = 0; i < this.chatLines.size(); i++) {
+                IChatComponent current = this.chatLines.get(i);
+                String text = current.getUnformattedText();
+                @SuppressWarnings("unchecked") List<String> lines = this.font.listFormattedStringToWidth(text, this.width - 8);
+
+                int off = 0;
+                for (String line : lines) {
+                    totalLines++;
+
+                    if (i <= row) {
+                        off += line.length();
+                        if (off < text.length() && text.charAt(off) == ' ') {
+                            off++;
+                            line += " ";
+                        }
+
+                        if (i == this.cursorPositionComponent && remainingChars > 0) {
+                            if (remainingChars < line.length()) {
+                                remainingChars = -1;
+                            } else {
+                                remainingChars -= line.length();
+                            }
+                        }
+
+                        if (remainingChars >= 0) {
+                            selectedLine++;
+                        }
+                    }
+                }
+            }
+
+            int height = this.getHeight() / this.font.FONT_HEIGHT;
+
+            if (totalLines > height) {
+                if (totalLines - this.lineScrollOffset < height) { // Don't let it scroll further
+                    this.lineScrollOffset = totalLines - height;
+                }
+
+                if (selectedLine < this.lineScrollOffset) {
+                    this.lineScrollOffset = selectedLine - 1;
+                }
+
+                if (selectedLine > this.lineScrollOffset + height + 1) {
+                    this.lineScrollOffset = selectedLine - height;
+                }
+
+                if (this.lineScrollOffset < 0) { // Don't let it scroll up too far
+                    this.lineScrollOffset = 0;
+                }
+
+                if (totalLines - this.lineScrollOffset < height) { // Don't let it scroll further
+                    this.lineScrollOffset = totalLines - height;
+                }
+            } else {
+                this.lineScrollOffset = 0;
+            }
+        }
+    }
+
+    private String getLine(int line) {
+        if (line < 0 || line >= this.chatLines.size()) {
+            return "";
+        }
+        IChatComponent component = this.chatLines.get(line);
+        if (component != null) {
+            return component.getUnformattedText();
+        }
+        return "";
+    }
+
+    private String getCurrentLineSelection() {
+        if (this.selectionEndComponent < 0 || this.selectionEndComponent >= this.chatLines.size()) {
+            return "";
+        }
+        IChatComponent component = this.chatLines.get(this.selectionEndComponent);
+        if (component != null) {
+            return component.getUnformattedText();
+        }
+        return "";
+    }
+
+    public int getHeight() {
+        return this.getEnableBackgroundDrawing() ? this.height - 8 : this.height;
+    }
+
+    public boolean getEnableBackgroundDrawing() {
+        return this.enableBackgroundDrawing;
+    }
+
+    public void setEnableBackgroundDrawing(boolean p_146185_1_) {
+        this.enableBackgroundDrawing = p_146185_1_;
+    }
+
     public void setSelectionPositionEnd() {
         this.setSelectionPos(this.chatLines.size(), this.getLine(this.chatLines.size() - 1).length());
     }
@@ -550,137 +662,123 @@ public class GuiTextBox extends Gui {
         try {
             if (!this.isFocused) {
                 return false;
-            }
-            else {
+            } else {
                 switch (character) {
-                case 1: // Select all
-                    this.setCursorPositionEnd();
-                    this.setSelectionPos(0, 0);
-                    return true;
-                case 3:
-                    GuiScreen.setClipboardString(this.getSelectedText());
-                    return true;
-                case 22:
-                    if (this.isEnabled) {
-                        this.writeText(GuiScreen.getClipboardString());
-                    }
-
-                    return true;
-                case 24:
-                    GuiScreen.setClipboardString(this.getSelectedText());
-
-                    if (this.isEnabled) {
-                        this.writeText("");
-                    }
-
-                    return true;
-                default:
-                    switch (key) {
-                    case 14:
-                        if (GuiScreen.isCtrlKeyDown()) {
-                            if (this.isEnabled) {
-                                this.deleteWords(-1);
-                            }
-                        }
-                        else if (this.isEnabled) {
-                            this.deleteFromCursor(-1);
+                    case 1: // Select all
+                        this.setCursorPositionEnd();
+                        this.setSelectionPos(0, 0);
+                        return true;
+                    case 3:
+                        GuiScreen.setClipboardString(this.getSelectedText());
+                        return true;
+                    case 22:
+                        if (this.isEnabled) {
+                            this.writeText(GuiScreen.getClipboardString());
                         }
 
                         return true;
-                    case 199: // Home
-                        if (GuiScreen.isShiftKeyDown()) {
-                            this.setSelectionPos(this.selectionEndComponent, 0);
-                        }
-                        else {
-                            this.setCursorPositionStartRow();
-                        }
+                    case 24:
+                        GuiScreen.setClipboardString(this.getSelectedText());
 
-                        return true;
-                    case 200: // Up arrow
-                        this.moveCursorLine(true, GuiScreen.isCtrlKeyDown());
-                        return true;
-                    case 203: // Left arrow
-                        if (GuiScreen.isShiftKeyDown()) {
-                            if (GuiScreen.isCtrlKeyDown()) {
-                                this.setSelectionPos(this.selectionEndComponent, this.getNthWordFromPos(-1, this.getSelectionEnd()));
-                            }
-                            else {
-                                this.moveSelectionBy(-1);
-                                //this.setSelectionPos(this.selectionEndComponent, this.getSelectionEnd() - 1);
-                            }
-                        }
-                        else if (GuiScreen.isCtrlKeyDown()) {
-                            this.setCursorPosition(this.cursorPositionComponent, this.getNthWordFromCursor(-1));
-                        }
-                        else {
-                            this.moveCursorBy(-1);
-                        }
-
-                        return true;
-                    case 208: // Down arrow
-                        this.moveCursorLine(false, GuiScreen.isCtrlKeyDown());
-                        return true;
-                    case 205: // Right arrow
-                        if (GuiScreen.isShiftKeyDown()) {
-                            if (GuiScreen.isCtrlKeyDown()) {
-                                this.setSelectionPos(this.selectionEndComponent, this.getNthWordFromPos(1, this.getSelectionEnd()));
-                            }
-                            else {
-                                this.moveSelectionBy(1);
-                                //this.setSelectionPos(this.selectionEndComponent, this.getSelectionEnd() + 1);
-                            }
-                        }
-                        else if (GuiScreen.isCtrlKeyDown()) {
-                            this.setCursorPosition(this.cursorPositionComponent, this.getNthWordFromCursor(1));
-                        }
-                        else {
-                            this.moveCursorBy(1);
-                        }
-
-                        return true;
-                    case 207: // Go to end
-                        if (GuiScreen.isShiftKeyDown()) {
-                            this.setSelectionPos(this.selectionEnd, this.getLine(this.selectionEndComponent).length());
-                        }
-                        else {
-                            this.setCursorPositionEnd();
-                        }
-
-                        return true;
-                    case 211: // Backspace
-                        if (GuiScreen.isCtrlKeyDown()) {
-                            if (this.isEnabled) {
-                                this.deleteWords(1);
-                            }
-                        }
-                        else if (this.isEnabled) {
-                            this.deleteFromCursor(1);
+                        if (this.isEnabled) {
+                            this.writeText("");
                         }
 
                         return true;
                     default:
-                        if (ChatAllowedCharacters.isAllowedCharacter(character)) {
-                            if (this.isEnabled) {
-                                this.writeText(Character.toString(character));
-                            }
+                        switch (key) {
+                            case 14:
+                                if (GuiScreen.isCtrlKeyDown()) {
+                                    if (this.isEnabled) {
+                                        this.deleteWords(-1);
+                                    }
+                                } else if (this.isEnabled) {
+                                    this.deleteFromCursor(-1);
+                                }
 
-                            return true;
-                        }
-                        else if (character == '\r') {
-                            if (this.isEnabled) {
-                                this.writeText("\n");
-                            }
+                                return true;
+                            case 199: // Home
+                                if (GuiScreen.isShiftKeyDown()) {
+                                    this.setSelectionPos(this.selectionEndComponent, 0);
+                                } else {
+                                    this.setCursorPositionStartRow();
+                                }
 
-                            return true;
+                                return true;
+                            case 200: // Up arrow
+                                this.moveCursorLine(true, GuiScreen.isCtrlKeyDown());
+                                return true;
+                            case 203: // Left arrow
+                                if (GuiScreen.isShiftKeyDown()) {
+                                    if (GuiScreen.isCtrlKeyDown()) {
+                                        this.setSelectionPos(this.selectionEndComponent, this.getNthWordFromPos(-1, this.getSelectionEnd()));
+                                    } else {
+                                        this.moveSelectionBy(-1);
+                                        //this.setSelectionPos(this.selectionEndComponent, this.getSelectionEnd() - 1);
+                                    }
+                                } else if (GuiScreen.isCtrlKeyDown()) {
+                                    this.setCursorPosition(this.cursorPositionComponent, this.getNthWordFromCursor(-1));
+                                } else {
+                                    this.moveCursorBy(-1);
+                                }
+
+                                return true;
+                            case 208: // Down arrow
+                                this.moveCursorLine(false, GuiScreen.isCtrlKeyDown());
+                                return true;
+                            case 205: // Right arrow
+                                if (GuiScreen.isShiftKeyDown()) {
+                                    if (GuiScreen.isCtrlKeyDown()) {
+                                        this.setSelectionPos(this.selectionEndComponent, this.getNthWordFromPos(1, this.getSelectionEnd()));
+                                    } else {
+                                        this.moveSelectionBy(1);
+                                        //this.setSelectionPos(this.selectionEndComponent, this.getSelectionEnd() + 1);
+                                    }
+                                } else if (GuiScreen.isCtrlKeyDown()) {
+                                    this.setCursorPosition(this.cursorPositionComponent, this.getNthWordFromCursor(1));
+                                } else {
+                                    this.moveCursorBy(1);
+                                }
+
+                                return true;
+                            case 207: // Go to end
+                                if (GuiScreen.isShiftKeyDown()) {
+                                    this.setSelectionPos(this.selectionEnd, this.getLine(this.selectionEndComponent).length());
+                                } else {
+                                    this.setCursorPositionEnd();
+                                }
+
+                                return true;
+                            case 211: // Backspace
+                                if (GuiScreen.isCtrlKeyDown()) {
+                                    if (this.isEnabled) {
+                                        this.deleteWords(1);
+                                    }
+                                } else if (this.isEnabled) {
+                                    this.deleteFromCursor(1);
+                                }
+
+                                return true;
+                            default:
+                                if (ChatAllowedCharacters.isAllowedCharacter(character)) {
+                                    if (this.isEnabled) {
+                                        this.writeText(Character.toString(character));
+                                    }
+
+                                    return true;
+                                } else if (character == '\r') {
+                                    if (this.isEnabled) {
+                                        this.writeText("\n");
+                                    }
+
+                                    return true;
+                                } else {
+                                    return false;
+                                }
                         }
-                        else {
-                            return false;
-                        }
-                    }
                 }
             }
-        }
-        catch (Throwable ಠ_ಠ) {
+        } catch (Throwable ಠ_ಠ) {
             ಠ_ಠ.printStackTrace();
             return true;
         }
@@ -711,8 +809,7 @@ public class GuiTextBox extends Gui {
                 for (int i = 0; i < this.chatLines.size(); i++) {
                     IChatComponent current = this.chatLines.get(i);
                     String text = current.getUnformattedText();
-                    @SuppressWarnings("unchecked")
-                    List<String> lines = this.font.listFormattedStringToWidth(text, this.getWidth());
+                    @SuppressWarnings("unchecked") List<String> lines = this.font.listFormattedStringToWidth(text, this.getWidth());
 
                     int off = 0;
                     for (String line : lines) {
@@ -768,8 +865,7 @@ public class GuiTextBox extends Gui {
                 for (int i = 0; i < this.chatLines.size(); i++) {
                     IChatComponent current = this.chatLines.get(i);
                     String text = current.getUnformattedText();
-                    @SuppressWarnings("unchecked")
-                    List<String> lines = this.font.listFormattedStringToWidth(text, this.getWidth());
+                    @SuppressWarnings("unchecked") List<String> lines = this.font.listFormattedStringToWidth(text, this.getWidth());
 
                     int off = 0;
                     for (String line : lines) {
@@ -781,8 +877,7 @@ public class GuiTextBox extends Gui {
 
                         if (remainingLines > height - 1) {
                             //break label;
-                        }
-                        else if (remainingLines >= 0) {
+                        } else if (remainingLines >= 0) {
                             if (i <= this.cursorPositionComponent && remainingChars >= 0) {
                                 cursorY += this.font.FONT_HEIGHT;
                             }
@@ -828,13 +923,11 @@ public class GuiTextBox extends Gui {
                 label:
                 for (int i = 0; i < this.chatLines.size(); i++) {
                     IChatComponent current = this.chatLines.get(i);
-                    @SuppressWarnings("unchecked")
-                    List<String> lines = this.font.listFormattedStringToWidth(current.getFormattedText(), this.getWidth());
+                    @SuppressWarnings("unchecked") List<String> lines = this.font.listFormattedStringToWidth(current.getFormattedText(), this.getWidth());
                     for (String line : lines) {
                         if (remainingLines > height - 1) {
                             break label;
-                        }
-                        else if (remainingLines >= 0) {
+                        } else if (remainingLines >= 0) {
                             this.font.drawStringWithShadow(line, renderedLength, textOffsetY + offsetY, textColor);
                             offsetY += this.font.FONT_HEIGHT;
                         }
@@ -845,8 +938,7 @@ public class GuiTextBox extends Gui {
                 if (drawCursor) {
                     if (drawCursorAsLine) {
                         Gui.drawRect(cursorX, cursorY - 1, cursorX + 1, cursorY + 1 + this.font.FONT_HEIGHT, 0xFFD0D0D0);
-                    }
-                    else {
+                    } else {
                         this.font.drawStringWithShadow("_", cursorX, cursorY, textColor);
                     }
                 }
@@ -873,14 +965,32 @@ public class GuiTextBox extends Gui {
                         for (int i = cursorY + this.font.FONT_HEIGHT; i < selectionEndY; i += this.font.FONT_HEIGHT) {
                             this.drawSelection(textOffsetX, cursorY + i - cursorY, this.getWidth() + this.posX, cursorY + i - cursorY + this.font.FONT_HEIGHT);
                         }
-                    }
-                    else {
+                    } else {
                         this.drawSelection(cursorX, cursorY, selectionEndX, selectionEndY + this.font.FONT_HEIGHT);
                     }
                 }
             }
+        } catch (Throwable ಠ_ಠ) {
         }
-        catch (Throwable ಠ_ಠ) {}
+    }
+
+    public boolean getVisible() {
+        return this.visible;
+    }
+
+    public String getCurrentLine() {
+        if (this.cursorPositionComponent < 0 || this.cursorPositionComponent >= this.chatLines.size()) {
+            return "";
+        }
+        IChatComponent component = this.chatLines.get(this.cursorPositionComponent);
+        if (component != null) {
+            return component.getUnformattedText();
+        }
+        return "";
+    }
+
+    public int getWidth() {
+        return this.getEnableBackgroundDrawing() ? this.width - 8 : this.width;
     }
 
     private void drawSelection(int startX, int startY, int width, int height) {
@@ -919,16 +1029,12 @@ public class GuiTextBox extends Gui {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
     public int getCursorPosition() {
         return this.cursorPosition;
-    }
-
-    public boolean getEnableBackgroundDrawing() {
-        return this.enableBackgroundDrawing;
-    }
-
-    public void setEnableBackgroundDrawing(boolean p_146185_1_) {
-        this.enableBackgroundDrawing = p_146185_1_;
     }
 
     public void setTextColor(int color) {
@@ -939,16 +1045,16 @@ public class GuiTextBox extends Gui {
         this.disabledColor = color;
     }
 
+    public boolean isFocused() {
+        return this.isFocused;
+    }
+
     public void setFocused(boolean focused) {
         if (focused && !this.isFocused) {
             this.cursorCounter = 0;
         }
 
         this.isFocused = focused;
-    }
-
-    public boolean isFocused() {
-        return this.isFocused;
     }
 
     public void setEnabled(boolean enabled) {
@@ -959,164 +1065,8 @@ public class GuiTextBox extends Gui {
         return this.selectionEnd;
     }
 
-    public int getWidth() {
-        return this.getEnableBackgroundDrawing() ? this.width - 8 : this.width;
-    }
-
-    public int getHeight() {
-        return this.getEnableBackgroundDrawing() ? this.height - 8 : this.height;
-    }
-
-    public String getCurrentLine() {
-        if (this.cursorPositionComponent < 0 || this.cursorPositionComponent >= this.chatLines.size()) {
-            return "";
-        }
-        IChatComponent component = this.chatLines.get(this.cursorPositionComponent);
-        if (component != null) {
-            return component.getUnformattedText();
-        }
-        return "";
-    }
-
-    private String getCurrentLineSelection() {
-        if (this.selectionEndComponent < 0 || this.selectionEndComponent >= this.chatLines.size()) {
-            return "";
-        }
-        IChatComponent component = this.chatLines.get(this.selectionEndComponent);
-        if (component != null) {
-            return component.getUnformattedText();
-        }
-        return "";
-    }
-
-    private String getLine(int line) {
-        if (line < 0 || line >= this.chatLines.size()) {
-            return "";
-        }
-        IChatComponent component = this.chatLines.get(line);
-        if (component != null) {
-            return component.getUnformattedText();
-        }
-        return "";
-    }
-
-    public void setSelectionPos(int row, int pos) {
-        int chatHeight = this.chatLines.size();
-
-        if (pos < 0) {
-            row--;
-
-            if (row < 0) {
-                row = 0;
-            }
-
-            if (row >= chatHeight) {
-                row = chatHeight - 1;
-            }
-
-            pos = this.getLine(row).length();
-        }
-
-        if (row < 0) {
-            row = 0;
-        }
-
-        if (row >= chatHeight) {
-            row = chatHeight - 1;
-        }
-
-        this.selectionEndComponent = row;
-        int length = this.getCurrentLineSelection().length();
-
-        if (pos > length) {
-            pos = length;
-        }
-
-        if (pos < 0) {
-            pos = 0;
-        }
-
-        this.selectionEnd = pos;
-
-        if (this.font != null) {
-            int totalLines = 0;
-            int selectedLine = 0;
-
-            int remainingChars = this.cursorPosition;
-
-            // XXX
-            for (int i = 0; i < this.chatLines.size(); i++) {
-                IChatComponent current = this.chatLines.get(i);
-                String text = current.getUnformattedText();
-                @SuppressWarnings("unchecked")
-                List<String> lines = this.font.listFormattedStringToWidth(text, this.width - 8);
-
-                int off = 0;
-                for (String line : lines) {
-                    totalLines++;
-
-                    if (i <= row) {
-                        off += line.length();
-                        if (off < text.length() && text.charAt(off) == ' ') {
-                            off++;
-                            line += " ";
-                        }
-
-                        if (i == this.cursorPositionComponent && remainingChars > 0) {
-                            if (remainingChars < line.length()) {
-                                remainingChars = -1;
-                            }
-                            else {
-                                remainingChars -= line.length();
-                            }
-                        }
-
-                        if (remainingChars >= 0) {
-                            selectedLine++;
-                        }
-                    }
-                }
-            }
-
-            int height = this.getHeight() / this.font.FONT_HEIGHT;
-
-            if (totalLines > height) {
-                if (totalLines - this.lineScrollOffset < height) { // Don't let it scroll further
-                    this.lineScrollOffset = totalLines - height;
-                }
-
-                if (selectedLine < this.lineScrollOffset) {
-                    this.lineScrollOffset = selectedLine - 1;
-                }
-
-                if (selectedLine > this.lineScrollOffset + height + 1) {
-                    this.lineScrollOffset = selectedLine - height;
-                }
-
-                if (this.lineScrollOffset < 0) { // Don't let it scroll up too far
-                    this.lineScrollOffset = 0;
-                }
-
-                if (totalLines - this.lineScrollOffset < height) { // Don't let it scroll further
-                    this.lineScrollOffset = totalLines - height;
-                }
-            }
-            else {
-                this.lineScrollOffset = 0;
-            }
-        }
-    }
-
     public void setCanLoseFocus(boolean flag) {
         this.canLoseFocus = flag;
-    }
-
-    public boolean getVisible() {
-        return this.visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 
 }

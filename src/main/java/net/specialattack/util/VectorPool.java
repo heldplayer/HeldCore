@@ -1,4 +1,3 @@
-
 package net.specialattack.util;
 
 import java.util.LinkedList;
@@ -24,8 +23,7 @@ public final class VectorPool {
             Vector vector = new Vector();
             VectorPool.usedVectors.add(vector);
             return vector;
-        }
-        else {
+        } else {
             Vector vector = VectorPool.unusedVectors.remove(0);
             vector.posX = 0.0D;
             vector.posY = 0.0D;
@@ -40,8 +38,7 @@ public final class VectorPool {
             Vector vector = new Vector(x, y, z);
             VectorPool.usedVectors.add(vector);
             return vector;
-        }
-        else {
+        } else {
             Vector vector = VectorPool.unusedVectors.remove(0);
             vector.posX = x;
             vector.posY = y;
@@ -58,17 +55,14 @@ public final class VectorPool {
             size = 16;
             used = VectorPool.usedTinyVectorArrays;
             unused = VectorPool.unusedTinyVectorArrays;
-        }
-        else if (size <= 256) {
+        } else if (size <= 256) {
             size = 256;
             used = VectorPool.usedSmallVectorArrays;
             unused = VectorPool.unusedSmallVectorArrays;
-        }
-        else {
+        } else {
             if (size <= VectorPool.bigArraySize) {
                 size = VectorPool.bigArraySize;
-            }
-            else {
+            } else {
                 VectorPool.bigArraySize = size;
                 VectorPool.usedBigVectorArrays.clear();
                 VectorPool.unusedBigVectorArrays.clear();
@@ -79,8 +73,7 @@ public final class VectorPool {
             Vector[] vectors = new Vector[size];
             used.add(vectors);
             return vectors;
-        }
-        else {
+        } else {
             Vector[] vectors = unused.remove(0);
             for (int i = 0; i < vectors.length; i++) {
                 vectors[i] = null;

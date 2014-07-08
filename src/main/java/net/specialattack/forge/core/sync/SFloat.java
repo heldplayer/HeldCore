@@ -1,10 +1,9 @@
-
 package net.specialattack.forge.core.sync;
+
+import com.google.common.io.ByteArrayDataInput;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-
-import com.google.common.io.ByteArrayDataInput;
 
 public class SFloat extends BaseSyncable {
 
@@ -19,15 +18,15 @@ public class SFloat extends BaseSyncable {
         super(owner);
     }
 
+    public float getValue() {
+        return this.value;
+    }
+
     public void setValue(float value) {
         if (this.value != value) {
             this.value = value;
             this.hasChanged = true;
         }
-    }
-
-    public float getValue() {
-        return this.value;
     }
 
     @Override

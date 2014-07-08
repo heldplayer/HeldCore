@@ -1,16 +1,14 @@
-
 package net.specialattack.forge.core.sync;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-
+import com.google.common.io.ByteArrayDataInput;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.google.common.io.ByteArrayDataInput;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 public class SInventoryStack extends BaseSyncable {
 
@@ -41,17 +39,12 @@ public class SInventoryStack extends BaseSyncable {
         return true;
     }
 
-    public void setInventory(IInventory inventory) {
-        this.inventory = inventory;
-        super.hasChanged = true;
-    }
-
     public IInventory getInventory() {
         return this.inventory;
     }
 
-    public void setValue(ItemStack value) {
-        this.inventory.setInventorySlotContents(this.slot, value);
+    public void setInventory(IInventory inventory) {
+        this.inventory = inventory;
         super.hasChanged = true;
     }
 
@@ -59,13 +52,17 @@ public class SInventoryStack extends BaseSyncable {
         return this.inventory.getStackInSlot(this.slot);
     }
 
+    public void setValue(ItemStack value) {
+        this.inventory.setInventorySlotContents(this.slot, value);
+        super.hasChanged = true;
+    }
+
     @Override
     public void read(ByteArrayDataInput in) throws IOException {
         boolean isNull = in.readBoolean();
         if (isNull) {
             this.inventory.setInventorySlotContents(this.slot, null);
-        }
-        else {
+        } else {
             NBTTagCompound tag = CompressedStreamTools.func_152456_a(in, NBTSizeTracker.field_152451_a);
             this.inventory.setInventorySlotContents(this.slot, ItemStack.loadItemStackFromNBT(tag));
         }
@@ -76,8 +73,7 @@ public class SInventoryStack extends BaseSyncable {
         ItemStack stack = this.inventory.getStackInSlot(this.slot);
         if (stack == null) {
             out.writeBoolean(true);
-        }
-        else {
+        } else {
             out.writeBoolean(false);
             NBTTagCompound tag = stack.writeToNBT(new NBTTagCompound());
             CompressedStreamTools.write(tag, out);

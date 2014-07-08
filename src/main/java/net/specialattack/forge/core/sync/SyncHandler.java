@@ -1,12 +1,8 @@
-
 package net.specialattack.forge.core.sync;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.world.World;
@@ -19,12 +15,9 @@ import net.specialattack.forge.core.sync.packet.Packet2TrackingBegin;
 import net.specialattack.forge.core.sync.packet.Packet3TrackingUpdate;
 import net.specialattack.forge.core.sync.packet.Packet5TrackingEnd;
 import net.specialattack.forge.core.sync.packet.Packet6SetInterval;
-
 import org.apache.logging.log4j.Level;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import java.util.*;
 
 public class SyncHandler {
 
@@ -34,6 +27,7 @@ public class SyncHandler {
     public static LinkedList<ISyncable> clientSyncables = new LinkedList<ISyncable>();
 
     public static boolean debug = true;
+    public static int initializationCounter = 0;
 
     public static void reset() {
         SyncHandler.globalObjects.clear();
@@ -237,8 +231,6 @@ public class SyncHandler {
             tracker.syncableOwners.remove(object);
         }
     }
-
-    public static int initializationCounter = 0;
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {

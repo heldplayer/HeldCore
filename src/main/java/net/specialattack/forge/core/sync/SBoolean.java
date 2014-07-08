@@ -1,10 +1,9 @@
-
 package net.specialattack.forge.core.sync;
+
+import com.google.common.io.ByteArrayDataInput;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-
-import com.google.common.io.ByteArrayDataInput;
 
 public class SBoolean extends BaseSyncable {
 
@@ -19,15 +18,15 @@ public class SBoolean extends BaseSyncable {
         super(owner);
     }
 
+    public boolean getValue() {
+        return this.value;
+    }
+
     public void setValue(boolean value) {
         if (this.value != value) {
             this.value = value;
             this.hasChanged = true;
         }
-    }
-
-    public boolean getValue() {
-        return this.value;
     }
 
     @Override

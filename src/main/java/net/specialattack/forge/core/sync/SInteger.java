@@ -1,10 +1,9 @@
-
 package net.specialattack.forge.core.sync;
+
+import com.google.common.io.ByteArrayDataInput;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-
-import com.google.common.io.ByteArrayDataInput;
 
 public class SInteger extends BaseSyncable {
 
@@ -19,15 +18,15 @@ public class SInteger extends BaseSyncable {
         super(owner);
     }
 
+    public int getValue() {
+        return this.value;
+    }
+
     public void setValue(int value) {
         if (this.value != value) {
             this.value = value;
             this.hasChanged = true;
         }
-    }
-
-    public int getValue() {
-        return this.value;
     }
 
     @Override

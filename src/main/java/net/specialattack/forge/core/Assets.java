@@ -1,4 +1,3 @@
-
 package net.specialattack.forge.core;
 
 import net.minecraft.util.ResourceLocation;

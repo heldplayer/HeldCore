@@ -1,6 +1,7 @@
-
 package net.specialattack.forge.core.client;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.AxisAlignedBB;
@@ -9,17 +10,12 @@ import net.minecraft.util.ResourceLocation;
 import net.specialattack.util.MathHelper;
 import net.specialattack.util.Vector;
 import net.specialattack.util.VectorPool;
-
 import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * A helper class used for rendering in 3D-space
- * 
+ *
  * @author heldplayer
- * 
  */
 @SideOnly(Side.CLIENT)
 public final class RenderHelper {
@@ -28,8 +24,7 @@ public final class RenderHelper {
         if (icon == null) {
             if (block) {
                 icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
-            }
-            else {
+            } else {
                 icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.locationItemsTexture)).getAtlasSprite("missingno");
             }
         }
@@ -43,36 +38,6 @@ public final class RenderHelper {
         if (texturemanager != null) {
             texturemanager.bindTexture(location);
         }
-    }
-
-    public static Vector[] getBezierPlanePoints(Vector[][] points, int pointCount) {
-        int actualLength = 0;
-        for (int i = 0; i < points[0].length; i++) {
-            if (points[0][i] == null) {
-                break;
-            }
-            actualLength++;
-        }
-        Vector[][] list = new Vector[pointCount + 1][];
-        for (int i = 0; i < list.length; i++) {
-            list[i] = VectorPool.getFreeVectorArray(actualLength);
-        }
-
-        for (int j = 0; j <= pointCount; j++) {
-            for (int i = 0; i < points.length; i++) {
-                list[j][i] = MathHelper.bezier(points[i], (double) j / (double) pointCount);
-            }
-        }
-
-        Vector[] result = VectorPool.getFreeVectorArray(list.length * (pointCount + 1));
-
-        for (int j = 0; j <= pointCount; j++) {
-            for (int i = 0; i < list.length; i++) {
-                result[i + j * (pointCount + 1)] = MathHelper.bezier(list[i], (double) j / (double) pointCount);
-            }
-        }
-
-        return result;
     }
 
     public static void renderBezierPlane(Vector[][] points, IIcon icon, int pointCount) {
@@ -105,6 +70,36 @@ public final class RenderHelper {
             }
         }
         GL11.glEnd();
+    }
+
+    public static Vector[] getBezierPlanePoints(Vector[][] points, int pointCount) {
+        int actualLength = 0;
+        for (int i = 0; i < points[0].length; i++) {
+            if (points[0][i] == null) {
+                break;
+            }
+            actualLength++;
+        }
+        Vector[][] list = new Vector[pointCount + 1][];
+        for (int i = 0; i < list.length; i++) {
+            list[i] = VectorPool.getFreeVectorArray(actualLength);
+        }
+
+        for (int j = 0; j <= pointCount; j++) {
+            for (int i = 0; i < points.length; i++) {
+                list[j][i] = MathHelper.bezier(points[i], (double) j / (double) pointCount);
+            }
+        }
+
+        Vector[] result = VectorPool.getFreeVectorArray(list.length * (pointCount + 1));
+
+        for (int j = 0; j <= pointCount; j++) {
+            for (int i = 0; i < list.length; i++) {
+                result[i + j * (pointCount + 1)] = MathHelper.bezier(list[i], (double) j / (double) pointCount);
+            }
+        }
+
+        return result;
     }
 
     public static void drawBox(AxisAlignedBB aabb) {

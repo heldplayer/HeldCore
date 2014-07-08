@@ -1,4 +1,3 @@
-
 package net.specialattack.forge.core.reflection;
 
 @SuppressWarnings("unchecked")
@@ -9,8 +8,8 @@ public final class ReflectionHelper {
             Class<T> clazz = (Class<T>) Class.forName(classPath);
 
             return new RClass<T>(clazz);
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
 
         return null;
     }

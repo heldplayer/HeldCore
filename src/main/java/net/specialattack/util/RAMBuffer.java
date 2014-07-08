@@ -1,4 +1,3 @@
-
 package net.specialattack.util;
 
 import java.io.PrintStream;
@@ -47,7 +46,7 @@ public class RAMBuffer {
 
     /**
      * Gets the capacity of the RAMBuffer
-     * 
+     *
      * @return The capacity of the buffer
      */
     public int getCapacity() {
@@ -56,14 +55,13 @@ public class RAMBuffer {
 
     /**
      * Gets the available bytes to be read
-     * 
+     *
      * @return The amount of available bytes to be read
      */
     public int getAvailable() {
         if (this.wrapFlag) {
             return this.writePos + this.capacity - this.readPos;
-        }
-        else {
+        } else {
             return this.writePos - this.readPos;
         }
     }
@@ -77,10 +75,8 @@ public class RAMBuffer {
 
     /**
      * Reads from the buffer into the parameter byte array
-     * 
-     * @param dest
-     *        The array to read to
-     * 
+     *
+     * @param dest The array to read to
      * @see read(byte[], int, int)
      */
     public byte[] read(byte[] dest) {
@@ -90,13 +86,10 @@ public class RAMBuffer {
     /**
      * Reads <code>length</code> bytes of the buffer into the parameter byte
      * array, starting at <code>offset</code>
-     * 
-     * @param dest
-     *        The array to read to
-     * @param offset
-     *        The starting offset to read from the destination array
-     * @param length
-     *        The amount of bytes to read
+     *
+     * @param dest   The array to read to
+     * @param offset The starting offset to read from the destination array
+     * @param length The amount of bytes to read
      */
     public byte[] read(byte[] dest, int offset, int length) {
         if (length >= this.capacity) {
@@ -118,20 +111,17 @@ public class RAMBuffer {
                 synchronized (this.readObj) {
                     try {
                         this.readObj.wait();
-                    }
-                    catch (InterruptedException e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             }
-        }
-        else {
+        } else {
             if (!this.wrapFlag && this.readPos + length > this.writePos) {
                 synchronized (this.readObj) {
                     try {
                         this.readObj.wait();
-                    }
-                    catch (InterruptedException e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
@@ -153,8 +143,7 @@ public class RAMBuffer {
                 this.buffer.get(dest, this.capacity - this.readPos, length - this.capacity + this.readPos);
                 this.readPos = length - this.capacity + this.readPos;
                 this.wrapFlag = false;
-            }
-            else {
+            } else {
                 this.buffer.position(this.readPos);
                 this.buffer.get(dest, offset, length);
                 this.readPos += length;
@@ -171,9 +160,8 @@ public class RAMBuffer {
 
     /**
      * Skips a certain amount of bytes
-     * 
-     * @param amount
-     *        The amount of bytes to skip
+     *
+     * @param amount The amount of bytes to skip
      */
     public void skip(int amount) {
         if (amount >= this.capacity) {
@@ -189,17 +177,15 @@ public class RAMBuffer {
         if (this.readPos + amount > this.capacity) {
             this.readPos = amount - this.capacity + this.readPos;
             this.wrapFlag = false;
-        }
-        else {
+        } else {
             this.readPos += amount;
         }
     }
 
     /**
      * Writes the parameter byte array to the buffer
-     * 
-     * @param src
-     *        The array to read from
+     *
+     * @param src The array to read from
      */
     public void write(byte[] src) {
         this.write(src, 0, src.length);
@@ -208,13 +194,10 @@ public class RAMBuffer {
     /**
      * Writes <code>length</code> bytes of the parameter byte array into the
      * buffer, starting at <code>offset</code>
-     * 
-     * @param src
-     *        The array to be written from
-     * @param offset
-     *        The starting offset to write from the destination array
-     * @param length
-     *        The amount of bytes to write
+     *
+     * @param src    The array to be written from
+     * @param offset The starting offset to write from the destination array
+     * @param length The amount of bytes to write
      */
     public void write(byte[] src, int offset, int length) {
         if (src.length >= this.capacity) {
@@ -237,20 +220,17 @@ public class RAMBuffer {
                 synchronized (this.writeObj) {
                     try {
                         this.writeObj.wait();
-                    }
-                    catch (InterruptedException e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             }
-        }
-        else {
+        } else {
             if (this.wrapFlag && this.writePos + length > this.readPos) {
                 synchronized (this.writeObj) {
                     try {
                         this.writeObj.wait();
-                    }
-                    catch (InterruptedException e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
@@ -266,8 +246,7 @@ public class RAMBuffer {
                 this.buffer.put(src, this.capacity - this.writePos, length - this.capacity + this.writePos);
                 this.writePos = length - this.capacity + this.writePos;
                 this.wrapFlag = true;
-            }
-            else {
+            } else {
                 this.buffer.position(this.writePos);
                 this.buffer.put(src, offset, length);
                 this.writePos += length;
@@ -282,10 +261,9 @@ public class RAMBuffer {
 
     /**
      * Prints the status of the RAMBuffer to the specified PrintStream
-     * 
-     * @param str
-     *        The stream to print to, see {@link System.out} and
-     *        {@link System.err}
+     *
+     * @param str The stream to print to, see {@link System.out} and
+     *            {@link System.err}
      */
     @Deprecated
     public void printStatus(PrintStream str) {
@@ -300,9 +278,9 @@ public class RAMBuffer {
     public static class Sections {
 
         protected int sectionSize;
-        private byte[][] sections;
         protected int lastSectionIndex;
         protected int bytesUntillNextSection;
+        private byte[][] sections;
 
         public Sections(int sectionSize, int sectionCount) {
             this.sectionSize = sectionSize;
@@ -314,8 +292,7 @@ public class RAMBuffer {
         public byte[][] getStoredSections() {
             if (this.sectionSize > 0) {
                 return this.sections;
-            }
-            else {
+            } else {
                 throw new IllegalStateException("RAMBuffer doesn't have sections enabled");
             }
         }
@@ -344,8 +321,7 @@ public class RAMBuffer {
                         buffer.buffer.rewind();
                         buffer.buffer.get(last, buffer.capacity - this.lastSectionIndex, this.sectionSize - buffer.capacity + this.lastSectionIndex);
                         this.lastSectionIndex = this.sectionSize - buffer.capacity + this.lastSectionIndex;
-                    }
-                    else {
+                    } else {
                         buffer.buffer.position(this.lastSectionIndex);
                         buffer.buffer.get(last, 0, this.sectionSize);
                         this.lastSectionIndex += this.sectionSize;
@@ -359,7 +335,8 @@ public class RAMBuffer {
             }
         }
 
-        public void pushData(byte[] section) {}
+        public void pushData(byte[] section) {
+        }
 
     }
 

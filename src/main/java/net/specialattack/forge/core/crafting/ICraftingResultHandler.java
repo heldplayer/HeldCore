@@ -1,9 +1,8 @@
-
 package net.specialattack.forge.core.crafting;
 
-import java.util.List;
-
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public interface ICraftingResultHandler {
 

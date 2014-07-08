@@ -1,11 +1,12 @@
-
 package net.specialattack.forge.core.client;
 
-import java.awt.Rectangle;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import cpw.mods.fml.client.GuiModList;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -26,16 +27,16 @@ import net.specialattack.forge.core.client.gui.GuiScreenReportBug;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.packet.Packet1TrackingStatus;
-import cpw.mods.fml.client.GuiModList;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.awt.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
+
+    public static IIcon iconReportBug;
 
     @Override
     public void init(FMLInitializationEvent event) {
@@ -57,8 +58,7 @@ public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public void onChunkUnload(ChunkEvent.Unload event) {
         if (event.world.isRemote) {
-            @SuppressWarnings("unchecked")
-            Map<ChunkPosition, TileEntity> tiles = event.getChunk().chunkTileEntityMap;
+            @SuppressWarnings("unchecked") Map<ChunkPosition, TileEntity> tiles = event.getChunk().chunkTileEntityMap;
             Iterator<TileEntity> iterator = tiles.values().iterator();
 
             while (iterator.hasNext()) {
@@ -70,8 +70,6 @@ public class ClientProxy extends CommonProxy {
             }
         }
     }
-
-    public static IIcon iconReportBug;
 
     @SubscribeEvent
     public void onTextureStitchedPost(TextureStitchEvent.Pre event) {
@@ -125,6 +123,21 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
+    private static boolean addButtonCheckClear(GuiScreen gui, Rectangle area, GuiButton button) {
+        List<GuiButton> buttonList = ObfuscationReflectionHelper.getPrivateValue(GuiScreen.class, gui, "buttonList", "field_146292_n");
+        for (GuiButton current : buttonList) {
+            if (area.intersects(new Rectangle(current.xPosition, current.yPosition, current.width, current.height))) {
+                return false;
+            }
+        }
+        button.xPosition = area.x;
+        button.yPosition = area.y;
+        button.width = area.width;
+        button.height = area.height;
+        buttonList.add(button);
+        return true;
+    }
+
     @SubscribeEvent
     public void onActionPerformedPost(ActionPerformedEvent.Pre event) {
         if (SpACore.showReportBugs.getValue()) {
@@ -139,21 +152,6 @@ public class ClientProxy extends CommonProxy {
                 event.setCanceled(true);
             }
         }
-    }
-
-    private static boolean addButtonCheckClear(GuiScreen gui, Rectangle area, GuiButton button) {
-        List<GuiButton> buttonList = ObfuscationReflectionHelper.getPrivateValue(GuiScreen.class, gui, "buttonList", "field_146292_n");
-        for (GuiButton current : buttonList) {
-            if (area.intersects(new Rectangle(current.xPosition, current.yPosition, current.width, current.height))) {
-                return false;
-            }
-        }
-        button.xPosition = area.x;
-        button.yPosition = area.y;
-        button.width = area.width;
-        button.height = area.height;
-        buttonList.add(button);
-        return true;
     }
 
 }

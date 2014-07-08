@@ -1,22 +1,5 @@
-
 package net.specialattack.forge.core;
 
-import java.io.File;
-import java.io.IOException;
-
-import net.minecraftforge.common.config.Configuration;
-import net.specialattack.forge.core.client.MC;
-import net.specialattack.forge.core.config.Config;
-import net.specialattack.forge.core.config.ConfigCategory;
-import net.specialattack.forge.core.config.ConfigValue;
-import net.specialattack.forge.core.packet.PacketHandler;
-import net.specialattack.forge.core.sync.SyncHandler;
-import net.specialattack.forge.core.sync.packet.Packet1TrackingStatus;
-import net.specialattack.forge.core.sync.packet.Packet2TrackingBegin;
-import net.specialattack.forge.core.sync.packet.Packet3TrackingUpdate;
-import net.specialattack.forge.core.sync.packet.Packet4InitiateClientTracking;
-import net.specialattack.forge.core.sync.packet.Packet5TrackingEnd;
-import net.specialattack.forge.core.sync.packet.Packet6SetInterval;
 import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -28,6 +11,17 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.common.config.Configuration;
+import net.specialattack.forge.core.client.MC;
+import net.specialattack.forge.core.config.Config;
+import net.specialattack.forge.core.config.ConfigCategory;
+import net.specialattack.forge.core.config.ConfigValue;
+import net.specialattack.forge.core.packet.PacketHandler;
+import net.specialattack.forge.core.sync.SyncHandler;
+import net.specialattack.forge.core.sync.packet.*;
+
+import java.io.File;
+import java.io.IOException;
 
 @Mod(name = Objects.MOD_NAME, modid = Objects.MOD_ID, guiFactory = Objects.GUI_FACTORY)
 public class SpACore extends SpACoreMod {
@@ -48,6 +42,30 @@ public class SpACore extends SpACoreMod {
     public static ConfigValue<Boolean> replaceModOptions;
 
     public static PacketHandler packetHandler;
+
+    public static void initializeReporter(String modId, String modVersion) {
+        if (SpACore.allowSnooping()) {
+            try {
+                File file = new File(SpACore.configFolder, modId + ".version");
+
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+
+                UsageReporter reporter = new UsageReporter(modId, modVersion, SpACore.modPack.getValue(), FMLCommonHandler.instance().getSide(), SpACore.configFolder);
+
+                Thread thread = new Thread(reporter, "Mod usage reporter for " + modId);
+                thread.setDaemon(true);
+                thread.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static boolean allowSnooping() {
+        return MC.getGameSettings().snooperEnabled && !SpACore.optOut.getValue();
+    }
 
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -87,44 +105,6 @@ public class SpACore extends SpACoreMod {
     }
 
     @Override
-    @EventHandler
-    public void init(FMLInitializationEvent event) {
-        super.init(event);
-    }
-
-    @Override
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        super.postInit(event);
-    }
-
-    @EventHandler
-    public void serverStarting(FMLServerStartingEvent event) {
-        SyncHandler.reset();
-    }
-
-    public static void initializeReporter(String modId, String modVersion) {
-        if (SpACore.allowSnooping()) {
-            try {
-                File file = new File(SpACore.configFolder, modId + ".version");
-
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-
-                UsageReporter reporter = new UsageReporter(modId, modVersion, SpACore.modPack.getValue(), FMLCommonHandler.instance().getSide(), SpACore.configFolder);
-
-                Thread thread = new Thread(reporter, "Mod usage reporter for " + modId);
-                thread.setDaemon(true);
-                thread.start();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
     public ModInfo getModInfo() {
         return Objects.MOD_INFO;
     }
@@ -135,8 +115,20 @@ public class SpACore extends SpACoreMod {
     }
 
     @Override
+    @EventHandler
+    public void init(FMLInitializationEvent event) {
+        super.init(event);
+    }
+
+    @Override
     public boolean shouldReport() {
         return false;
+    }
+
+    @Override
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        super.postInit(event);
     }
 
     @Override
@@ -145,8 +137,9 @@ public class SpACore extends SpACoreMod {
         return true;
     }
 
-    public static boolean allowSnooping() {
-        return MC.getGameSettings().snooperEnabled && !SpACore.optOut.getValue();
+    @EventHandler
+    public void serverStarting(FMLServerStartingEvent event) {
+        SyncHandler.reset();
     }
 
 }

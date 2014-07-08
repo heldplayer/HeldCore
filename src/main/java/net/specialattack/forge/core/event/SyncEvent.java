@@ -1,10 +1,9 @@
-
 package net.specialattack.forge.core.event;
 
+import cpw.mods.fml.common.eventhandler.Event;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.PlayerTracker;
 import net.specialattack.forge.core.sync.SyncHandler;
-import cpw.mods.fml.common.eventhandler.Event;
 
 public abstract class SyncEvent extends Event {
 

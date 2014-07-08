@@ -1,6 +1,6 @@
-import java.util.Arrays;
-
 import net.specialattack.util.RAMBuffer;
+
+import java.util.Arrays;
 
 public class RAMTest {
 
@@ -11,6 +11,7 @@ public class RAMTest {
     private static void testBasicBuffer() {
         final RAMBuffer buffer = new RAMBuffer(16);
         new Thread(new Runnable() {
+
             @Override
             public void run() {
                 buffer.write(new byte[] { 1, 2, 3, 4, 5, 6 });
@@ -25,6 +26,7 @@ public class RAMTest {
         }).start();
 
         Thread t = new Thread(new Runnable() {
+
             @Override
             public void run() {
                 System.err.println(Arrays.toString(buffer.read(new byte[6])));
@@ -40,8 +42,7 @@ public class RAMTest {
         t.start();
         try {
             t.join();
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

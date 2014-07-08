@@ -1,4 +1,3 @@
-
 package net.specialattack.forge.core.reflection;
 
 import java.lang.reflect.Constructor;
@@ -20,8 +19,8 @@ public class RClass<T> {
             field.setAccessible(true);
 
             return new RField<T, V>(this, field);
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
 
         return null;
     }
@@ -32,8 +31,8 @@ public class RClass<T> {
             method.setAccessible(true);
 
             return new RMethod<T, V>(this, method);
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
 
         return null;
     }
@@ -44,8 +43,8 @@ public class RClass<T> {
             constructor.setAccessible(true);
 
             return new RConstructor<T>(this, constructor);
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
 
         return null;
     }

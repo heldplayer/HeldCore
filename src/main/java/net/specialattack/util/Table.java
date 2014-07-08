@@ -1,4 +1,3 @@
-
 package net.specialattack.util;
 
 import java.util.Collection;
@@ -112,12 +111,12 @@ public class Table<K, V1, V2> {
             return this.value1;
         }
 
-        public W getValue2() {
-            return this.value2;
-        }
-
         public void setValue1(V value) {
             this.value1 = value;
+        }
+
+        public W getValue2() {
+            return this.value2;
         }
 
         public void setValue2(W value) {

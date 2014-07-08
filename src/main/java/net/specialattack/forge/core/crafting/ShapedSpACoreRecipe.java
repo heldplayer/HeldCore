@@ -1,10 +1,4 @@
-
 package net.specialattack.forge.core.crafting;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
@@ -12,6 +6,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class ShapedSpACoreRecipe implements ISpACoreRecipe {
@@ -36,8 +35,7 @@ public class ShapedSpACoreRecipe implements ISpACoreRecipe {
             this.mirrored = (Boolean) ingredients[idx];
             if (ingredients[idx + 1] instanceof Object[]) {
                 ingredients = (Object[]) ingredients[idx + 1];
-            }
-            else {
+            } else {
                 idx = 1;
             }
         }
@@ -51,8 +49,7 @@ public class ShapedSpACoreRecipe implements ISpACoreRecipe {
             }
 
             this.height = parts.length;
-        }
-        else {
+        } else {
             while (ingredients[idx] instanceof String) {
                 String s = (String) ingredients[idx++];
                 shape += s;
@@ -78,17 +75,13 @@ public class ShapedSpACoreRecipe implements ISpACoreRecipe {
 
             if (in instanceof ItemStack) {
                 itemMap.put(chr, Arrays.asList(((ItemStack) in).copy()));
-            }
-            else if (in instanceof Item) {
+            } else if (in instanceof Item) {
                 itemMap.put(chr, Arrays.asList(new ItemStack((Item) in)));
-            }
-            else if (in instanceof Block) {
+            } else if (in instanceof Block) {
                 itemMap.put(chr, Arrays.asList(new ItemStack((Block) in, 1, OreDictionary.WILDCARD_VALUE)));
-            }
-            else if (in instanceof String) {
+            } else if (in instanceof String) {
                 itemMap.put(chr, OreDictionary.getOres((String) in));
-            }
-            else {
+            } else {
                 String ret = "Invalid shaped ore recipe: ";
                 for (Object tmp : ingredients) {
                     ret += tmp + ", ";
@@ -106,11 +99,6 @@ public class ShapedSpACoreRecipe implements ISpACoreRecipe {
     }
 
     @Override
-    public int getRecipeSize() {
-        return this.ingredients.length;
-    }
-
-    @Override
     public ItemStack getOutput() {
         return this.output.copy();
     }
@@ -118,16 +106,6 @@ public class ShapedSpACoreRecipe implements ISpACoreRecipe {
     @Override
     public ICraftingResultHandler getHandler() {
         return this.handler;
-    }
-
-    @Override
-    public ItemStack getRecipeOutput() {
-        return this.output;
-    }
-
-    @Override
-    public ItemStack getCraftingResult(InventoryCrafting var1) {
-        return this.tempOut.copy();
     }
 
     @Override
@@ -147,6 +125,21 @@ public class ShapedSpACoreRecipe implements ISpACoreRecipe {
         return false;
     }
 
+    @Override
+    public ItemStack getCraftingResult(InventoryCrafting var1) {
+        return this.tempOut.copy();
+    }
+
+    @Override
+    public int getRecipeSize() {
+        return this.ingredients.length;
+    }
+
+    @Override
+    public ItemStack getRecipeOutput() {
+        return this.output;
+    }
+
     private boolean checkMatch(InventoryCrafting inv, int startX, int startY, boolean mirror) {
         this.tempOut = null;
         ArrayList<ItemStack> input = new ArrayList<ItemStack>();
@@ -160,8 +153,7 @@ public class ShapedSpACoreRecipe implements ISpACoreRecipe {
                 if (subX >= 0 && subY >= 0 && subX < this.width && subY < this.height) {
                     if (mirror) {
                         target = this.ingredients[this.width - subX - 1 + subY * this.width];
-                    }
-                    else {
+                    } else {
                         target = this.ingredients[subX + subY * this.width];
                     }
                 }
@@ -170,8 +162,7 @@ public class ShapedSpACoreRecipe implements ISpACoreRecipe {
 
                 if (target == null && slot != null) {
                     return false;
-                }
-                else if (target != null) {
+                } else if (target != null) {
                     boolean matched = false;
 
                     for (ItemStack item : target) {

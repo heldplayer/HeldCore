@@ -1,10 +1,9 @@
-
 package net.specialattack.forge.core.sync;
+
+import com.google.common.io.ByteArrayDataInput;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-
-import com.google.common.io.ByteArrayDataInput;
 
 public class SShort extends BaseSyncable {
 
@@ -19,15 +18,15 @@ public class SShort extends BaseSyncable {
         super(owner);
     }
 
+    public short getValue() {
+        return this.value;
+    }
+
     public void setValue(short value) {
         if (this.value != value) {
             this.value = value;
             this.hasChanged = true;
         }
-    }
-
-    public short getValue() {
-        return this.value;
     }
 
     @Override

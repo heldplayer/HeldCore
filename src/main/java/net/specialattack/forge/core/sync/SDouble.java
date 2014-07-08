@@ -1,10 +1,9 @@
-
 package net.specialattack.forge.core.sync;
+
+import com.google.common.io.ByteArrayDataInput;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-
-import com.google.common.io.ByteArrayDataInput;
 
 public class SDouble extends BaseSyncable {
 
@@ -19,15 +18,15 @@ public class SDouble extends BaseSyncable {
         super(owner);
     }
 
+    public double getValue() {
+        return this.value;
+    }
+
     public void setValue(double value) {
         if (this.value != value) {
             this.value = value;
             this.hasChanged = true;
         }
-    }
-
-    public double getValue() {
-        return this.value;
     }
 
     @Override

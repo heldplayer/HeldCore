@@ -1,11 +1,8 @@
-
 package net.specialattack.forge.core.sync.packet;
 
+import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-
-import java.io.IOException;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -14,7 +11,8 @@ import net.specialattack.forge.core.event.SyncEvent;
 import net.specialattack.forge.core.packet.SpACorePacket;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.SyncHandler;
-import cpw.mods.fml.relauncher.Side;
+
+import java.io.IOException;
 
 public class Packet1TrackingStatus extends SpACorePacket {
 
@@ -39,8 +37,7 @@ public class Packet1TrackingStatus extends SpACorePacket {
             this.posX = object.getPosX();
             this.posY = object.getPosY();
             this.posZ = object.getPosZ();
-        }
-        else {
+        } else {
             this.isWordly = false;
 
             this.identifier = object.getIdentifier();
@@ -60,8 +57,7 @@ public class Packet1TrackingStatus extends SpACorePacket {
             this.posX = in.readInt();
             this.posY = in.readInt();
             this.posZ = in.readInt();
-        }
-        else {
+        } else {
             byte[] data = new byte[in.readInt()];
             in.readBytes(data);
             this.identifier = new String(data);
@@ -78,8 +74,7 @@ public class Packet1TrackingStatus extends SpACorePacket {
             out.writeInt(this.posX);
             out.writeInt(this.posY);
             out.writeInt(this.posZ);
-        }
-        else {
+        } else {
             byte[] data = this.identifier.getBytes();
             out.writeInt(data.length);
             out.writeBytes(data);
@@ -100,22 +95,19 @@ public class Packet1TrackingStatus extends SpACorePacket {
                 if (tile instanceof ISyncableObjectOwner) {
                     if (this.track) {
                         SyncHandler.startTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
-                    }
-                    else {
+                    } else {
                         SyncHandler.stopTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
                     }
                 }
             }
-        }
-        else {
+        } else {
             SyncEvent.RequestObject event = new SyncEvent.RequestObject(this.identifier);
             MinecraftForge.EVENT_BUS.post(event);
 
             if (event.result != null) {
                 if (this.track) {
                     SyncHandler.startTracking(event.result, (EntityPlayerMP) player);
-                }
-                else {
+                } else {
                     SyncHandler.stopTracking(event.result, (EntityPlayerMP) player);
                 }
             }

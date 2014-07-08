@@ -1,10 +1,4 @@
-
 package net.specialattack.forge.core.crafting;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
@@ -12,6 +6,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public class ShapelessSpACoreRecipe implements ISpACoreRecipe {
 
@@ -29,20 +28,15 @@ public class ShapelessSpACoreRecipe implements ISpACoreRecipe {
         for (Object ingredient : ingredients) {
             if (ingredient instanceof ItemStack) {
                 this.ingredients.add(Arrays.asList(((ItemStack) ingredient).copy()));
-            }
-            else if (ingredient instanceof Item) {
+            } else if (ingredient instanceof Item) {
                 this.ingredients.add(Arrays.asList(new ItemStack((Item) ingredient)));
-            }
-            else if (ingredient instanceof Block) {
+            } else if (ingredient instanceof Block) {
                 this.ingredients.add(Arrays.asList(new ItemStack((Block) ingredient)));
-            }
-            else if (ingredient instanceof String) {
+            } else if (ingredient instanceof String) {
                 this.ingredients.add(OreDictionary.getOres((String) ingredient));
-            }
-            else if (ingredient instanceof ItemStack[]) {
+            } else if (ingredient instanceof ItemStack[]) {
                 this.ingredients.add(Arrays.asList((ItemStack[]) ingredient));
-            }
-            else {
+            } else {
                 StringBuilder str = new StringBuilder("Invalid shapeless SpACore recipe: ");
                 for (Object tmp : ingredients) {
                     str.append(tmp).append(", ");
@@ -54,11 +48,6 @@ public class ShapelessSpACoreRecipe implements ISpACoreRecipe {
     }
 
     @Override
-    public int getRecipeSize() {
-        return this.ingredients.size();
-    }
-
-    @Override
     public ItemStack getOutput() {
         return this.output.copy();
     }
@@ -66,16 +55,6 @@ public class ShapelessSpACoreRecipe implements ISpACoreRecipe {
     @Override
     public ICraftingResultHandler getHandler() {
         return this.handler;
-    }
-
-    @Override
-    public ItemStack getRecipeOutput() {
-        return this.output;
-    }
-
-    @Override
-    public ItemStack getCraftingResult(InventoryCrafting crafting) {
-        return this.tempOut.copy();
     }
 
     @Override
@@ -120,6 +99,21 @@ public class ShapelessSpACoreRecipe implements ISpACoreRecipe {
         }
 
         return false;
+    }
+
+    @Override
+    public ItemStack getCraftingResult(InventoryCrafting crafting) {
+        return this.tempOut.copy();
+    }
+
+    @Override
+    public int getRecipeSize() {
+        return this.ingredients.size();
+    }
+
+    @Override
+    public ItemStack getRecipeOutput() {
+        return this.output;
     }
 
     private boolean checkItemEquals(ItemStack target, ItemStack input) {

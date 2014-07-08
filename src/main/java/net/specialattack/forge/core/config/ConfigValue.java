@@ -1,24 +1,21 @@
-
 package net.specialattack.forge.core.config;
 
-import java.util.List;
-import java.util.regex.Pattern;
-
-import net.minecraftforge.common.config.Property;
 import cpw.mods.fml.client.config.ConfigGuiType;
 import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
 import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.common.config.Property;
+
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Class used for storing a configuration entry
- * 
+ *
+ * @param <T> The type of value that will be stored in this config
  * @author heldplayer
- * 
- * @param <T>
- *        The type of value that will be stored in this config
  */
 public class ConfigValue<T> implements IConfigElement<T> {
 
@@ -125,9 +122,175 @@ public class ConfigValue<T> implements IConfigElement<T> {
         }
     }
 
+    public boolean isChanged() {
+        if (this.side != FMLCommonHandler.instance().getSide() && this.side != null) {
+            return false;
+        }
+
+        return this.value != null ? this.value.hasChanged() : false;
+    }
+
+    public ConfigValue<T> setRequiresMcRestart(boolean requiresMcRestart) {
+        this.requiresMcRestart = requiresMcRestart;
+        return this;
+    }
+
+    public ConfigValue<T> setRequiresWorldRestart(boolean requiresWorldRestart) {
+        this.requiresWorldRestart = requiresWorldRestart;
+        return this;
+    }
+
+    public ConfigValue<T> setShowInGui(boolean showInGui) {
+        this.showInGui = showInGui;
+        return this;
+    }
+
+    @Override
+    public boolean isProperty() {
+        return true;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Class<? extends IConfigEntry> getConfigEntryClass() {
+        return null;
+    }
+
+    @Override
+    public Class<? extends IArrayEntry> getArrayEntryClass() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public String getQualifiedName() {
+        return this.name;
+    }
+
+    @Override
+    public String getLanguageKey() {
+        return this.unlocalizedName;
+    }
+
+    @Override
+    public String getComment() {
+        return this.comment;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public List<IConfigElement> getChildElements() {
+        return null;
+    }
+
+    @Override
+    public ConfigGuiType getType() {
+        switch (this.mode) {
+            case 1:
+            case 6:
+                return ConfigGuiType.BOOLEAN;
+            case 2:
+            case 7:
+                return ConfigGuiType.DOUBLE;
+            case 3:
+            case 8:
+                return ConfigGuiType.INTEGER;
+            case 4:
+            case 9:
+            default:
+                return ConfigGuiType.STRING;
+        }
+    }
+
+    @Override
+    public boolean isList() {
+        return this.mode > 4 && this.mode < 10;
+    }
+
+    @Override
+    public boolean isListLengthFixed() {
+        return false;
+    }
+
+    @Override
+    public int getMaxListLength() {
+        return -1;
+    }
+
+    @Override
+    public boolean isDefault() {
+        return this.value.isDefault();
+    }
+
+    @Override
+    public Object getDefault() {
+        return this.deff;
+    }
+
+    @Override
+    public Object[] getDefaults() {
+        if (this.mode == 6) {
+            Boolean[] values = new Boolean[((boolean[]) this.deff).length];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = Boolean.valueOf(((boolean[]) this.deff)[i]);
+            }
+            return values;
+        } else if (this.mode == 7) {
+            Double[] values = new Double[((double[]) this.deff).length];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = Double.valueOf(((double[]) this.deff)[i]);
+            }
+            return values;
+        } else if (this.mode == 8) {
+            Integer[] values = new Integer[((int[]) this.deff).length];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = Integer.valueOf(((int[]) this.deff)[i]);
+            }
+            return values;
+        } else if (this.mode == 9) {
+            return (IConfigurable[]) this.deff;
+        } else {
+            return (String[]) this.deff;
+        }
+    }
+
+    @Override
+    public void setToDefault() {
+        this.value.setToDefault();
+    }
+
+    @Override
+    public boolean requiresWorldRestart() {
+        return this.requiresWorldRestart;
+    }
+
+    @Override
+    public boolean showInGui() {
+        return this.showInGui;
+    }
+
+    @Override
+    public boolean requiresMcRestart() {
+        return this.requiresMcRestart;
+    }
+
+    @Override
+    public Object get() {
+        return this.value.getString();
+    }
+
+    @Override
+    public Object[] getList() {
+        return (Object[]) this.getValue();
+    }
+
     /**
      * Returns the value this config entry is set to
-     * 
+     *
      * @return The set value
      */
     @SuppressWarnings("unchecked")
@@ -218,176 +381,6 @@ public class ConfigValue<T> implements IConfigElement<T> {
         if (this.mode == 9) {
             this.value.set((String[]) value);
         }
-    }
-
-    public boolean isChanged() {
-        if (this.side != FMLCommonHandler.instance().getSide() && this.side != null) {
-            return false;
-        }
-
-        return this.value != null ? this.value.hasChanged() : false;
-    }
-
-    public ConfigValue<T> setRequiresMcRestart(boolean requiresMcRestart) {
-        this.requiresMcRestart = requiresMcRestart;
-        return this;
-    }
-
-    public ConfigValue<T> setRequiresWorldRestart(boolean requiresWorldRestart) {
-        this.requiresWorldRestart = requiresWorldRestart;
-        return this;
-    }
-
-    public ConfigValue<T> setShowInGui(boolean showInGui) {
-        this.showInGui = showInGui;
-        return this;
-    }
-
-    @Override
-    public boolean isProperty() {
-        return true;
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    public Class<? extends IConfigEntry> getConfigEntryClass() {
-        return null;
-    }
-
-    @Override
-    public Class<? extends IArrayEntry> getArrayEntryClass() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public String getQualifiedName() {
-        return this.name;
-    }
-
-    @Override
-    public String getLanguageKey() {
-        return this.unlocalizedName;
-    }
-
-    @Override
-    public String getComment() {
-        return this.comment;
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    public List<IConfigElement> getChildElements() {
-        return null;
-    }
-
-    @Override
-    public ConfigGuiType getType() {
-        switch (this.mode) {
-        case 1:
-        case 6:
-            return ConfigGuiType.BOOLEAN;
-        case 2:
-        case 7:
-            return ConfigGuiType.DOUBLE;
-        case 3:
-        case 8:
-            return ConfigGuiType.INTEGER;
-        case 4:
-        case 9:
-        default:
-            return ConfigGuiType.STRING;
-        }
-    }
-
-    @Override
-    public boolean isList() {
-        return this.mode > 4 && this.mode < 10;
-    }
-
-    @Override
-    public boolean isListLengthFixed() {
-        return false;
-    }
-
-    @Override
-    public int getMaxListLength() {
-        return -1;
-    }
-
-    @Override
-    public boolean isDefault() {
-        return this.value.isDefault();
-    }
-
-    @Override
-    public Object getDefault() {
-        return this.deff;
-    }
-
-    @Override
-    public Object[] getDefaults() {
-        if (this.mode == 6) {
-            Boolean[] values = new Boolean[((boolean[]) this.deff).length];
-            for (int i = 0; i < values.length; i++) {
-                values[i] = Boolean.valueOf(((boolean[]) this.deff)[i]);
-            }
-            return values;
-        }
-        else if (this.mode == 7) {
-            Double[] values = new Double[((double[]) this.deff).length];
-            for (int i = 0; i < values.length; i++) {
-                values[i] = Double.valueOf(((double[]) this.deff)[i]);
-            }
-            return values;
-        }
-        else if (this.mode == 8) {
-            Integer[] values = new Integer[((int[]) this.deff).length];
-            for (int i = 0; i < values.length; i++) {
-                values[i] = Integer.valueOf(((int[]) this.deff)[i]);
-            }
-            return values;
-        }
-        else if (this.mode == 9) {
-            return (IConfigurable[]) this.deff;
-        }
-        else {
-            return (String[]) this.deff;
-        }
-    }
-
-    @Override
-    public void setToDefault() {
-        this.value.setToDefault();
-    }
-
-    @Override
-    public boolean requiresWorldRestart() {
-        return this.requiresWorldRestart;
-    }
-
-    @Override
-    public boolean showInGui() {
-        return this.showInGui;
-    }
-
-    @Override
-    public boolean requiresMcRestart() {
-        return this.requiresMcRestart;
-    }
-
-    @Override
-    public Object get() {
-        return this.value.getString();
-    }
-
-    @Override
-    public Object[] getList() {
-        return (Object[]) this.getValue();
     }
 
     @Override

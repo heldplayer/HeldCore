@@ -1,15 +1,13 @@
-
 package net.specialattack.forge.core.sync;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-
+import com.google.common.io.ByteArrayDataInput;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.google.common.io.ByteArrayDataInput;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 public class SItemStack extends BaseSyncable {
 
@@ -24,15 +22,15 @@ public class SItemStack extends BaseSyncable {
         super(owner);
     }
 
+    public ItemStack getValue() {
+        return this.value;
+    }
+
     public void setValue(ItemStack value) {
         if (this.value != value && !ItemStack.areItemStacksEqual(this.value, value)) {
             this.value = value;
             this.hasChanged = true;
         }
-    }
-
-    public ItemStack getValue() {
-        return this.value;
     }
 
     @Override

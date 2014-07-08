@@ -1,4 +1,3 @@
-
 package net.specialattack.forge.core;
 
 import java.io.InputStream;
@@ -23,12 +22,10 @@ public class ModInfo {
             prop.load(stream);
             stream.close();
             version = prop.getProperty("version");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             version = "Error";
-        }
-        finally {
+        } finally {
             this.modVersion = version;
         }
     }

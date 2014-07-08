@@ -1,9 +1,7 @@
-
 package net.specialattack.forge.core.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -13,18 +11,16 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.specialattack.forge.core.Assets;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A helper class used for rendering on GUIs
- * 
+ *
  * @author heldplayer
- * 
  */
 @SideOnly(Side.CLIENT)
 public final class GuiHelper {
@@ -33,23 +29,17 @@ public final class GuiHelper {
 
     /**
      * Draws a fluid tank
-     * 
-     * @param fluid
-     *        The fluid to render
-     * @param left
-     *        The x position to start at
-     * @param top
-     *        The y position to start at
-     * @param width
-     *        The width of the tank to render
-     * @param height
-     *        The height of the tank to render
+     *
+     * @param fluid  The fluid to render
+     * @param left   The x position to start at
+     * @param top    The y position to start at
+     * @param width  The width of the tank to render
+     * @param height The height of the tank to render
      */
     public static void drawFluid(Fluid fluid, int left, int top, int width, int height) {
         if (fluid.getSpriteNumber() == 0) {
             MC.getRenderEngine().bindTexture(TextureMap.locationBlocksTexture);
-        }
-        else {
+        } else {
             MC.getRenderEngine().bindTexture(TextureMap.locationItemsTexture);
         }
 
@@ -77,14 +67,34 @@ public final class GuiHelper {
     }
 
     /**
+     * Draws a textured rectangle
+     *
+     * @param startX The starting x position
+     * @param startY The starting y position
+     * @param width  The width of the rectangle
+     * @param height The height of the rectangle
+     * @param zLevel The z-level for rendering
+     * @param startU The starting texture u location
+     * @param startV The starting texture v location
+     * @param endU   The ending texture u location
+     * @param endV   The ending texture v location
+     */
+    public static void drawTexturedModalRect(int startX, int startY, int width, int height, float zLevel, float startU, float startV, float endU, float endV) {
+        Tessellator tes = Tessellator.instance;
+        tes.startDrawingQuads();
+        tes.addVertexWithUV(startX, startY + height, zLevel, startU, endV);
+        tes.addVertexWithUV(startX + width, startY + height, zLevel, endU, endV);
+        tes.addVertexWithUV(startX + width, startY, zLevel, endU, startV);
+        tes.addVertexWithUV(startX, startY, zLevel, startU, startV);
+        tes.draw();
+    }
+
+    /**
      * Scales an int for drawing in a GUI
-     * 
-     * @param scale
-     *        The resulting max value of the int
-     * @param amount
-     *        The amount
-     * @param total
-     *        The max amount that can be entered
+     *
+     * @param scale  The resulting max value of the int
+     * @param amount The amount
+     * @param total  The max amount that can be entered
      * @return
      */
     public static int getScaled(int scale, int amount, int total) {
@@ -97,19 +107,13 @@ public final class GuiHelper {
 
     /**
      * Draws a tooltip
-     * 
-     * @param strings
-     *        The strings to draw
-     * @param fontRenderer
-     *        The font renderer instance to use
-     * @param mouseX
-     *        The x position of the mouse
-     * @param mouseY
-     *        The y position of the mouse
-     * @param guiTop
-     *        The top position of the GUI
-     * @param height
-     *        The height of the GUI
+     *
+     * @param strings      The strings to draw
+     * @param fontRenderer The font renderer instance to use
+     * @param mouseX       The x position of the mouse
+     * @param mouseY       The y position of the mouse
+     * @param guiTop       The top position of the GUI
+     * @param height       The height of the GUI
      */
     public static void drawTooltip(List<String> strings, FontRenderer fontRenderer, int mouseX, int mouseY, int guiTop, int height) {
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
@@ -173,45 +177,16 @@ public final class GuiHelper {
         }
     }
 
-    public static ArrayList<String> getFluidString(IFluidTank tank) {
-        GuiHelper.reusableArrayList.clear();
-
-        if (tank == null) {
-            GuiHelper.reusableArrayList.add("This tank is broken");
-            return GuiHelper.reusableArrayList;
-        }
-
-        FluidStack stack = tank.getFluid();
-
-        if (stack != null && stack.amount > 0) {
-            GuiHelper.reusableArrayList.add(stack.getFluid().getLocalizedName());
-            GuiHelper.reusableArrayList.add(StatCollector.translateToLocalFormatted(Assets.DOMAIN + "gui.container.fluid.filled", stack.amount, tank.getCapacity()).trim());
-        }
-        else {
-            GuiHelper.reusableArrayList.add(StatCollector.translateToLocal(Assets.DOMAIN + "gui.container.fluid.empty"));
-            GuiHelper.reusableArrayList.add(StatCollector.translateToLocalFormatted(Assets.DOMAIN + "gui.container.fluid.filled", 0, tank.getCapacity()).trim());
-        }
-
-        return GuiHelper.reusableArrayList;
-    }
-
     /**
      * Draws a gradient rectangle
-     * 
-     * @param startX
-     *        The starting x position
-     * @param startY
-     *        The starting y position
-     * @param endX
-     *        The ending x position
-     * @param endY
-     *        The ending y position
-     * @param color1
-     *        The first colour
-     * @param color2
-     *        The last colour
-     * @param zLevel
-     *        The z-level for rendering
+     *
+     * @param startX The starting x position
+     * @param startY The starting y position
+     * @param endX   The ending x position
+     * @param endY   The ending y position
+     * @param color1 The first colour
+     * @param color2 The last colour
+     * @param zLevel The z-level for rendering
      */
     public static void drawGradientRect(int startX, int startY, int endX, int endY, int color1, int color2, float zLevel) {
         float alpha1 = (color1 >> 24 & 255) / 255.0F;
@@ -242,36 +217,25 @@ public final class GuiHelper {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 
-    /**
-     * Draws a textured rectangle
-     * 
-     * @param startX
-     *        The starting x position
-     * @param startY
-     *        The starting y position
-     * @param width
-     *        The width of the rectangle
-     * @param height
-     *        The height of the rectangle
-     * @param zLevel
-     *        The z-level for rendering
-     * @param startU
-     *        The starting texture u location
-     * @param startV
-     *        The starting texture v location
-     * @param endU
-     *        The ending texture u location
-     * @param endV
-     *        The ending texture v location
-     */
-    public static void drawTexturedModalRect(int startX, int startY, int width, int height, float zLevel, float startU, float startV, float endU, float endV) {
-        Tessellator tes = Tessellator.instance;
-        tes.startDrawingQuads();
-        tes.addVertexWithUV(startX, startY + height, zLevel, startU, endV);
-        tes.addVertexWithUV(startX + width, startY + height, zLevel, endU, endV);
-        tes.addVertexWithUV(startX + width, startY, zLevel, endU, startV);
-        tes.addVertexWithUV(startX, startY, zLevel, startU, startV);
-        tes.draw();
+    public static ArrayList<String> getFluidString(IFluidTank tank) {
+        GuiHelper.reusableArrayList.clear();
+
+        if (tank == null) {
+            GuiHelper.reusableArrayList.add("This tank is broken");
+            return GuiHelper.reusableArrayList;
+        }
+
+        FluidStack stack = tank.getFluid();
+
+        if (stack != null && stack.amount > 0) {
+            GuiHelper.reusableArrayList.add(stack.getFluid().getLocalizedName());
+            GuiHelper.reusableArrayList.add(StatCollector.translateToLocalFormatted(Assets.DOMAIN + "gui.container.fluid.filled", stack.amount, tank.getCapacity()).trim());
+        } else {
+            GuiHelper.reusableArrayList.add(StatCollector.translateToLocal(Assets.DOMAIN + "gui.container.fluid.empty"));
+            GuiHelper.reusableArrayList.add(StatCollector.translateToLocalFormatted(Assets.DOMAIN + "gui.container.fluid.filled", 0, tank.getCapacity()).trim());
+        }
+
+        return GuiHelper.reusableArrayList;
     }
 
     public static void drawTexturedModalRect(int startX, int startY, int width, int height, double zLevel, double startU, double startV, double endU, double endV) {

@@ -1,4 +1,3 @@
-
 package net.specialattack.forge.core;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;

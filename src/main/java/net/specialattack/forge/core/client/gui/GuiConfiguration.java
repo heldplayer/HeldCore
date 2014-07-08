@@ -1,10 +1,9 @@
-
 package net.specialattack.forge.core.client.gui;
 
+import cpw.mods.fml.client.config.GuiConfig;
 import net.minecraft.client.gui.GuiScreen;
 import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.SpACore;
-import cpw.mods.fml.client.config.GuiConfig;
 
 public class GuiConfiguration extends GuiConfig {
 

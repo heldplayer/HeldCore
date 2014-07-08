@@ -1,6 +1,7 @@
-
 package net.specialattack.forge.core.client;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
@@ -11,23 +12,21 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.settings.GameSettings;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class MC {
 
     private static Minecraft mc;
 
+    public static EffectRenderer getEffectRenderer() {
+        return MC.getMinecraft().effectRenderer;
+    }
+
     public static Minecraft getMinecraft() {
         if (MC.mc == null) {
             MC.mc = Minecraft.getMinecraft();
         }
         return MC.mc;
-    }
-
-    public static EffectRenderer getEffectRenderer() {
-        return MC.getMinecraft().effectRenderer;
     }
 
     public static EntityRenderer getEntityRenderer() {

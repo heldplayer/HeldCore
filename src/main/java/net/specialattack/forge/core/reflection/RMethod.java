@@ -1,4 +1,3 @@
-
 package net.specialattack.forge.core.reflection;
 
 import java.lang.reflect.Method;
@@ -23,8 +22,8 @@ public class RMethod<T, V> {
             V result = (V) this.method.invoke(classInstance, args);
 
             return result;
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
 
         return null;
     }

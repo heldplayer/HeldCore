@@ -1,16 +1,15 @@
-
 package net.specialattack.forge.core.config;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.client.config.ConfigGuiType;
 import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
 import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.common.config.Configuration;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class ConfigCategory<T> implements IConfigElement<T> {
 
@@ -181,7 +180,8 @@ public class ConfigCategory<T> implements IConfigElement<T> {
     }
 
     @Override
-    public void setToDefault() {}
+    public void setToDefault() {
+    }
 
     @Override
     public boolean requiresWorldRestart() {
@@ -209,10 +209,12 @@ public class ConfigCategory<T> implements IConfigElement<T> {
     }
 
     @Override
-    public void set(T value) {}
+    public void set(T value) {
+    }
 
     @Override
-    public void set(T[] aVal) {}
+    public void set(T[] aVal) {
+    }
 
     @Override
     public String[] getValidValues() {

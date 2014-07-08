@@ -1,111 +1,25 @@
-
 package net.specialattack.forge.core.nei.recipe;
 
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.specialattack.forge.core.crafting.ShapelessSpACoreRecipe;
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIClientUtils;
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.ShapedRecipeHandler;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
+import net.specialattack.forge.core.crafting.ShapelessSpACoreRecipe;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
 
     public int[][] stackorder = new int[][] { { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 }, { 0, 2 }, { 1, 2 }, { 2, 0 }, { 2, 1 }, { 2, 2 } };
-
-    public class CachedShapelessRecipe extends CachedRecipe {
-
-        public ArrayList<PositionedStack> ingredients;
-        public List<ItemStack> input;
-        public PositionedStack result;
-        public ShapelessSpACoreRecipe recipe;
-
-        public CachedShapelessRecipe(ShapelessSpACoreRecipe recipe) {
-            this.recipe = recipe;
-            this.ingredients = new ArrayList<PositionedStack>();
-            this.input = new ArrayList<ItemStack>();
-            this.setResult(recipe.getOutput());
-            this.setIngredients(recipe);
-        }
-
-        public void setIngredients(List<List<ItemStack>> items) {
-            this.ingredients.clear();
-            this.input.clear();
-            for (int ingred = 0; ingred < items.size(); ingred++) {
-                PositionedStack stack = new PositionedStack(items.get(ingred), 25 + ShapelessSpACoreRecipeHandler.this.stackorder[ingred][0] * 18, 6 + ShapelessSpACoreRecipeHandler.this.stackorder[ingred][1] * 18);
-                stack.setMaxSize(1);
-                this.ingredients.add(stack);
-            }
-
-            this.getCycledIngredients(ShapelessSpACoreRecipeHandler.this.cycleticks / 20, this.ingredients);
-            this.setResult(this.recipe.handler.getOutput(this.recipe, this.input));
-        }
-
-        public void setIngredients(ShapelessSpACoreRecipe recipe) {
-            ArrayList<List<ItemStack>> items = recipe.ingredients;
-
-            this.setIngredients(items);
-        }
-
-        public void setResult(ItemStack output) {
-            if (this.result != null) {
-                this.result.item = output;
-                this.result.items = new ItemStack[] { output };
-            }
-            else {
-                this.result = new PositionedStack(output, 119, 24);
-            }
-        }
-
-        @Override
-        public ArrayList<PositionedStack> getIngredients() {
-            return this.ingredients;
-        }
-
-        @Override
-        public PositionedStack getResult() {
-            return this.result;
-        }
-
-        // Strangeness @Override
-        public ArrayList<PositionedStack> getCycledIngredients(int cycle, ArrayList<PositionedStack> ingredients) {
-            ArrayList<PositionedStack> result = (ArrayList<PositionedStack>) super.getCycledIngredients(cycle, ingredients);
-
-            this.input.clear();
-
-            for (PositionedStack stack : result) {
-                this.input.add(stack.item);
-            }
-
-            return result;
-        }
-
-        @Override
-        public void setIngredientPermutation(Collection<PositionedStack> ingredients, ItemStack ingredient) {
-            for (PositionedStack stack : ingredients) {
-                for (int i = 0; i < stack.items.length; i++) {
-                    if (NEIServerUtils.areStacksSameTypeCrafting(ingredient, stack.items[i])) {
-                        stack.item = ingredient;
-                        stack.item.setItemDamage(ingredient.getItemDamage());
-                        stack.items = new ItemStack[] { stack.item };
-                        stack.setPermutationToRender(0);
-                        break;
-                    }
-                }
-            }
-        }
-
-    }
 
     @Override
     public String getRecipeName() {
@@ -128,8 +42,7 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
 
                 this.arecipes.add(recipe);
             }
-        }
-        else {
+        } else {
             super.loadCraftingRecipes(outputId, results);
         }
     }
@@ -175,6 +88,16 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
     }
 
     @Override
+    public void drawExtras(int recipeId) {
+        super.drawExtras(recipeId);
+        CachedShapelessRecipe recipe = (CachedShapelessRecipe) this.arecipes.get(recipeId);
+
+        if (recipe != null && recipe.recipe != null && recipe.recipe.handler != null) {
+            GuiDraw.drawStringC(recipe.recipe.handler.getOwningModName(), 124, 8, 0x404040, false);
+        }
+    }
+
+    @Override
     public void onUpdate() {
         super.onUpdate();
 
@@ -186,16 +109,6 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
 
                 recipe.setResult(recipe.recipe.handler.getOutput(recipe.recipe, recipe.input));
             }
-        }
-    }
-
-    @Override
-    public void drawExtras(int recipeId) {
-        super.drawExtras(recipeId);
-        CachedShapelessRecipe recipe = (CachedShapelessRecipe) this.arecipes.get(recipeId);
-
-        if (recipe != null && recipe.recipe != null && recipe.recipe.handler != null) {
-            GuiDraw.drawStringC(recipe.recipe.handler.getOwningModName(), 124, 8, 0x404040, false);
         }
     }
 
@@ -219,6 +132,89 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
         }
 
         return currenttip;
+    }
+
+    public class CachedShapelessRecipe extends CachedRecipe {
+
+        public ArrayList<PositionedStack> ingredients;
+        public List<ItemStack> input;
+        public PositionedStack result;
+        public ShapelessSpACoreRecipe recipe;
+
+        public CachedShapelessRecipe(ShapelessSpACoreRecipe recipe) {
+            this.recipe = recipe;
+            this.ingredients = new ArrayList<PositionedStack>();
+            this.input = new ArrayList<ItemStack>();
+            this.setResult(recipe.getOutput());
+            this.setIngredients(recipe);
+        }
+
+        public void setIngredients(List<List<ItemStack>> items) {
+            this.ingredients.clear();
+            this.input.clear();
+            for (int ingred = 0; ingred < items.size(); ingred++) {
+                PositionedStack stack = new PositionedStack(items.get(ingred), 25 + ShapelessSpACoreRecipeHandler.this.stackorder[ingred][0] * 18, 6 + ShapelessSpACoreRecipeHandler.this.stackorder[ingred][1] * 18);
+                stack.setMaxSize(1);
+                this.ingredients.add(stack);
+            }
+
+            this.getCycledIngredients(ShapelessSpACoreRecipeHandler.this.cycleticks / 20, this.ingredients);
+            this.setResult(this.recipe.handler.getOutput(this.recipe, this.input));
+        }
+
+        // Strangeness @Override
+        public ArrayList<PositionedStack> getCycledIngredients(int cycle, ArrayList<PositionedStack> ingredients) {
+            ArrayList<PositionedStack> result = (ArrayList<PositionedStack>) super.getCycledIngredients(cycle, ingredients);
+
+            this.input.clear();
+
+            for (PositionedStack stack : result) {
+                this.input.add(stack.item);
+            }
+
+            return result;
+        }
+
+        @Override
+        public PositionedStack getResult() {
+            return this.result;
+        }
+
+        public void setResult(ItemStack output) {
+            if (this.result != null) {
+                this.result.item = output;
+                this.result.items = new ItemStack[] { output };
+            } else {
+                this.result = new PositionedStack(output, 119, 24);
+            }
+        }
+
+        @Override
+        public ArrayList<PositionedStack> getIngredients() {
+            return this.ingredients;
+        }
+
+        public void setIngredients(ShapelessSpACoreRecipe recipe) {
+            ArrayList<List<ItemStack>> items = recipe.ingredients;
+
+            this.setIngredients(items);
+        }
+
+        @Override
+        public void setIngredientPermutation(Collection<PositionedStack> ingredients, ItemStack ingredient) {
+            for (PositionedStack stack : ingredients) {
+                for (int i = 0; i < stack.items.length; i++) {
+                    if (NEIServerUtils.areStacksSameTypeCrafting(ingredient, stack.items[i])) {
+                        stack.item = ingredient;
+                        stack.item.setItemDamage(ingredient.getItemDamage());
+                        stack.items = new ItemStack[] { stack.item };
+                        stack.setPermutationToRender(0);
+                        break;
+                    }
+                }
+            }
+        }
+
     }
 
 }

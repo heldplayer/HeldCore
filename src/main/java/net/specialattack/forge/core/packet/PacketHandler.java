@@ -1,19 +1,5 @@
-
 package net.specialattack.forge.core.packet;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler.Sharable;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-
-import java.util.EnumMap;
-import java.util.UUID;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.specialattack.forge.core.Objects;
-import net.specialattack.forge.core.client.MC;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
@@ -21,6 +7,18 @@ import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler.Sharable;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.specialattack.forge.core.Objects;
+import net.specialattack.forge.core.client.MC;
+
+import java.util.EnumMap;
+import java.util.UUID;
 
 // Thanks AtomicStryker for your example classes!
 // https://code.google.com/p/atomicstrykers-minecraft-mods/source/browse/Minions/src/main/java/atomicstryker/minions/common/network/NetworkHelper.java
@@ -97,19 +95,16 @@ public class PacketHandler {
                 byte[] bytes = packet.sender.toString().getBytes();
                 out.writeInt(bytes.length);
                 out.writeBytes(bytes);
-            }
-            else {
+            } else {
                 out.writeInt(0);
             }
             if (packet.senderSide != null) {
                 out.writeInt(packet.senderSide.ordinal());
-            }
-            else {
+            } else {
                 Side side = packet.getSendingSide();
                 if (side != null) {
                     out.writeInt(side.ordinal());
-                }
-                else {
+                } else {
                     out.writeInt(Side.SERVER.ordinal());
                 }
             }
@@ -123,17 +118,18 @@ public class PacketHandler {
                 in.readBytes(bytes);
                 String player = new String(bytes);
                 Side side = Side.values()[in.readInt()];
-                packet.sender = UUID.fromString(player);
+                try {
+                    packet.sender = UUID.fromString(player);
+                } catch (IllegalArgumentException e) {
+                }
                 packet.senderSide = side;
 
                 try {
                     packet.read(context, in);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     throw new RuntimeException("Failed reading packet", e);
                 }
-            }
-            catch (Throwable e) {
+            } catch (Throwable e) {
                 Objects.log.warn("Failed reading packet", e);
             }
         }
@@ -149,8 +145,7 @@ public class PacketHandler {
                 EntityPlayer player = null;
                 if (packet.senderSide.isServer()) {
                     player = MC.getPlayer();
-                }
-                else if (packet.senderSide.isClient()) {
+                } else if (packet.senderSide.isClient()) {
                     if (packet.sender != null) {
                         for (Object obj : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
                             if (obj instanceof EntityPlayer) {
@@ -163,8 +158,7 @@ public class PacketHandler {
                 }
 
                 packet.onData(context, player);
-            }
-            catch (Throwable e) {
+            } catch (Throwable e) {
                 Objects.log.warn("Failed handling packet", e);
             }
         }

@@ -1,6 +1,7 @@
-
 package net.specialattack.forge.core.client.gui;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -8,11 +9,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.specialattack.forge.core.client.RenderHelper;
-
 import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiButtonIcon extends GuiButton {
@@ -66,12 +63,10 @@ public class GuiButtonIcon extends GuiButton {
 
             if (this.packedFGColour != 0) {
                 textColor = this.packedFGColour;
-            }
-            else if (!this.enabled) {
+            } else if (!this.enabled) {
                 textColor = 0xA0A0A0;
                 icon = this.disabledIcon;
-            }
-            else if (this.field_146123_n) {
+            } else if (this.field_146123_n) {
                 textColor = 0xFFFFA0;
                 icon = this.hoverIcon;
             }

@@ -1,4 +1,3 @@
-
 package net.specialattack.util;
 
 public class Vector {
@@ -7,7 +6,8 @@ public class Vector {
     public double posY;
     public double posZ;
 
-    Vector() {}
+    Vector() {
+    }
 
     Vector(double posX, double posY, double posZ) {
         this.posX = posX;

@@ -1,10 +1,9 @@
-
 package net.specialattack.forge.core.sync;
+
+import com.google.common.io.ByteArrayDataInput;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-
-import com.google.common.io.ByteArrayDataInput;
 
 public interface ISyncable {
 
@@ -18,9 +17,9 @@ public interface ISyncable {
 
     void write(DataOutputStream out) throws IOException;
 
-    void setId(int id);
-
     int getId();
+
+    void setId(int id);
 
     void setValue(Object obj);
 

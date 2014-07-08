@@ -1,13 +1,10 @@
-
 package net.specialattack.forge.core.sync.packet;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteStreams;
+import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,13 +13,11 @@ import net.specialattack.forge.core.event.SyncEvent;
 import net.specialattack.forge.core.packet.SpACorePacket;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.SyncHandler;
-
 import org.apache.logging.log4j.Level;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
-
-import cpw.mods.fml.relauncher.Side;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 public class Packet2TrackingBegin extends SpACorePacket {
 
@@ -50,8 +45,7 @@ public class Packet2TrackingBegin extends SpACorePacket {
             this.posX = object.getPosX();
             this.posY = object.getPosY();
             this.posZ = object.getPosZ();
-        }
-        else {
+        } else {
             this.isWordly = false;
 
             this.identifier = object.getIdentifier();
@@ -62,8 +56,7 @@ public class Packet2TrackingBegin extends SpACorePacket {
 
         try {
             object.writeSetup(dos);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Objects.log.log(Level.WARN, "Failed synchronizing object", e);
         }
 
@@ -83,8 +76,7 @@ public class Packet2TrackingBegin extends SpACorePacket {
             this.posX = in.readInt();
             this.posY = in.readInt();
             this.posZ = in.readInt();
-        }
-        else {
+        } else {
             byte[] data = new byte[in.readInt()];
             in.readBytes(data);
             this.identifier = new String(data);
@@ -102,8 +94,7 @@ public class Packet2TrackingBegin extends SpACorePacket {
             out.writeInt(this.posX);
             out.writeInt(this.posY);
             out.writeInt(this.posZ);
-        }
-        else {
+        } else {
             byte[] data = this.identifier.getBytes();
             out.writeInt(data.length);
             out.writeBytes(data);
@@ -126,14 +117,12 @@ public class Packet2TrackingBegin extends SpACorePacket {
                         object.readSetup(dat);
 
                         SyncHandler.clientSyncables.addAll(object.getSyncables());
-                    }
-                    catch (IOException e) {
+                    } catch (IOException e) {
                         Objects.log.log(Level.WARN, "Failed synchronizing object", e);
                     }
                 }
             }
-        }
-        else {
+        } else {
             SyncEvent.RequestObject event = new SyncEvent.RequestObject(this.identifier);
             MinecraftForge.EVENT_BUS.post(event);
 
@@ -146,8 +135,7 @@ public class Packet2TrackingBegin extends SpACorePacket {
                     object.readSetup(dat);
 
                     SyncHandler.clientSyncables.addAll(object.getSyncables());
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     Objects.log.log(Level.WARN, "Failed synchronizing object", e);
                 }
             }
