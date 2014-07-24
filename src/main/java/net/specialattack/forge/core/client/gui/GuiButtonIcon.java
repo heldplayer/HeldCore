@@ -76,10 +76,11 @@ public class GuiButtonIcon extends GuiButton {
 
             if (this.displayString != null && !this.displayString.isEmpty()) {
                 this.drawCenteredString(font, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, textColor);
-                iconX -= font.getStringWidth(this.displayString) / 2;
+                iconX -= font.getStringWidth(this.displayString);
             }
 
             if (icon != null && this.iconMap != null) {
+                GL11.glColor3f(1.0F, 1.0F, 1.0F);
                 RenderHelper.bindTexture(this.iconMap);
                 this.drawTexturedModelRectFromIcon(iconX + this.xPosition, iconY + this.yPosition, icon, 16, 16);
             }

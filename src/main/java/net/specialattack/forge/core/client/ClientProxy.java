@@ -85,26 +85,33 @@ public class ClientProxy extends CommonProxy {
     public void onInitGuiPost(InitGuiEvent.Post event) {
         if (SpACore.showReportBugs.getValue()) {
             if (event.gui != null && event.gui instanceof GuiMainMenu) {
-                GuiButton button = new GuiButtonIcon(-123, 0, 0, 20, 20, "", ClientProxy.iconReportBug, Assets.TEXTURE_MAP);
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 - 124, event.gui.height / 4 + 96, 20, 20), button)) {
+                int guiPosX = event.gui.width / 2;
+                int guiPosY = event.gui.height / 4;
+                int buttonWidth = 20;
+                int buttonHeight = 20;
+
+                GuiButton button = new GuiButtonIcon(-123, 0, 0, buttonWidth, buttonHeight, null, ClientProxy.iconReportBug, Assets.TEXTURE_MAP);
+                button.enabled = false;
+
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX - 124, guiPosY + 96, buttonWidth, buttonHeight), button)) {
                     return;
                 }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 + 104, event.gui.height / 4 + 96, 20, 20), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX + 104, guiPosY + 96, buttonWidth, buttonHeight), button)) {
                     return;
                 }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 + 104, event.gui.height / 4 + 132, 20, 20), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX + 104, guiPosY + 132, buttonWidth, buttonHeight), button)) {
                     return;
                 }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 - 124, event.gui.height / 4 + 72, 20, 20), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX - 124, guiPosY + 72, buttonWidth, buttonHeight), button)) {
                     return;
                 }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 + 104, event.gui.height / 4 + 72, 20, 20), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX + 104, guiPosY + 72, buttonWidth, buttonHeight), button)) {
                     return;
                 }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 - 124, event.gui.height / 4 + 48, 20, 20), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX - 124, guiPosY + 48, buttonWidth, buttonHeight), button)) {
                     return;
                 }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(event.gui.width / 2 + 104, event.gui.height / 4 + 48, 20, 20), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX + 104, guiPosY + 48, buttonWidth, buttonHeight), button)) {
                     return;
                 }
             }
