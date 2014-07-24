@@ -90,7 +90,7 @@ public class SpACore extends SpACoreMod {
         SpACore.refreshRate = new ConfigValue<Integer>("refreshRate", "config.spacore.key.refreshRate", null, 5, "The refresh-rate used for syncing objects between server and client. A higher refresh-rate will decrease bandwidth and CPU usage, but will also cause objects to appear to lag");
         SpACore.textureMapId = new ConfigValue<Integer>("textureMapId", "config.spacore.key.textureMapId", Side.CLIENT, 10, "The ID of the texture map that SpACore assigns");
         SpACore.textureMapId.setRequiresMcRestart(true);
-        SpACore.showReportBugs = new ConfigValue<Boolean>("showReportBugs", "config.spacore.key.showReportBugs", Side.CLIENT, true, "Should the mod add a 'Report a bug' button to the menu?");
+        SpACore.showReportBugs = new ConfigValue<Boolean>("showReportBugs", "config.spacore.key.showReportBugs", Side.CLIENT, false, "Should the mod add a 'Report a bug' button to the menu?");
         SpACore.replaceModOptions = new ConfigValue<Boolean>("replaceModOptions", "config.spacore.key.replaceModOptions", Side.CLIENT, true, "Should the ingame 'Mod Options' button be replaced with a 'Mods' button that actually works?");
         this.config = new Config(event.getSuggestedConfigurationFile());
         this.config.addCategory(category);
@@ -115,20 +115,8 @@ public class SpACore extends SpACoreMod {
     }
 
     @Override
-    @EventHandler
-    public void init(FMLInitializationEvent event) {
-        super.init(event);
-    }
-
-    @Override
     public boolean shouldReport() {
         return false;
-    }
-
-    @Override
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        super.postInit(event);
     }
 
     @Override
