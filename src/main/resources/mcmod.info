@@ -1,12 +1,16 @@
-[
-    {
-        "modid" : "spacore",
-        "name" : "SpACore",
-        "version" : "${version}",
-        "authors": [
-            "heldplayer",
-            "mbl111"
-        ],
-        "url" : "http://dsiwars.specialattack.net/forums/viewtopic.php?t=3"
-    }
-]
+{
+    "modListVersion" : 2,
+    "modList" : [
+        {
+            "modid" : "spacore",
+            "name" : "SpACore",
+            "version" : "${version}",
+            "mcversion" : "${minecraft_version}",
+            "authorList" : [
+                "heldplayer",
+                "mbl111"
+            ],
+            "url" : "http://dsiwars.specialattack.net/forums/viewtopic.php?t=3"
+        }
+    ]
+}
