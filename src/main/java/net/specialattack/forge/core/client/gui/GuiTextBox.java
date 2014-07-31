@@ -778,8 +778,8 @@ public class GuiTextBox extends Gui {
                         }
                 }
             }
-        } catch (Throwable ಠ_ಠ) {
-            ಠ_ಠ.printStackTrace();
+        } catch (Throwable e) {
+            e.printStackTrace();
             return true;
         }
     }
@@ -970,7 +970,7 @@ public class GuiTextBox extends Gui {
                     }
                 }
             }
-        } catch (Throwable ಠ_ಠ) {
+        } catch (Throwable e) {
         }
     }
 

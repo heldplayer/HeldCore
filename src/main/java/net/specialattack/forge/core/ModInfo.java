@@ -15,7 +15,7 @@ public class ModInfo {
 
         Properties prop = new Properties();
 
-        String version = "";
+        String version = null;
 
         try {
             InputStream stream = Objects.class.getClassLoader().getResourceAsStream(this.modId.toLowerCase() + ".version");
@@ -24,7 +24,6 @@ public class ModInfo {
             version = prop.getProperty("version");
         } catch (Exception e) {
             e.printStackTrace();
-            version = "Error";
         } finally {
             this.modVersion = version;
         }
