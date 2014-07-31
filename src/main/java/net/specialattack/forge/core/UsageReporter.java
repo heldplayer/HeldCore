@@ -28,7 +28,7 @@ public class UsageReporter implements Runnable {
     public void run() {
         HttpURLConnection request = null;
 
-        boolean needsResending = false;
+        boolean needsResending;
 
         try {
             needsResending = this.needsResending();
@@ -107,11 +107,7 @@ public class UsageReporter implements Runnable {
             if (path == null || path.isEmpty()) {
                 return true;
             }
-            if (!path.equals(file.getAbsolutePath())) {
-                return true;
-            }
-
-            return false;
+            return !path.equals(file.getAbsolutePath());
         } catch (IOException e) {
             return true;
         } finally {

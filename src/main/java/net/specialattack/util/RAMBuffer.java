@@ -18,8 +18,8 @@ public class RAMBuffer {
 
     private List<RAMBuffer.Sections> sections;
 
-    private Object readObj = new Object();
-    private Object writeObj = new Object();
+    private final Object readObj = new Object();
+    private final Object writeObj = new Object();
 
     public RAMBuffer(int capacity) {
         if (capacity < 1) {
@@ -77,7 +77,6 @@ public class RAMBuffer {
      * Reads from the buffer into the parameter byte array
      *
      * @param dest The array to read to
-     * @see read(byte[], int, int)
      */
     public byte[] read(byte[] dest) {
         return this.read(dest, 0, dest.length);
@@ -262,8 +261,7 @@ public class RAMBuffer {
     /**
      * Prints the status of the RAMBuffer to the specified PrintStream
      *
-     * @param str The stream to print to, see {@link System.out} and
-     *            {@link System.err}
+     * @param str The stream to print to, see System.out and System.err
      */
     @Deprecated
     public void printStatus(PrintStream str) {

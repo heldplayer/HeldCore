@@ -29,7 +29,6 @@ import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.packet.Packet1TrackingStatus;
 
 import java.awt.*;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -59,11 +58,8 @@ public class ClientProxy extends CommonProxy {
     public void onChunkUnload(ChunkEvent.Unload event) {
         if (event.world.isRemote) {
             @SuppressWarnings("unchecked") Map<ChunkPosition, TileEntity> tiles = event.getChunk().chunkTileEntityMap;
-            Iterator<TileEntity> iterator = tiles.values().iterator();
 
-            while (iterator.hasNext()) {
-                TileEntity tile = iterator.next();
-
+            for (TileEntity tile : tiles.values()) {
                 if (tile instanceof ISyncableObjectOwner) {
                     SpACore.packetHandler.sendPacketToServer(new Packet1TrackingStatus((ISyncableObjectOwner) tile, false));
                 }

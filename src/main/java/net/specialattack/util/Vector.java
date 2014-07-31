@@ -58,9 +58,7 @@ public class Vector {
 
     @Override
     public Vector clone() {
-        Vector result = VectorPool.getFreeVector(this.posX, this.posY, this.posZ);
-
-        return result;
+        return VectorPool.getFreeVector(this.posX, this.posY, this.posZ);
     }
 
 }

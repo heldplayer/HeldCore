@@ -95,8 +95,8 @@ public final class MathHelper {
      */
     public static Vector bezier(Vector[] input, double t) {
         int actualInput = 0;
-        for (int i = 0; i < input.length; i++) {
-            if (input[i] == null) {
+        for (Vector vec : input) {
+            if (vec == null) {
                 break;
             }
             actualInput++;

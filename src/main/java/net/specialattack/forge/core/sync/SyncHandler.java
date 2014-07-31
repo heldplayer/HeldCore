@@ -41,11 +41,7 @@ public class SyncHandler {
             return;
         }
 
-        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
-
-        while (i.hasNext()) {
-            PlayerTracker tracker = i.next();
-
+        for (PlayerTracker tracker : SyncHandler.players) {
             if (SyncHandler.debug) {
                 Objects.log.log(Level.DEBUG, "Removing " + tracker.toString());
             }
@@ -101,10 +97,7 @@ public class SyncHandler {
             return;
         }
 
-        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
-
-        while (i.hasNext()) {
-            PlayerTracker tracker = i.next();
+        for (PlayerTracker tracker : SyncHandler.players) {
             if (tracker.getPlayer() == player) {
                 if (SyncHandler.debug) {
                     Objects.log.log(Level.DEBUG, "Starting to track " + object.toString());
@@ -121,10 +114,7 @@ public class SyncHandler {
             return;
         }
 
-        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
-
-        while (i.hasNext()) {
-            PlayerTracker tracker = i.next();
+        for (PlayerTracker tracker : SyncHandler.players) {
             if (tracker.getPlayer() == player) {
                 List<ISyncable> syncables = object.getSyncables();
                 for (ISyncable syncable : syncables) {
@@ -146,11 +136,7 @@ public class SyncHandler {
             return;
         }
 
-        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
-
-        while (i.hasNext()) {
-            PlayerTracker tracker = i.next();
-
+        for (PlayerTracker tracker : SyncHandler.players) {
             if (tracker.syncableOwners.isEmpty()) {
                 continue;
             }
@@ -171,11 +157,7 @@ public class SyncHandler {
 
         List<ISyncable> syncables = object.getSyncables();
         if (syncables.contains(syncable)) {
-            Iterator<PlayerTracker> i = SyncHandler.players.iterator();
-
-            while (i.hasNext()) {
-                PlayerTracker tracker = i.next();
-
+            for (PlayerTracker tracker : SyncHandler.players) {
                 tracker.syncables.remove(syncable);
                 SpACore.packetHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
                 if (SyncHandler.debug) {
@@ -253,7 +235,7 @@ public class SyncHandler {
                 SyncEvent.ClientStartSyncing clientEvent = new SyncEvent.ClientStartSyncing();
                 MinecraftForge.EVENT_BUS.post(clientEvent);
 
-                SpACore.packetHandler.sendPacketToServer(new Packet6SetInterval(Integer.valueOf(SpACore.refreshRate.getValue())));
+                SpACore.packetHandler.sendPacketToServer(new Packet6SetInterval(SpACore.refreshRate.getValue()));
             }
         }
     }

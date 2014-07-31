@@ -33,10 +33,10 @@ public class SInventoryStack extends BaseSyncable {
             return true;
         }
         ItemStack stack = this.inventory.getStackInSlot(this.slot);
-        if (this.prevValue == stack || (this.prevValue != null && stack != null && ItemStack.areItemStacksEqual(this.prevValue, stack))) {
+        if (this.prevValue == stack) {
             return false;
         }
-        return true;
+        return !ItemStack.areItemStacksEqual(this.prevValue, stack);
     }
 
     public IInventory getInventory() {
@@ -50,6 +50,13 @@ public class SInventoryStack extends BaseSyncable {
 
     public ItemStack getValue() {
         return this.inventory.getStackInSlot(this.slot);
+    }
+
+    @Override
+    public void setValue(Object obj) {
+        if (obj instanceof ItemStack) {
+            this.setValue((ItemStack) obj);
+        }
     }
 
     public void setValue(ItemStack value) {
@@ -77,13 +84,6 @@ public class SInventoryStack extends BaseSyncable {
             out.writeBoolean(false);
             NBTTagCompound tag = stack.writeToNBT(new NBTTagCompound());
             CompressedStreamTools.write(tag, out);
-        }
-    }
-
-    @Override
-    public void setValue(Object obj) {
-        if (obj instanceof ItemStack) {
-            this.setValue((ItemStack) obj);
         }
     }
 

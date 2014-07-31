@@ -19,9 +19,7 @@ public class RMethod<T, V> {
 
     public V call(T classInstance, Object... args) {
         try {
-            V result = (V) this.method.invoke(classInstance, args);
-
-            return result;
+            return (V) this.method.invoke(classInstance, args);
         } catch (Exception e) {
         }
 

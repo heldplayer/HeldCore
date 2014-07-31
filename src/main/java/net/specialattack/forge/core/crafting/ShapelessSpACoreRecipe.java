@@ -9,7 +9,6 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class ShapelessSpACoreRecipe implements ISpACoreRecipe {
@@ -68,12 +67,9 @@ public class ShapelessSpACoreRecipe implements ISpACoreRecipe {
 
             if (slot != null) {
                 boolean inRecipe = false;
-                Iterator<List<ItemStack>> req = required.iterator();
 
-                while (req.hasNext()) {
+                for (List<ItemStack> next : required) {
                     boolean match = false;
-
-                    List<ItemStack> next = req.next();
 
                     for (ItemStack item : next) {
                         match = match || this.checkItemEquals(item, slot);

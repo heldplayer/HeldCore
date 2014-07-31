@@ -36,9 +36,9 @@ public class Packet3TrackingUpdate extends SpACorePacket {
 
             try {
                 dos.writeInt(this.syncables.length);
-                for (int i = 0; i < this.syncables.length; i++) {
-                    dos.writeInt(this.syncables[i].getId());
-                    this.syncables[i].write(dos);
+                for (ISyncable syncable : this.syncables) {
+                    dos.writeInt(syncable.getId());
+                    syncable.write(dos);
                 }
             } catch (IOException e) {
                 Objects.log.log(Level.WARN, "Failed synchronizing object", e);

@@ -127,7 +127,7 @@ public class ConfigValue<T> implements IConfigElement<T> {
             return false;
         }
 
-        return this.value != null ? this.value.hasChanged() : false;
+        return this.value != null &&  this.value.hasChanged();
     }
 
     public ConfigValue<T> setRequiresMcRestart(boolean requiresMcRestart) {
@@ -236,19 +236,19 @@ public class ConfigValue<T> implements IConfigElement<T> {
         if (this.mode == 6) {
             Boolean[] values = new Boolean[((boolean[]) this.deff).length];
             for (int i = 0; i < values.length; i++) {
-                values[i] = Boolean.valueOf(((boolean[]) this.deff)[i]);
+                values[i] = ((boolean[]) this.deff)[i];
             }
             return values;
         } else if (this.mode == 7) {
             Double[] values = new Double[((double[]) this.deff).length];
             for (int i = 0; i < values.length; i++) {
-                values[i] = Double.valueOf(((double[]) this.deff)[i]);
+                values[i] = ((double[]) this.deff)[i];
             }
             return values;
         } else if (this.mode == 8) {
             Integer[] values = new Integer[((int[]) this.deff).length];
             for (int i = 0; i < values.length; i++) {
-                values[i] = Integer.valueOf(((int[]) this.deff)[i]);
+                values[i] = ((int[]) this.deff)[i];
             }
             return values;
         } else if (this.mode == 9) {

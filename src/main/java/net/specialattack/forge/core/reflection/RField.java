@@ -19,9 +19,7 @@ public class RField<T, V> {
 
     public V get(T classInstance) {
         try {
-            V result = (V) this.field.get(classInstance);
-
-            return result;
+            return (V) this.field.get(classInstance);
         } catch (Exception e) {
         }
 

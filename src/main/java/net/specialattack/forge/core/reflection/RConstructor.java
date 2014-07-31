@@ -14,9 +14,7 @@ public class RConstructor<T> {
 
     public T newInstance(Object... args) {
         try {
-            T result = this.constructor.newInstance(args);
-
-            return result;
+            return this.constructor.newInstance(args);
         } catch (Exception e) {
         }
 

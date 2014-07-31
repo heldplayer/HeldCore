@@ -10,7 +10,6 @@ import net.specialattack.forge.core.sync.PlayerTracker;
 import net.specialattack.forge.core.sync.SyncHandler;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 public class Packet6SetInterval extends SpACorePacket {
 
@@ -23,7 +22,7 @@ public class Packet6SetInterval extends SpACorePacket {
     public Packet6SetInterval(Integer interval) {
         super(null);
 
-        this.interval = interval.intValue();
+        this.interval = interval;
     }
 
     @Override
@@ -43,11 +42,7 @@ public class Packet6SetInterval extends SpACorePacket {
 
     @Override
     public void onData(ChannelHandlerContext context, EntityPlayer player) {
-        Iterator<PlayerTracker> i = SyncHandler.players.iterator();
-
-        while (i.hasNext()) {
-            PlayerTracker tracker = i.next();
-
+        for (PlayerTracker tracker : SyncHandler.players) {
             EntityPlayerMP playerMP = tracker.getPlayer();
 
             if (playerMP == player) {

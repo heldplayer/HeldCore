@@ -845,9 +845,8 @@ public class GuiTextBox extends Gui {
                 boolean hasSelection = this.selectionEnd != this.cursorPosition || this.selectionEndComponent != this.cursorPositionComponent;
                 int textOffsetX = this.enableBackgroundDrawing ? this.posX + 4 : this.posX;
                 int textOffsetY = this.enableBackgroundDrawing ? this.posY + 4 : this.posY;
-                int renderedLength = textOffsetX;
 
-                boolean drawCursorAsLine = this.cursorPositionComponent + 1 < this.chatLines.size() ? true : this.cursorPosition < this.getCurrentLine().length();
+                boolean drawCursorAsLine = this.cursorPositionComponent + 1 < this.chatLines.size() || this.cursorPosition < this.getCurrentLine().length();
                 int cursorX = textOffsetX;
                 int cursorY = textOffsetY - this.font.FONT_HEIGHT;
 
@@ -921,14 +920,13 @@ public class GuiTextBox extends Gui {
 
                 // XXX
                 label:
-                for (int i = 0; i < this.chatLines.size(); i++) {
-                    IChatComponent current = this.chatLines.get(i);
+                for (IChatComponent current : this.chatLines) {
                     @SuppressWarnings("unchecked") List<String> lines = this.font.listFormattedStringToWidth(current.getFormattedText(), this.getWidth());
                     for (String line : lines) {
                         if (remainingLines > height - 1) {
                             break label;
                         } else if (remainingLines >= 0) {
-                            this.font.drawStringWithShadow(line, renderedLength, textOffsetY + offsetY, textColor);
+                            this.font.drawStringWithShadow(line, textOffsetX, textOffsetY + offsetY, textColor);
                             offsetY += this.font.FONT_HEIGHT;
                         }
                         remainingLines++;

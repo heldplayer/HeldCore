@@ -95,7 +95,7 @@ public final class GuiHelper {
      * @param scale  The resulting max value of the int
      * @param amount The amount
      * @param total  The max amount that can be entered
-     * @return
+     * @return Scaled int
      */
     public static int getScaled(int scale, int amount, int total) {
         if (amount > total) {
@@ -253,10 +253,10 @@ public final class GuiHelper {
         float f1 = 0.00390625F;
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(startX + 0, startY + height, 0.0D, (u + 0) * f, (v + height) * f1);
+        tessellator.addVertexWithUV(startX, startY + height, 0.0D, u * f, (v + height) * f1);
         tessellator.addVertexWithUV(startX + width, startY + height, 0.0D, (u + width) * f, (v + height) * f1);
-        tessellator.addVertexWithUV(startX + width, startY + 0, 0.0D, (u + width) * f, (v + 0) * f1);
-        tessellator.addVertexWithUV(startX + 0, startY + 0, 0.0D, (u + 0) * f, (v + 0) * f1);
+        tessellator.addVertexWithUV(startX + width, startY, 0.0D, (u + width) * f, v  * f1);
+        tessellator.addVertexWithUV(startX, startY, 0.0D, u * f, v  * f1);
         tessellator.draw();
     }
 
