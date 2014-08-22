@@ -9,6 +9,8 @@ import codechicken.nei.recipe.ShapedRecipeHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.specialattack.forge.core.crafting.CraftingHelper;
+import net.specialattack.forge.core.crafting.FakeShapelessSpACoreRecipe;
 import net.specialattack.forge.core.crafting.ShapelessSpACoreRecipe;
 
 import java.awt.*;
@@ -29,10 +31,14 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
     @Override
     public void loadCraftingRecipes(String outputId, Object... results) {
         if (outputId.equals("crafting") && this.getClass() == ShapelessSpACoreRecipeHandler.class) {
-            List<IRecipe> allrecipes = CraftingManager.getInstance().getRecipeList();
+            List<IRecipe> allrecipes = new ArrayList<IRecipe>(CraftingManager.getInstance().getRecipeList());
+            allrecipes.addAll(CraftingHelper.fakeRecipes);
             for (IRecipe irecipe : allrecipes) {
                 CachedShapelessRecipe recipe = null;
-                if (irecipe instanceof ShapelessSpACoreRecipe) {
+
+                if (irecipe instanceof FakeShapelessSpACoreRecipe) {
+                    recipe = ((FakeShapelessSpACoreRecipe) irecipe).isEnabled() ? new CachedShapelessRecipe((FakeShapelessSpACoreRecipe) irecipe) : null;
+                } else if (irecipe instanceof ShapelessSpACoreRecipe) {
                     recipe = new CachedShapelessRecipe((ShapelessSpACoreRecipe) irecipe);
                 }
 
@@ -49,11 +55,15 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
 
     @Override
     public void loadCraftingRecipes(ItemStack result) {
-        List<IRecipe> allrecipes = CraftingManager.getInstance().getRecipeList();
+        List<IRecipe> allrecipes = new ArrayList<IRecipe>(CraftingManager.getInstance().getRecipeList());
+        allrecipes.addAll(CraftingHelper.fakeRecipes);
         for (IRecipe irecipe : allrecipes) {
             if (NEIServerUtils.areStacksSameTypeCrafting(irecipe.getRecipeOutput(), result)) {
                 CachedShapelessRecipe recipe = null;
-                if (irecipe instanceof ShapelessSpACoreRecipe) {
+
+                if (irecipe instanceof FakeShapelessSpACoreRecipe) {
+                    recipe = ((FakeShapelessSpACoreRecipe) irecipe).isEnabled() ? new CachedShapelessRecipe((FakeShapelessSpACoreRecipe) irecipe) : null;
+                } else if (irecipe instanceof ShapelessSpACoreRecipe) {
                     recipe = new CachedShapelessRecipe((ShapelessSpACoreRecipe) irecipe);
                 }
                 if (recipe == null) {
@@ -66,10 +76,14 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
 
     @Override
     public void loadUsageRecipes(ItemStack ingredient) {
-        List<IRecipe> allrecipes = CraftingManager.getInstance().getRecipeList();
+        List<IRecipe> allrecipes = new ArrayList<IRecipe>(CraftingManager.getInstance().getRecipeList());
+        allrecipes.addAll(CraftingHelper.fakeRecipes);
         for (IRecipe irecipe : allrecipes) {
             CachedShapelessRecipe recipe = null;
-            if (irecipe instanceof ShapelessSpACoreRecipe) {
+
+            if (irecipe instanceof FakeShapelessSpACoreRecipe) {
+                recipe = ((FakeShapelessSpACoreRecipe) irecipe).isEnabled() ? new CachedShapelessRecipe((FakeShapelessSpACoreRecipe) irecipe) : null;
+            } else if (irecipe instanceof ShapelessSpACoreRecipe) {
                 recipe = new CachedShapelessRecipe((ShapelessSpACoreRecipe) irecipe);
             }
             if (recipe == null) {

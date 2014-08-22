@@ -8,13 +8,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.specialattack.forge.core.event.SyncEvent;
-import net.specialattack.forge.core.packet.SpACorePacket;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.SyncHandler;
 
 import java.io.IOException;
 
-public class Packet1TrackingStatus extends SpACorePacket {
+public class Packet1TrackingStatus extends SyncPacket {
 
     public boolean isWordly;
     public String identifier;

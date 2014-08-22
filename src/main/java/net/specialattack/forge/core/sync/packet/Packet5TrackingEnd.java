@@ -4,14 +4,13 @@ import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
-import net.specialattack.forge.core.packet.SpACorePacket;
 import net.specialattack.forge.core.sync.ISyncable;
 import net.specialattack.forge.core.sync.SyncHandler;
 
 import java.io.IOException;
 import java.util.Iterator;
 
-public class Packet5TrackingEnd extends SpACorePacket {
+public class Packet5TrackingEnd extends SyncPacket {
 
     public int id;
 

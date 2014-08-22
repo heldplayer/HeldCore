@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.ChunkPosition;
@@ -36,6 +37,16 @@ import java.util.Map;
 public class ClientProxy extends CommonProxy {
 
     public static IIcon iconReportBug;
+
+    @Override
+    public boolean allowSnooping() {
+        return MC.getGameSettings().snooperEnabled && super.allowSnooping();
+    }
+
+    @Override
+    public EntityPlayer getClientPlayer() {
+        return MC.getPlayer();
+    }
 
     @Override
     public void init(FMLInitializationEvent event) {

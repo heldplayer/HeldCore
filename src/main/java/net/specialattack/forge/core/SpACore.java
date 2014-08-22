@@ -39,10 +39,10 @@ public class SpACore extends SpACoreMod {
     public static ConfigValue<Boolean> showReportBugs;
     public static ConfigValue<Boolean> replaceModOptions;
 
-    public static PacketHandler packetHandler;
+    public static PacketHandler<SyncPacket> packetHandler;
 
     public static void initializeReporter(String modId, String modVersion) {
-        if (SpACore.allowSnooping()) {
+        if (SpACore.proxy.allowSnooping()) {
             try {
                 File file = new File(SpACore.configFolder, modId + ".version");
 
@@ -61,17 +61,13 @@ public class SpACore extends SpACoreMod {
         }
     }
 
-    public static boolean allowSnooping() {
-        return MC.getGameSettings().snooperEnabled && !SpACore.optOut.getValue();
-    }
-
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         Objects.log = event.getModLog();
 
-        SpACore.packetHandler = new PacketHandler("SpACore", Packet1TrackingStatus.class, Packet2TrackingBegin.class, Packet3TrackingUpdate.class, Packet4InitiateClientTracking.class, Packet5TrackingEnd.class, Packet6SetInterval.class);
+        SpACore.packetHandler = new PacketHandler<SyncPacket>("SpACore", Packet1TrackingStatus.class, Packet2TrackingBegin.class, Packet3TrackingUpdate.class, Packet4InitiateClientTracking.class, Packet5TrackingEnd.class, Packet6SetInterval.class);
 
         SpACore.configFolder = new File(event.getModConfigurationDirectory(), "SpACore");
 

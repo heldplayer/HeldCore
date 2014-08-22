@@ -17,6 +17,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.specialattack.forge.core.crafting.CraftingHelper;
+import net.specialattack.forge.core.crafting.FakeShapedSpACoreRecipe;
 import net.specialattack.forge.core.crafting.ShapedSpACoreRecipe;
 
 import java.awt.*;
@@ -35,10 +37,14 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
     @Override
     public void loadCraftingRecipes(String outputId, Object... results) {
         if (outputId.equals("crafting") && this.getClass() == ShapedSpACoreRecipeHandler.class) {
-            List<IRecipe> allrecipes = CraftingManager.getInstance().getRecipeList();
+            List<IRecipe> allrecipes = new ArrayList<IRecipe>(CraftingManager.getInstance().getRecipeList());
+            allrecipes.addAll(CraftingHelper.fakeRecipes);
             for (IRecipe irecipe : allrecipes) {
                 CachedShapedRecipe recipe = null;
-                if (irecipe instanceof ShapedSpACoreRecipe) {
+
+                if (irecipe instanceof FakeShapedSpACoreRecipe) {
+                    recipe = ((FakeShapedSpACoreRecipe) irecipe).isEnabled() ? new CachedShapedRecipe((FakeShapedSpACoreRecipe) irecipe) : null;
+                } else if (irecipe instanceof ShapedSpACoreRecipe) {
                     recipe = new CachedShapedRecipe((ShapedSpACoreRecipe) irecipe);
                 }
                 if (recipe == null) {
@@ -55,11 +61,15 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
 
     @Override
     public void loadCraftingRecipes(ItemStack result) {
-        List<IRecipe> allrecipes = CraftingManager.getInstance().getRecipeList();
+        List<IRecipe> allrecipes = new ArrayList<IRecipe>(CraftingManager.getInstance().getRecipeList());
+        allrecipes.addAll(CraftingHelper.fakeRecipes);
         for (IRecipe irecipe : allrecipes) {
             if (NEIServerUtils.areStacksSameTypeCrafting(irecipe.getRecipeOutput(), result)) {
                 CachedShapedRecipe recipe = null;
-                if (irecipe instanceof ShapedSpACoreRecipe) {
+
+                if (irecipe instanceof FakeShapedSpACoreRecipe) {
+                    recipe = ((FakeShapedSpACoreRecipe) irecipe).isEnabled() ? new CachedShapedRecipe((FakeShapedSpACoreRecipe) irecipe) : null;
+                } else if (irecipe instanceof ShapedSpACoreRecipe) {
                     recipe = new CachedShapedRecipe((ShapedSpACoreRecipe) irecipe);
                 }
                 if (recipe == null) {
@@ -73,10 +83,14 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
 
     @Override
     public void loadUsageRecipes(ItemStack ingredient) {
-        List<IRecipe> allrecipes = CraftingManager.getInstance().getRecipeList();
+        List<IRecipe> allrecipes = new ArrayList<IRecipe>(CraftingManager.getInstance().getRecipeList());
+        allrecipes.addAll(CraftingHelper.fakeRecipes);
         for (IRecipe irecipe : allrecipes) {
             CachedShapedRecipe recipe = null;
-            if (irecipe instanceof ShapedSpACoreRecipe) {
+
+            if (irecipe instanceof FakeShapedSpACoreRecipe) {
+                recipe = ((FakeShapedSpACoreRecipe) irecipe).isEnabled() ? new CachedShapedRecipe((FakeShapedSpACoreRecipe) irecipe) : null;
+            } else if (irecipe instanceof ShapedSpACoreRecipe) {
                 recipe = new CachedShapedRecipe((ShapedSpACoreRecipe) irecipe);
             }
             if (recipe == null || !recipe.contains(recipe.ingredients, ingredient)) {

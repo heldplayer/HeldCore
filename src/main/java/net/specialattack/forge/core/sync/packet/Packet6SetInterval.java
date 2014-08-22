@@ -5,13 +5,12 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.specialattack.forge.core.packet.SpACorePacket;
 import net.specialattack.forge.core.sync.PlayerTracker;
 import net.specialattack.forge.core.sync.SyncHandler;
 
 import java.io.IOException;
 
-public class Packet6SetInterval extends SpACorePacket {
+public class Packet6SetInterval extends SyncPacket {
 
     public int interval;
 

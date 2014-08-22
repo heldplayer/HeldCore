@@ -10,7 +10,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.event.SyncEvent;
-import net.specialattack.forge.core.packet.SpACorePacket;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.SyncHandler;
 import org.apache.logging.log4j.Level;
@@ -19,7 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class Packet2TrackingBegin extends SpACorePacket {
+public class Packet2TrackingBegin extends SyncPacket {
 
     public boolean isWordly;
     public String identifier;

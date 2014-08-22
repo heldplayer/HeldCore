@@ -7,7 +7,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 import net.specialattack.forge.core.Objects;
-import net.specialattack.forge.core.packet.SpACorePacket;
 import net.specialattack.forge.core.sync.ISyncable;
 import net.specialattack.forge.core.sync.SyncHandler;
 import org.apache.logging.log4j.Level;
@@ -16,7 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class Packet3TrackingUpdate extends SpACorePacket {
+public class Packet3TrackingUpdate extends SyncPacket {
 
     public ISyncable[] syncables;
     public byte[] data;

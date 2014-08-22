@@ -9,24 +9,19 @@ import java.util.List;
 public class RAMBuffer {
 
     private final ByteBuffer buffer;
-    private int capacity;
-    private int readPos;
-    private int writePos;
-    // True: write has wrapped but read hasn't yet
-    // False: write and read have wrapped
-    private boolean wrapFlag = false;
-
-    private List<RAMBuffer.Sections> sections;
-
     private final Object readObj = new Object();
     private final Object writeObj = new Object();
+    protected int readPos;
+    protected int writePos;
+    // True: write has wrapped but read hasn't yet
+    // False: write and read have wrapped
+    protected boolean wrapFlag = false;
+    private int capacity;
+    private List<RAMBuffer.Sections> sections;
 
     public RAMBuffer(int capacity) {
         if (capacity < 1) {
             throw new IllegalArgumentException("Buffer size must be greater than 1");
-        }
-        if ((capacity & (capacity - 1)) != 0) {
-            throw new IllegalArgumentException("Buffer size must be a power of 2");
         }
         this.buffer = ByteBuffer.allocate(capacity);
         this.capacity = capacity;
@@ -37,6 +32,9 @@ public class RAMBuffer {
             throw new IllegalArgumentException("Section size must be smaller than or equal to buffer size");
         }
 
+        if ((this.capacity & (this.capacity - 1)) != 0) {
+            throw new IllegalArgumentException("Buffer size must be a power of 2 to add sections");
+        }
         if (this.sections == null) {
             this.sections = new ArrayList<RAMBuffer.Sections>();
         }
@@ -91,7 +89,7 @@ public class RAMBuffer {
      * @param length The amount of bytes to read
      */
     public byte[] read(byte[] dest, int offset, int length) {
-        if (length >= this.capacity) {
+        if (length > this.capacity) {
             throw new IllegalArgumentException("Destination array was bigger than the buffer capacity");
         }
         if (offset < 0) {
@@ -199,7 +197,7 @@ public class RAMBuffer {
      * @param length The amount of bytes to write
      */
     public void write(byte[] src, int offset, int length) {
-        if (src.length >= this.capacity) {
+        if (src.length > this.capacity) {
             throw new IllegalArgumentException("Source array was bigger than the buffer capacity");
         }
         if (offset < 0) {
