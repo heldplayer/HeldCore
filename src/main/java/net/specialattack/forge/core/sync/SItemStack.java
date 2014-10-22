@@ -1,13 +1,12 @@
 package net.specialattack.forge.core.sync;
 
 import com.google.common.io.ByteArrayDataInput;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
-
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 public class SItemStack extends BaseSyncable {
 

@@ -6,17 +6,17 @@ import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.ShapedRecipeHandler;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.specialattack.forge.core.crafting.CraftingHelper;
 import net.specialattack.forge.core.crafting.FakeShapelessSpACoreRecipe;
 import net.specialattack.forge.core.crafting.ShapelessSpACoreRecipe;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {

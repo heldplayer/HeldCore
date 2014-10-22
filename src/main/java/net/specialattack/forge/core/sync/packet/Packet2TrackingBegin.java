@@ -5,6 +5,9 @@ import com.google.common.io.ByteStreams;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
@@ -13,10 +16,6 @@ import net.specialattack.forge.core.event.SyncEvent;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.SyncHandler;
 import org.apache.logging.log4j.Level;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 public class Packet2TrackingBegin extends SyncPacket {
 

@@ -10,14 +10,13 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import java.util.EnumMap;
+import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.SpACore;
-
-import java.util.EnumMap;
-import java.util.UUID;
 
 // Thanks AtomicStryker for your example classes!
 // https://code.google.com/p/atomicstrykers-minecraft-mods/source/browse/Minions/src/main/java/atomicstryker/minions/common/network/NetworkHelper.java

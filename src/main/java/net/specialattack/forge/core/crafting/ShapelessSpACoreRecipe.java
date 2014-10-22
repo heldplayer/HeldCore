@@ -1,15 +1,14 @@
 package net.specialattack.forge.core.crafting;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class ShapelessSpACoreRecipe implements ISpACoreRecipe {
 

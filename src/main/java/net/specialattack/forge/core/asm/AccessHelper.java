@@ -1,9 +1,8 @@
 package net.specialattack.forge.core.asm;
 
+import java.io.File;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.server.MinecraftServer;
-
-import java.io.File;
 
 public final class AccessHelper {
 

@@ -47,7 +47,7 @@ public class SpACoreModTransformer implements IClassTransformer {
                     method.visitLabel(l0);
                     method.visitVarInsn(Opcodes.ALOAD, 0);
                     method.visitVarInsn(Opcodes.ALOAD, 1);
-                    method.visitMethodInsn(Opcodes.INVOKESPECIAL, "net/specialattack/forge/core/SpACoreMod", methods[i], descriptor);
+                    method.visitMethodInsn(Opcodes.INVOKESPECIAL, "net/specialattack/forge/core/SpACoreMod", methods[i], descriptor, false);
                     method.visitInsn(Opcodes.RETURN);
                     Label l2 = new Label();
                     method.visitLabel(l2);

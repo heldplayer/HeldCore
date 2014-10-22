@@ -1,7 +1,7 @@
+import java.util.Arrays;
 import net.specialattack.util.RAMBuffer;
 
-import java.util.Arrays;
-
+@SuppressWarnings("deprecation")
 public class RAMTest {
 
     public static void main(String[] params) {

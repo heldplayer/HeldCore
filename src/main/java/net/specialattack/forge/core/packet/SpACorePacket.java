@@ -3,11 +3,10 @@ package net.specialattack.forge.core.packet;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
-
 import java.io.IOException;
 import java.util.UUID;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 
 public abstract class SpACorePacket {
 

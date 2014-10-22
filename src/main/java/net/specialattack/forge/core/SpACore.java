@@ -9,17 +9,15 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.relauncher.Side;
+import java.io.File;
+import java.io.IOException;
 import net.minecraftforge.common.config.Configuration;
-import net.specialattack.forge.core.client.MC;
 import net.specialattack.forge.core.config.Config;
 import net.specialattack.forge.core.config.ConfigCategory;
 import net.specialattack.forge.core.config.ConfigValue;
 import net.specialattack.forge.core.packet.PacketHandler;
 import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.packet.*;
-
-import java.io.File;
-import java.io.IOException;
 
 @Mod(name = Objects.MOD_NAME, modid = Objects.MOD_ID, guiFactory = Objects.GUI_FACTORY)
 public class SpACore extends SpACoreMod {
@@ -92,7 +90,7 @@ public class SpACore extends SpACoreMod {
         category.addValue(SpACore.optOut);
         category.addValue(SpACore.refreshRate);
         category.addValue(SpACore.textureMapId);
-        category.addValue(SpACore.showReportBugs);
+        //category.addValue(SpACore.showReportBugs);
         category.addValue(SpACore.replaceModOptions);
 
         super.preInit(event);

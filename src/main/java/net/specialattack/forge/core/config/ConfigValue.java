@@ -6,17 +6,19 @@ import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraftforge.common.config.Property;
-
 import java.util.List;
 import java.util.regex.Pattern;
+import net.minecraftforge.common.config.Property;
 
 /**
  * Class used for storing a configuration entry
  *
- * @param <T> The type of value that will be stored in this config
+ * @param <T>
+ *         The type of value that will be stored in this config
+ *
  * @author heldplayer
  */
+@SuppressWarnings("ConstantConditions")
 public class ConfigValue<T> implements IConfigElement<T> {
 
     protected ConfigCategory<?> category;
@@ -123,11 +125,7 @@ public class ConfigValue<T> implements IConfigElement<T> {
     }
 
     public boolean isChanged() {
-        if (this.side != FMLCommonHandler.instance().getSide() && this.side != null) {
-            return false;
-        }
-
-        return this.value != null &&  this.value.hasChanged();
+        return !(this.side != FMLCommonHandler.instance().getSide() && this.side != null) && this.value != null && this.value.hasChanged();
     }
 
     public ConfigValue<T> setRequiresMcRestart(boolean requiresMcRestart) {

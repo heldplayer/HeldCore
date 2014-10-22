@@ -4,9 +4,8 @@ import com.google.common.eventbus.EventBus;
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.LoadController;
 import cpw.mods.fml.common.ModMetadata;
-import net.specialattack.forge.core.Objects;
-
 import java.util.Arrays;
+import net.specialattack.forge.core.Objects;
 
 public class SpACoreModContainer extends DummyModContainer {
 

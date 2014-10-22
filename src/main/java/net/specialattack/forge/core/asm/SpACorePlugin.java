@@ -3,7 +3,6 @@ package net.specialattack.forge.core.asm;
 import cpw.mods.fml.relauncher.IFMLCallHook;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
-
 import java.util.Map;
 
 @TransformerExclusions({ "net.specialattack.forge.core.asm" })

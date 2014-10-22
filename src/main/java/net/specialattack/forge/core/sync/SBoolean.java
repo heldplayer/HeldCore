@@ -1,7 +1,6 @@
 package net.specialattack.forge.core.sync;
 
 import com.google.common.io.ByteArrayDataInput;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 

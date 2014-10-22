@@ -5,15 +5,14 @@ import com.google.common.io.ByteStreams;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.sync.ISyncable;
 import net.specialattack.forge.core.sync.SyncHandler;
 import org.apache.logging.log4j.Level;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 public class Packet3TrackingUpdate extends SyncPacket {
 

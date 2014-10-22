@@ -3,14 +3,13 @@ package net.specialattack.forge.core.sync.packet;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.specialattack.forge.core.SpACore;
 import net.specialattack.forge.core.event.SyncEvent;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
-
-import java.io.IOException;
 
 public class Packet4InitiateClientTracking extends SyncPacket {
 
@@ -25,7 +24,10 @@ public class Packet4InitiateClientTracking extends SyncPacket {
     }
 
     public Packet4InitiateClientTracking(ISyncableObjectOwner object) {
-        super(object != null ? object.getWorld() : null);
+        super(object != null && object.isWorldBound() ? object.getWorld() : null);
+        if (object == null) {
+            throw new IllegalArgumentException("object");
+        }
 
         if (object.isWorldBound()) {
             this.isWordly = true;

@@ -1,10 +1,9 @@
 package net.specialattack.forge.core.sync;
 
+import java.util.LinkedList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
-
-import java.util.LinkedList;
 
 public class PlayerTracker {
 

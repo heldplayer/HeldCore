@@ -3,12 +3,11 @@ package net.specialattack.forge.core.sync.packet;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.specialattack.forge.core.sync.PlayerTracker;
 import net.specialattack.forge.core.sync.SyncHandler;
-
-import java.io.IOException;
 
 public class Packet6SetInterval extends SyncPacket {
 

@@ -2,6 +2,7 @@ package net.specialattack.forge.core.client.gui;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -10,8 +11,6 @@ import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import org.lwjgl.opengl.GL11;
-
-import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiTextBox extends Gui {
@@ -378,7 +377,6 @@ public class GuiTextBox extends Gui {
                             off += line.length();
                             if (off < text.length() && text.charAt(off) == ' ') {
                                 off++;
-                                line += " ";
                             }
 
                             prevLineChar = off;
@@ -821,7 +819,6 @@ public class GuiTextBox extends Gui {
                         off += line.length();
                         if (off < text.length() && text.charAt(off) == ' ') {
                             off++;
-                            line += " ";
                         }
 
                         remainingLines++;

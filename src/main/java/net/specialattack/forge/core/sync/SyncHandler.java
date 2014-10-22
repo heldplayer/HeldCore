@@ -3,6 +3,7 @@ package net.specialattack.forge.core.sync;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import java.util.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.world.World;
@@ -16,8 +17,6 @@ import net.specialattack.forge.core.sync.packet.Packet3TrackingUpdate;
 import net.specialattack.forge.core.sync.packet.Packet5TrackingEnd;
 import net.specialattack.forge.core.sync.packet.Packet6SetInterval;
 import org.apache.logging.log4j.Level;
-
-import java.util.*;
 
 public class SyncHandler {
 

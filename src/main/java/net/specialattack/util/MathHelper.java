@@ -169,7 +169,6 @@ public final class MathHelper {
                     ai[i] += tempi;
                 }
             }
-            mmax = istep;
         }
     }
 

@@ -3,6 +3,7 @@ package net.specialattack.forge.core.sync.packet;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -10,8 +11,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.specialattack.forge.core.event.SyncEvent;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.SyncHandler;
-
-import java.io.IOException;
 
 public class Packet1TrackingStatus extends SyncPacket {
 
@@ -27,7 +26,10 @@ public class Packet1TrackingStatus extends SyncPacket {
     }
 
     public Packet1TrackingStatus(ISyncableObjectOwner object, boolean track) {
-        super(object != null ? object.getWorld() : null);
+        super(object != null && object.isWorldBound() ? object.getWorld() : null);
+        if (object == null) {
+            throw new IllegalArgumentException("object");
+        }
 
         this.track = track;
         if (object.isWorldBound()) {

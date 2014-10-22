@@ -5,11 +5,10 @@ import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
 import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraftforge.common.config.Configuration;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import net.minecraftforge.common.config.Configuration;
 
 public class ConfigCategory<T> implements IConfigElement<T> {
 

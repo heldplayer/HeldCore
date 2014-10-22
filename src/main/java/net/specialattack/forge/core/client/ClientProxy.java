@@ -7,6 +7,9 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.awt.Rectangle;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -28,10 +31,6 @@ import net.specialattack.forge.core.client.gui.GuiScreenReportBug;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.packet.Packet1TrackingStatus;
-
-import java.awt.*;
-import java.util.List;
-import java.util.Map;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {

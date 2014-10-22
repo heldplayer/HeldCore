@@ -1,14 +1,13 @@
 package net.specialattack.forge.core.sync;
 
 import com.google.common.io.ByteArrayDataInput;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
-
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 public class SInventoryStack extends BaseSyncable {
 
@@ -33,10 +32,7 @@ public class SInventoryStack extends BaseSyncable {
             return true;
         }
         ItemStack stack = this.inventory.getStackInSlot(this.slot);
-        if (this.prevValue == stack) {
-            return false;
-        }
-        return !ItemStack.areItemStacksEqual(this.prevValue, stack);
+        return this.prevValue != stack && !ItemStack.areItemStacksEqual(this.prevValue, stack);
     }
 
     public IInventory getInventory() {

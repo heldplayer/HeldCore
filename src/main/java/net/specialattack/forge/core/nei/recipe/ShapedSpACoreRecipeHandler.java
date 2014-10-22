@@ -11,6 +11,11 @@ import codechicken.nei.api.IStackPositioner;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.RecipeInfo;
 import codechicken.nei.recipe.TemplateRecipeHandler;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiCrafting;
 import net.minecraft.inventory.Container;
@@ -20,11 +25,6 @@ import net.minecraft.item.crafting.IRecipe;
 import net.specialattack.forge.core.crafting.CraftingHelper;
 import net.specialattack.forge.core.crafting.FakeShapedSpACoreRecipe;
 import net.specialattack.forge.core.crafting.ShapedSpACoreRecipe;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {

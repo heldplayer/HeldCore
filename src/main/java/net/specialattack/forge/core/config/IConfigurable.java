@@ -18,7 +18,9 @@ public interface IConfigurable {
      * Loads the config value from a serialized String and returns a new
      * instance
      *
-     * @param serialized The saved String
+     * @param serialized
+     *         The saved String
+     *
      * @return A new instance of the config value
      */
     public abstract IConfigurable load(String serialized);
