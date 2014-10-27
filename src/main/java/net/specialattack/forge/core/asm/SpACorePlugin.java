@@ -1,10 +1,8 @@
 package net.specialattack.forge.core.asm;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.IFMLCallHook;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
-import cpw.mods.fml.relauncher.Side;
 import java.util.Map;
 
 @TransformerExclusions({ "net.specialattack.forge.core.asm" })
@@ -34,7 +32,6 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
         if (!((Boolean) data.get("runtimeDeobfuscationEnabled"))) {
             debug = true;
         }
-        debug = debug && FMLCommonHandler.instance().getSide() == Side.CLIENT;
     }
 
     @Override
