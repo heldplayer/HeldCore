@@ -10,13 +10,12 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.util.AttributeKey;
 import java.util.EnumMap;
-import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.SpACore;
+import org.apache.logging.log4j.Level;
 
 // Thanks AtomicStryker for your example classes!
 // https://code.google.com/p/atomicstrykers-minecraft-mods/source/browse/Minions/src/main/java/atomicstryker/minions/common/network/NetworkHelper.java
@@ -25,57 +24,100 @@ public class PacketHandler<P extends SpACorePacket> {
 
     private final FMLEmbeddedChannel clientOutboundChannel;
     private final FMLEmbeddedChannel serverOutboundChannel;
+    private final String channelName;
 
     public PacketHandler(String channelName, Class<? extends P>... handledPacketClasses) {
-        EnumMap<Side, FMLEmbeddedChannel> channelPair = NetworkRegistry.INSTANCE.newChannel(channelName, new ChannelHandler(handledPacketClasses), new ClickMessageHandler());
+        EnumMap<Side, FMLEmbeddedChannel> channelPair = NetworkRegistry.INSTANCE.newChannel(channelName, new ChannelHandler(handledPacketClasses), new MessageHandler());
         this.clientOutboundChannel = channelPair.get(Side.CLIENT);
         this.serverOutboundChannel = channelPair.get(Side.SERVER);
+        this.channelName = channelName;
+    }
+
+    private <T> void setAttr(Side side, AttributeKey<T> attribute, T value) {
+        if (side == Side.CLIENT) {
+            this.clientOutboundChannel.attr(attribute).set(value);
+        } else if (side == Side.SERVER) {
+            this.serverOutboundChannel.attr(attribute).set(value);
+        } else {
+            throw new IllegalStateException("Setting attribute on unknwon side!");
+        }
+    }
+
+    private void write(Side side, P packet) {
+        if (side == Side.CLIENT) {
+            Verification.verifyPacket(this.clientOutboundChannel, packet, side);
+            this.clientOutboundChannel.writeOutbound(packet);
+        } else if (side == Side.SERVER) {
+            Verification.verifyPacket(this.serverOutboundChannel, packet, side);
+            this.serverOutboundChannel.writeOutbound(packet);
+        } else {
+            throw new IllegalStateException("Writing from unknown side!");
+        }
     }
 
     public void sendPacketToServer(P packet) {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
-            this.clientOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
-            EntityPlayer player = SpACore.proxy.getClientPlayer();
-            if (player != null) {
-                packet.sender = player.getUniqueID();
-            }
-            packet.senderSide = Side.CLIENT;
-            this.clientOutboundChannel.writeOutbound(packet);
+            setAttr(Side.CLIENT, FMLOutboundHandler.FML_MESSAGETARGET, FMLOutboundHandler.OutboundTarget.TOSERVER);
+            packet.attr(Attributes.SENDING_PLAYER).set(SpACore.proxy.getClientPlayer());
+            write(Side.CLIENT, packet);
+        } else {
+            throw new IllegalStateException("Calling client only code on the server side!");
         }
     }
 
     public void sendPacketToPlayer(P packet, EntityPlayer player) {
         if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
-            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
-            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
-            packet.senderSide = Side.SERVER;
-            this.serverOutboundChannel.writeOutbound(packet);
+            setAttr(Side.SERVER, FMLOutboundHandler.FML_MESSAGETARGET, FMLOutboundHandler.OutboundTarget.PLAYER);
+            setAttr(Side.SERVER, FMLOutboundHandler.FML_MESSAGETARGETARGS, player);
+            packet.attr(Attributes.TARGET_PLAYER).set(player.getUniqueID());
+            write(Side.SERVER, packet);
+        } else {
+            throw new IllegalStateException("Calling server only code on the client side!");
         }
     }
 
     public void sendPacketToAllPlayers(P packet) {
         if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
-            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
-            packet.senderSide = Side.SERVER;
-            this.serverOutboundChannel.writeOutbound(packet);
+            setAttr(Side.SERVER, FMLOutboundHandler.FML_MESSAGETARGET, FMLOutboundHandler.OutboundTarget.ALL);
+            write(Side.SERVER, packet);
+        } else {
+            throw new IllegalStateException("Calling server only code on the client side!");
         }
     }
 
     public void sendPacketToAllAroundPoint(P packet, NetworkRegistry.TargetPoint tp) {
         if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
-            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
-            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(tp);
-            packet.senderSide = Side.SERVER;
-            this.serverOutboundChannel.writeOutbound(packet);
+            setAttr(Side.SERVER, FMLOutboundHandler.FML_MESSAGETARGET, FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
+            setAttr(Side.SERVER, FMLOutboundHandler.FML_MESSAGETARGETARGS, tp);
+            write(Side.SERVER, packet);
+        } else {
+            throw new IllegalStateException("Calling server only code on the client side!");
         }
     }
 
     public void sendPacketToAllInDimension(P packet, int dimension) {
         if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
-            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
-            this.serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimension);
-            packet.senderSide = Side.SERVER;
-            this.serverOutboundChannel.writeOutbound(packet);
+            setAttr(Side.SERVER, FMLOutboundHandler.FML_MESSAGETARGET, FMLOutboundHandler.OutboundTarget.DIMENSION);
+            setAttr(Side.SERVER, FMLOutboundHandler.FML_MESSAGETARGETARGS, dimension);
+            write(Side.SERVER, packet);
+        } else {
+            throw new IllegalStateException("Calling server only code on the client side!");
+        }
+    }
+
+    public <T> void prepareServerOutbound(AttributeKey<T> attributeKey, T arg) {
+        if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
+            setAttr(Side.SERVER, attributeKey, arg);
+        } else {
+            throw new IllegalStateException("Calling server only code on the client side!");
+        }
+    }
+
+    public <T> void prepareClientOutbound(AttributeKey<T> attributeKey, T arg) {
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+            setAttr(Side.CLIENT, attributeKey, arg);
+        } else {
+            throw new IllegalStateException("Calling client only code on the server side!");
         }
     }
 
@@ -89,74 +131,43 @@ public class PacketHandler<P extends SpACorePacket> {
 
         @Override
         public void encodeInto(ChannelHandlerContext context, P packet, ByteBuf out) throws Exception {
-            if (packet.sender != null) {
-                byte[] bytes = packet.sender.toString().getBytes();
-                out.writeInt(bytes.length);
-                out.writeBytes(bytes);
-            } else {
-                out.writeInt(0);
-            }
-            if (packet.senderSide != null) {
-                out.writeInt(packet.senderSide.ordinal());
-            } else {
-                Side side = packet.getSendingSide();
-                if (side != null) {
-                    out.writeInt(side.ordinal());
+            try {
+                if (packet.getSendingSide() == Side.SERVER && packet.attr(Attributes.TARGET_PLAYER).get() != null) {
+                    Objects.log.log(Level.INFO, String.format("%s %s send > %s @ %s", packet.getSendingSide(), channelName, packet.getDebugInfo(), packet.attr(Attributes.TARGET_PLAYER).get()));
                 } else {
-                    out.writeInt(Side.SERVER.ordinal());
+                    Objects.log.log(Level.INFO, String.format("%s %s send > %s", packet.getSendingSide(), channelName, packet.getDebugInfo()));
                 }
+                // Writing the attributes
+                Attributes.writeAttributes(packet, out);
+                // Writing the packet
+                packet.write(context, out);
+            } catch (Exception e) {
+                throw new IllegalStateException("Failed writing packet", e);
             }
-            packet.write(context, out);
         }
 
         @Override
         public void decodeInto(ChannelHandlerContext context, ByteBuf in, P packet) {
             try {
-                byte[] bytes = new byte[in.readInt()];
-                in.readBytes(bytes);
-                String player = new String(bytes);
-                Side side = Side.values()[in.readInt()];
-                try {
-                    packet.sender = UUID.fromString(player);
-                } catch (IllegalArgumentException e) {
-                }
-                packet.senderSide = side;
-
-                try {
-                    packet.read(context, in);
-                } catch (Exception e) {
-                    throw new RuntimeException("Failed reading packet", e);
-                }
-            } catch (Throwable e) {
-                Objects.log.warn("Failed reading packet", e);
+                // Reading the attributes
+                Attributes.readAttributes(packet, in);
+                // Reading the packet
+                packet.read(context, in);
+                Objects.log.log(Level.INFO, String.format("%s %s recv < %s", packet.getSendingSide() == Side.CLIENT ? Side.SERVER : Side.CLIENT, channelName, packet.getDebugInfo()));
+            } catch (Exception e) {
+                throw new IllegalStateException("Failed reading packet", e);
             }
         }
-
     }
 
     @Sharable
-    private class ClickMessageHandler extends SimpleChannelInboundHandler<P> {
+    private class MessageHandler extends SimpleChannelInboundHandler<P> {
 
         @Override
-        protected void channelRead0(ChannelHandlerContext context, P packet) throws Exception {
+        protected void channelRead0(ChannelHandlerContext context, P packet) {
             try {
-                EntityPlayer player = null;
-                if (packet.senderSide.isServer()) {
-                    player = SpACore.proxy.getClientPlayer();
-                } else if (packet.senderSide.isClient()) {
-                    if (packet.sender != null) {
-                        for (Object obj : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
-                            if (obj instanceof EntityPlayer) {
-                                if (((EntityPlayerMP) obj).getUniqueID().equals(packet.sender)) {
-                                    player = (EntityPlayer) obj;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                packet.onData(context, player);
-            } catch (Throwable e) {
+                packet.onData(context);
+            } catch (Exception e) {
                 Objects.log.warn("Failed handling packet", e);
             }
         }

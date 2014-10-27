@@ -1,37 +1,31 @@
 package net.specialattack.forge.core.sync.packet;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
-import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.SpACore;
 import net.specialattack.forge.core.event.SyncEvent;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.SyncHandler;
 import org.apache.logging.log4j.Level;
 
-public class Packet2TrackingBegin extends SyncPacket {
+public class Packet7TrackingStop extends SyncPacket {
 
     public boolean isWordly;
     public String identifier;
     public int posX;
     public int posY;
     public int posZ;
-    public byte[] data;
 
-    public Packet2TrackingBegin() {
+    public Packet7TrackingStop() {
         super(null);
     }
 
-    public Packet2TrackingBegin(ISyncableObjectOwner object) {
+    public Packet7TrackingStop(ISyncableObjectOwner object) {
         super(object != null ? object.getWorld() : null);
 
         if (object == null) {
@@ -49,22 +43,11 @@ public class Packet2TrackingBegin extends SyncPacket {
 
             this.identifier = object.getIdentifier();
         }
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream(32640);
-        DataOutputStream dos = new DataOutputStream(bos);
-
-        try {
-            object.writeSetup(dos);
-        } catch (IOException e) {
-            Objects.log.log(Level.WARN, "Failed synchronizing object", e);
-        }
-
-        this.data = bos.toByteArray();
     }
 
     @Override
     public String getDebugInfo() {
-        return String.format("PacketTrackingBegin[Data: %s bytes, isWorldly: %s, %s]", this.data == null ? "null" : this.data.length, this.isWordly, this.isWordly ? String.format("x: %s, y: %s, z: %s", this.posX, this.posY, this.posZ) : String.format("Identifier: %s", this.identifier));
+        return String.format("PacketTrackingStop[isWorldly: %s, %s]", this.isWordly, this.isWordly ? String.format("x: %s, y: %s, z: %s", this.posX, this.posY, this.posZ) : String.format("Identifier: %s", this.identifier));
     }
 
     @Override
@@ -85,9 +68,6 @@ public class Packet2TrackingBegin extends SyncPacket {
             in.readBytes(data);
             this.identifier = new String(data);
         }
-
-        this.data = new byte[in.readInt()];
-        in.readBytes(this.data);
     }
 
     @Override
@@ -103,9 +83,6 @@ public class Packet2TrackingBegin extends SyncPacket {
             out.writeInt(data.length);
             out.writeBytes(data);
         }
-
-        out.writeInt(this.data.length);
-        out.writeBytes(this.data);
     }
 
     @Override
@@ -118,15 +95,9 @@ public class Packet2TrackingBegin extends SyncPacket {
                 if (tile != null) {
                     if (tile instanceof ISyncableObjectOwner) {
                         ISyncableObjectOwner object = (ISyncableObjectOwner) tile;
-                        try {
-                            ByteArrayDataInput dat = ByteStreams.newDataInput(this.data);
 
-                            object.readSetup(dat);
-
-                            SyncHandler.Client.startTracking(object.getSyncables());
-                        } catch (IOException e) {
-                            SyncHandler.Client.log.log(Level.WARN, "Failed synchronizing object", e);
-                        }
+                        SyncHandler.Client.log.log(Level.INFO, String.format("Marking %s as not valid", object));
+                        object.setNotValid();
                     }
                 }
             }
@@ -137,15 +108,8 @@ public class Packet2TrackingBegin extends SyncPacket {
             if (event.result != null) {
                 ISyncableObjectOwner object = event.result;
 
-                try {
-                    ByteArrayDataInput dat = ByteStreams.newDataInput(this.data);
-
-                    object.readSetup(dat);
-
-                    SyncHandler.Client.startTracking(object.getSyncables());
-                } catch (IOException e) {
-                    SyncHandler.Client.log.log(Level.WARN, "Failed synchronizing object", e);
-                }
+                SyncHandler.Client.log.log(Level.INFO, String.format("Marking %s as not valid", object));
+                object.setNotValid();
             }
         }
     }

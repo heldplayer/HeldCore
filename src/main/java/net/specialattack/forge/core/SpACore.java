@@ -8,10 +8,12 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.relauncher.Side;
 import java.io.File;
 import java.io.IOException;
 import net.minecraftforge.common.config.Configuration;
+import net.specialattack.forge.core.client.MC;
 import net.specialattack.forge.core.config.Config;
 import net.specialattack.forge.core.config.ConfigCategory;
 import net.specialattack.forge.core.config.ConfigValue;
@@ -37,7 +39,7 @@ public class SpACore extends SpACoreMod {
     public static ConfigValue<Boolean> showReportBugs;
     public static ConfigValue<Boolean> replaceModOptions;
 
-    public static PacketHandler<SyncPacket> packetHandler;
+    public static PacketHandler<SyncPacket> syncPacketHandler;
 
     public static void initializeReporter(String modId, String modVersion) {
         if (SpACore.proxy.allowSnooping()) {
@@ -65,7 +67,7 @@ public class SpACore extends SpACoreMod {
     public void preInit(FMLPreInitializationEvent event) {
         Objects.log = event.getModLog();
 
-        SpACore.packetHandler = new PacketHandler<SyncPacket>("SpACore", Packet1TrackingStatus.class, Packet2TrackingBegin.class, Packet3TrackingUpdate.class, Packet4InitiateClientTracking.class, Packet5TrackingEnd.class, Packet6SetInterval.class);
+        SpACore.syncPacketHandler = new PacketHandler<SyncPacket>("SpACore", Packet1TrackingStatus.class, Packet2TrackingBegin.class, Packet3TrackingUpdate.class, Packet4InitiateClientTracking.class, Packet5TrackingEnd.class, Packet6SetInterval.class, Packet7TrackingStop.class);
 
         SpACore.configFolder = new File(event.getModConfigurationDirectory(), "SpACore");
 
@@ -113,13 +115,20 @@ public class SpACore extends SpACoreMod {
 
     @Override
     public boolean configChanged(OnConfigChangedEvent event) {
-        Objects.log.info("Configuration changed!");
+        if (MC.getWorld() != null) {
+            SyncHandler.Client.sendUpdateInterval();
+        }
         return true;
     }
 
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
-        SyncHandler.reset();
+        SyncHandler.Server.reset(); // Make sure it is reset
+    }
+
+    @EventHandler
+    public void serverStopped(FMLServerStoppedEvent event) {
+        SyncHandler.Server.reset();
     }
 
 }

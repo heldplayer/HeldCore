@@ -1,8 +1,8 @@
 package net.specialattack.util;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class Table<K, V1, V2> {
 
@@ -88,7 +88,7 @@ public class Table<K, V1, V2> {
     }
 
     public Collection<Entry<K, V1, V2>> getEntries() {
-        TreeSet<Entry<K, V1, V2>> result = new TreeSet<Entry<K, V1, V2>>();
+        HashSet<Entry<K, V1, V2>> result = new HashSet<Entry<K, V1, V2>>();
 
         for (java.util.Map.Entry<K, Value<V1, V2>> entry : this.entries.entrySet()) {
             result.add(new Entry<K, V1, V2>(entry.getKey(), entry.getValue().value1, entry.getValue().value2));

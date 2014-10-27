@@ -1,10 +1,10 @@
 package net.specialattack.forge.core.client;
 
 import cpw.mods.fml.client.GuiModList;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.awt.Rectangle;
@@ -48,20 +48,17 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
+    protected void initializeSyncHandler() {
+        SyncHandler.initializeClient();
+    }
+
+    @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
 
         MC.getRenderEngine().loadTextureMap(Assets.TEXTURE_MAP, new TextureMap(SpACore.textureMapId.getValue(), "textures/spacore"));
-    }
 
-    @SubscribeEvent
-    public void onClientConnectedToServer(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        SyncHandler.initializationCounter = 20;
-    }
-
-    @SubscribeEvent
-    public void onClientDisconnectionFromServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
-        SyncHandler.clientSyncables.clear();
+        FMLCommonHandler.instance().bus().register(this);
     }
 
     @SubscribeEvent
@@ -71,7 +68,7 @@ public class ClientProxy extends CommonProxy {
 
             for (TileEntity tile : tiles.values()) {
                 if (tile instanceof ISyncableObjectOwner) {
-                    SpACore.packetHandler.sendPacketToServer(new Packet1TrackingStatus((ISyncableObjectOwner) tile, false));
+                    SpACore.syncPacketHandler.sendPacketToServer(new Packet1TrackingStatus((ISyncableObjectOwner) tile, false));
                 }
             }
         }
@@ -157,12 +154,14 @@ public class ClientProxy extends CommonProxy {
             if (event.button != null && event.button.id == -123 && event.gui != null && event.gui instanceof GuiMainMenu) {
                 MC.getMinecraft().displayGuiScreen(new GuiScreenReportBug());
                 event.setCanceled(true);
+                event.button.func_146113_a(MC.getSoundHandler());
             }
         }
         if (SpACore.replaceModOptions.getValue()) {
             if (event.button != null && event.button.id == 12 && event.gui != null && event.gui instanceof GuiIngameMenu) {
                 MC.getMinecraft().displayGuiScreen(new GuiModList(event.gui));
                 event.setCanceled(true);
+                event.button.func_146113_a(MC.getSoundHandler());
             }
         }
     }

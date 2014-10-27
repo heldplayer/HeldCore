@@ -9,7 +9,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.specialattack.forge.core.event.SyncEvent;
+import net.specialattack.forge.core.packet.Attributes;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
+import net.specialattack.forge.core.sync.PlayerTracker;
 import net.specialattack.forge.core.sync.SyncHandler;
 
 public class Packet1TrackingStatus extends SyncPacket {
@@ -43,6 +45,11 @@ public class Packet1TrackingStatus extends SyncPacket {
 
             this.identifier = object.getIdentifier();
         }
+    }
+
+    @Override
+    public String getDebugInfo() {
+        return String.format("PacketTrackingStatus[isWorldly: %s, %s]", this.isWordly, this.isWordly ? String.format("x: %s, y: %s, z: %s", this.posX, this.posY, this.posZ) : String.format("Identifier: %s", this.identifier));
     }
 
     @Override
@@ -85,19 +92,26 @@ public class Packet1TrackingStatus extends SyncPacket {
     }
 
     @Override
-    public void onData(ChannelHandlerContext context, EntityPlayer player) {
-        if (!(player instanceof EntityPlayerMP)) {
-            return;
+    public void onData(ChannelHandlerContext context) {
+        this.requireAttribute(Attributes.SENDING_PLAYER);
+
+        EntityPlayer player = this.attr(Attributes.SENDING_PLAYER).get();
+
+        PlayerTracker tracker = SyncHandler.Server.getTracker(player);
+        if (tracker == null) {
+            SyncHandler.Server.startTracking((EntityPlayerMP) player);
         }
 
         if (this.isWordly) {
-            TileEntity tile = player.worldObj.getTileEntity(this.posX, this.posY, this.posZ);
-            if (tile != null) {
-                if (tile instanceof ISyncableObjectOwner) {
-                    if (this.track) {
-                        SyncHandler.startTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
-                    } else {
-                        SyncHandler.stopTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
+            if (player.worldObj != null) {
+                TileEntity tile = player.worldObj.getTileEntity(this.posX, this.posY, this.posZ);
+                if (tile != null) {
+                    if (tile instanceof ISyncableObjectOwner) {
+                        if (this.track) {
+                            SyncHandler.Server.startTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
+                        } else {
+                            SyncHandler.Server.stopTracking((ISyncableObjectOwner) tile, (EntityPlayerMP) player);
+                        }
                     }
                 }
             }
@@ -107,9 +121,9 @@ public class Packet1TrackingStatus extends SyncPacket {
 
             if (event.result != null) {
                 if (this.track) {
-                    SyncHandler.startTracking(event.result, (EntityPlayerMP) player);
+                    SyncHandler.Server.startTracking(event.result, (EntityPlayerMP) player);
                 } else {
-                    SyncHandler.stopTracking(event.result, (EntityPlayerMP) player);
+                    SyncHandler.Server.stopTracking(event.result, (EntityPlayerMP) player);
                 }
             }
         }

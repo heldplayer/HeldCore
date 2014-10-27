@@ -1,37 +1,63 @@
 package net.specialattack.forge.core.sync;
 
-import java.util.LinkedList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.play.INetHandlerPlayServer;
+import net.specialattack.forge.core.CommonProxy;
+import org.apache.logging.log4j.Level;
 
 public class PlayerTracker {
 
-    public LinkedList<ISyncable> syncables;
-    public LinkedList<ISyncableObjectOwner> syncableOwners;
-    public INetHandler handler;
+    public Set<ISyncable> syncables;
+    public Set<ISyncableObjectOwner> syncableOwners;
+    protected Set<ISyncable> updatedSyncables;
+    public final UUID uuid;
     public int ticks;
     public int interval;
 
-    public PlayerTracker(INetHandler handler, int interval) {
-        this.handler = handler;
-        this.syncables = new LinkedList<ISyncable>();
-        this.syncableOwners = new LinkedList<ISyncableObjectOwner>();
+    public PlayerTracker(INetHandlerPlayServer handler, int interval) {
+        this.syncables = new HashSet<ISyncable>();
+        this.syncableOwners = new HashSet<ISyncableObjectOwner>();
+        this.updatedSyncables = new HashSet<ISyncable>();
         this.interval = interval;
+        if (handler instanceof NetHandlerPlayServer) {
+            NetHandlerPlayServer netHandlerPlayServer = (NetHandlerPlayServer) handler;
+            this.uuid = netHandlerPlayServer.playerEntity.getUniqueID();
+            SyncHandler.Server.log.log(Level.INFO, String.format("Created tracker %s", this.uuid));
+        } else {
+            throw new IllegalArgumentException("handler must be of type NetHandlerPlayServer");
+        }
     }
 
     @Override
     public String toString() {
-        EntityPlayerMP player = this.getPlayer();
-        return "Player Tracker " + (player != null ? player.getCommandSenderName() : null);
+        return String.format("[Player Tracker %s]", this.uuid);
     }
 
     public EntityPlayerMP getPlayer() {
-        if (this.handler instanceof NetHandlerPlayServer) {
-            NetHandlerPlayServer netHandlerPlayServer = (NetHandlerPlayServer) this.handler;
-            return netHandlerPlayServer.playerEntity;
+        return CommonProxy.getPlayerFromUUID(this.uuid);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
-        return null;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        PlayerTracker tracker = (PlayerTracker) o;
+
+        return uuid.equals(tracker.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return uuid.hashCode();
     }
 
 }

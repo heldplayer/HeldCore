@@ -1,7 +1,5 @@
 package net.specialattack.forge.core.sync;
 
-import net.specialattack.forge.core.Objects;
-
 public abstract class BaseSyncable implements ISyncable {
 
     protected boolean hasChanged;
@@ -31,8 +29,7 @@ public abstract class BaseSyncable implements ISyncable {
     @Override
     public int getId() {
         if (this.id == -1) {
-            this.id = SyncHandler.lastSyncId++;
-            Objects.log.debug("Getting next ID (" + this.id + ") for " + this.toString()); // FIXME: debug code
+            this.id = SyncHandler.Server.getNextFreeId();
         }
         return this.id;
     }

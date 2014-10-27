@@ -34,6 +34,7 @@ public class SpACoreLoggerTransformer implements IClassTransformer {
                                     super.visitInsn(Opcodes.POP);
                                     desc = Type.getMethodDescriptor(Type.VOID_TYPE, Type.getType(String.class));
                                     checking = false;
+                                    System.out.println("Removed stacktraces from missing textures.");
                                 }
                                 super.visitMethodInsn(opcode, owner, name, desc, itf);
                             }

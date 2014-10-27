@@ -10,6 +10,8 @@ public interface ISyncableObjectOwner {
 
     boolean isNotValid();
 
+    void setNotValid();
+
     List<ISyncable> getSyncables();
 
     void readSetup(ByteArrayDataInput in) throws IOException;

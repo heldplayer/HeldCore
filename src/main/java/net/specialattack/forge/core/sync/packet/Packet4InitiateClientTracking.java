@@ -43,6 +43,11 @@ public class Packet4InitiateClientTracking extends SyncPacket {
     }
 
     @Override
+    public String getDebugInfo() {
+        return String.format("PacketInitiateClientTracking[isWorldly: %s, %s]", this.isWordly, this.isWordly ? String.format("x: %s, y: %s, z: %s", this.posX, this.posY, this.posZ) : String.format("Identifier: %s", this.identifier));
+    }
+
+    @Override
     public Side getSendingSide() {
         return Side.SERVER;
     }
@@ -78,12 +83,16 @@ public class Packet4InitiateClientTracking extends SyncPacket {
     }
 
     @Override
-    public void onData(ChannelHandlerContext context, EntityPlayer player) {
+    public void onData(ChannelHandlerContext context) {
+        EntityPlayer player = SpACore.proxy.getClientPlayer();
+
         if (this.isWordly) {
-            TileEntity tile = player.worldObj.getTileEntity(this.posX, this.posY, this.posZ);
-            if (tile != null) {
-                if (tile instanceof ISyncableObjectOwner) {
-                    SpACore.packetHandler.sendPacketToServer(new Packet1TrackingStatus((ISyncableObjectOwner) tile, true));
+            if (player.worldObj != null) {
+                TileEntity tile = player.worldObj.getTileEntity(this.posX, this.posY, this.posZ);
+                if (tile != null) {
+                    if (tile instanceof ISyncableObjectOwner) {
+                        SpACore.syncPacketHandler.sendPacketToServer(new Packet1TrackingStatus((ISyncableObjectOwner) tile, true));
+                    }
                 }
             }
         } else {
@@ -91,7 +100,7 @@ public class Packet4InitiateClientTracking extends SyncPacket {
             MinecraftForge.EVENT_BUS.post(event);
 
             if (event.result != null) {
-                SpACore.packetHandler.sendPacketToServer(new Packet1TrackingStatus(event.result, true));
+                SpACore.syncPacketHandler.sendPacketToServer(new Packet1TrackingStatus(event.result, true));
             }
         }
     }

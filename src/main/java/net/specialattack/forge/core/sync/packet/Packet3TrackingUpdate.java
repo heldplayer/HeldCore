@@ -8,7 +8,6 @@ import io.netty.channel.ChannelHandlerContext;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import net.minecraft.entity.player.EntityPlayer;
 import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.sync.ISyncable;
 import net.specialattack.forge.core.sync.SyncHandler;
@@ -49,6 +48,11 @@ public class Packet3TrackingUpdate extends SyncPacket {
     }
 
     @Override
+    public String getDebugInfo() {
+        return String.format("PacketTrackingUpdate[Syncables: length=%s, data: %s bytes]", this.syncables == null ? "null" : this.syncables.length, this.data == null ? "null" : this.data.length);
+    }
+
+    @Override
     public Side getSendingSide() {
         return Side.SERVER;
     }
@@ -66,23 +70,22 @@ public class Packet3TrackingUpdate extends SyncPacket {
     }
 
     @Override
-    public void onData(ChannelHandlerContext context, EntityPlayer player) {
+    public void onData(ChannelHandlerContext context) {
         ByteArrayDataInput dat = ByteStreams.newDataInput(this.data);
 
         try {
             this.syncables = new ISyncable[dat.readInt()];
             for (int i = 0; i < this.syncables.length; i++) {
                 int id = dat.readInt();
-                for (ISyncable syncable : SyncHandler.clientSyncables) {
-                    if (syncable.getId() == id) {
-                        this.syncables[i] = syncable;
-                        syncable.read(dat);
-                        syncable.getOwner().onDataChanged(syncable);
-                    }
+                ISyncable syncable = SyncHandler.Client.getSyncable(id);
+                if (syncable != null) {
+                    this.syncables[i] = syncable;
+                    syncable.read(dat);
+                    syncable.getOwner().onDataChanged(syncable);
                 }
             }
         } catch (IOException e) {
-            Objects.log.log(Level.WARN, "Failed synchronizing object", e);
+            SyncHandler.Client.log.log(Level.WARN, "Failed synchronizing object", e);
         }
     }
 

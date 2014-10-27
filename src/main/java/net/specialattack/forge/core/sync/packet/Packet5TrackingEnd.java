@@ -4,8 +4,6 @@ import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import java.io.IOException;
-import java.util.Iterator;
-import net.minecraft.entity.player.EntityPlayer;
 import net.specialattack.forge.core.sync.ISyncable;
 import net.specialattack.forge.core.sync.SyncHandler;
 
@@ -24,6 +22,11 @@ public class Packet5TrackingEnd extends SyncPacket {
     }
 
     @Override
+    public String getDebugInfo() {
+        return String.format("PacketTrackingEnd[Id: %s]", this.id);
+    }
+
+    @Override
     public Side getSendingSide() {
         return Side.SERVER;
     }
@@ -39,15 +42,8 @@ public class Packet5TrackingEnd extends SyncPacket {
     }
 
     @Override
-    public void onData(ChannelHandlerContext context, EntityPlayer player) {
-        Iterator<ISyncable> i = SyncHandler.clientSyncables.iterator();
-
-        while (i.hasNext()) {
-            ISyncable syncable = i.next();
-            if (syncable.getId() == this.id) {
-                i.remove();
-            }
-        }
+    public void onData(ChannelHandlerContext context) {
+        SyncHandler.Client.removeSyncable(id);
     }
 
 }

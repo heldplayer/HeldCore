@@ -3,6 +3,7 @@ package net.specialattack.forge.core.client;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -59,6 +60,10 @@ public final class MC {
 
     public static IResourceManager getResourceManager() {
         return MC.getMinecraft().getResourceManager();
+    }
+
+    public static SoundHandler getSoundHandler() {
+        return MC.getMinecraft().getSoundHandler();
     }
 
 }
