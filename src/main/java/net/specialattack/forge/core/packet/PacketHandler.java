@@ -13,9 +13,10 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
 import java.util.EnumMap;
 import net.minecraft.entity.player.EntityPlayer;
-import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.SpACore;
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 // Thanks AtomicStryker for your example classes!
 // https://code.google.com/p/atomicstrykers-minecraft-mods/source/browse/Minions/src/main/java/atomicstryker/minions/common/network/NetworkHelper.java
@@ -25,6 +26,9 @@ public class PacketHandler<P extends SpACorePacket> {
     private final FMLEmbeddedChannel clientOutboundChannel;
     private final FMLEmbeddedChannel serverOutboundChannel;
     private final String channelName;
+
+    public static final boolean debug = Boolean.parseBoolean(System.getProperty("spacore.packet.debug", "false"));
+    public static final Logger log = LogManager.getLogger("SpACore:Pckt");
 
     public PacketHandler(String channelName, Class<? extends P>... handledPacketClasses) {
         EnumMap<Side, FMLEmbeddedChannel> channelPair = NetworkRegistry.INSTANCE.newChannel(channelName, new ChannelHandler(handledPacketClasses), new MessageHandler());
@@ -132,10 +136,12 @@ public class PacketHandler<P extends SpACorePacket> {
         @Override
         public void encodeInto(ChannelHandlerContext context, P packet, ByteBuf out) throws Exception {
             try {
-                if (packet.getSendingSide() == Side.SERVER && packet.attr(Attributes.TARGET_PLAYER).get() != null) {
-                    Objects.log.log(Level.INFO, String.format("%s %s send > %s @ %s", packet.getSendingSide(), channelName, packet.getDebugInfo(), packet.attr(Attributes.TARGET_PLAYER).get()));
-                } else {
-                    Objects.log.log(Level.INFO, String.format("%s %s send > %s", packet.getSendingSide(), channelName, packet.getDebugInfo()));
+                if (debug) {
+                    if (packet.getSendingSide() == Side.SERVER && packet.attr(Attributes.TARGET_PLAYER).get() != null) {
+                        log.log(Level.INFO, String.format("%s %s send > %s @ %s", packet.getSendingSide(), channelName, packet.getDebugInfo(), packet.attr(Attributes.TARGET_PLAYER).get()));
+                    } else {
+                        log.log(Level.INFO, String.format("%s %s send > %s", packet.getSendingSide(), channelName, packet.getDebugInfo()));
+                    }
                 }
                 // Writing the attributes
                 Attributes.writeAttributes(packet, out);
@@ -153,7 +159,9 @@ public class PacketHandler<P extends SpACorePacket> {
                 Attributes.readAttributes(packet, in);
                 // Reading the packet
                 packet.read(context, in);
-                Objects.log.log(Level.INFO, String.format("%s %s recv < %s", packet.getSendingSide() == Side.CLIENT ? Side.SERVER : Side.CLIENT, channelName, packet.getDebugInfo()));
+                if (debug) {
+                    log.log(Level.INFO, String.format("%s %s recv < %s", packet.getSendingSide() == Side.CLIENT ? Side.SERVER : Side.CLIENT, channelName, packet.getDebugInfo()));
+                }
             } catch (Exception e) {
                 throw new IllegalStateException("Failed reading packet", e);
             }
@@ -168,7 +176,7 @@ public class PacketHandler<P extends SpACorePacket> {
             try {
                 packet.onData(context);
             } catch (Exception e) {
-                Objects.log.warn("Failed handling packet", e);
+                log.warn("Failed handling packet", e);
             }
         }
 
