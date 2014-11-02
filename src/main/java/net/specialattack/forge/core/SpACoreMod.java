@@ -13,6 +13,7 @@ public abstract class SpACoreMod {
     public Config<?> config;
 
     public void preInit(FMLPreInitializationEvent event) {
+        this.config.sort();
         this.config.load();
         this.config.saveOnChange();
 

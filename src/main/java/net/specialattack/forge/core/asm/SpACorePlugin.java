@@ -1,5 +1,6 @@
 package net.specialattack.forge.core.asm;
 
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import cpw.mods.fml.relauncher.IFMLCallHook;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
@@ -29,8 +30,8 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
     public void injectData(Map<String, Object> data) {
-        if (!((Boolean) data.get("runtimeDeobfuscationEnabled"))) {
-            debug = true;
+        if (FMLLaunchHandler.side().isClient() && !((Boolean) data.get("runtimeDeobfuscationEnabled"))) {
+            //debug = true; // Enable when NEI bugs
         }
     }
 

@@ -28,6 +28,7 @@ import net.specialattack.forge.core.CommonProxy;
 import net.specialattack.forge.core.SpACore;
 import net.specialattack.forge.core.client.gui.GuiButtonIcon;
 import net.specialattack.forge.core.client.gui.GuiScreenReportBug;
+import net.specialattack.forge.core.client.shader.FrameBufferStorage;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.packet.Packet1TrackingStatus;
@@ -59,6 +60,8 @@ public class ClientProxy extends CommonProxy {
         MC.getRenderEngine().loadTextureMap(Assets.TEXTURE_MAP, new TextureMap(SpACore.textureMapId.getValue(), "textures/spacore"));
 
         FMLCommonHandler.instance().bus().register(this);
+
+        FrameBufferStorage.initialize();
     }
 
     @SubscribeEvent
@@ -94,7 +97,7 @@ public class ClientProxy extends CommonProxy {
                 int buttonHeight = 20;
 
                 GuiButton button = new GuiButtonIcon(-123, 0, 0, buttonWidth, buttonHeight, null, ClientProxy.iconReportBug, Assets.TEXTURE_MAP);
-                button.enabled = false;
+                //button.enabled = false;
 
                 if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX - 124, guiPosY + 96, buttonWidth, buttonHeight), button)) {
                     return;

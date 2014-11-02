@@ -1,5 +1,6 @@
 package net.specialattack.forge.core.sync;
 
+import java.util.concurrent.Callable;
 import org.apache.logging.log4j.Level;
 
 public class PlayersOnlineChecker implements Runnable {
@@ -13,10 +14,11 @@ public class PlayersOnlineChecker implements Runnable {
                 synchronized (SyncHandler.Server.playerSet) {
                     for (final PlayerTracker tracker : SyncHandler.Server.playerSet) {
                         if (tracker.getPlayer() == null) {
-                            SyncHandler.Server.addDelayedTask(new Runnable() {
+                            SyncHandler.Server.addDelayedTask(new Callable<Void>() {
                                 @Override
-                                public void run() {
+                                public Void call() {
                                     SyncHandler.Server.stopTracking(tracker.uuid);
+                                    return null;
                                 }
                             });
                         }

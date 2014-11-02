@@ -6,6 +6,8 @@ import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.relauncher.Side;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraftforge.common.config.Configuration;
@@ -80,6 +82,24 @@ public class ConfigCategory<T> implements IConfigElement<T> {
 
     public void setShowInGui(boolean showInGui) {
         this.showInGui = showInGui;
+    }
+
+    public void sort() {
+        Collections.sort(this.children, new Comparator<ConfigCategory<?>>() {
+            @Override
+            public int compare(ConfigCategory<?> o1, ConfigCategory<?> o2) {
+                return o1.getLanguageKey().compareTo(o2.getLanguageKey());
+            }
+        });
+        for (ConfigCategory<?> category : this.children) {
+            category.sort();
+        }
+        Collections.sort(this.keys, new Comparator<ConfigValue<?>>() {
+            @Override
+            public int compare(ConfigValue<?> o1, ConfigValue<?> o2) {
+                return o1.getLanguageKey().compareTo(o2.getLanguageKey());
+            }
+        });
     }
 
     @Override

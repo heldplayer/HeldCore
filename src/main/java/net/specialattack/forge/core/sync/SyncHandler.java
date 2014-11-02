@@ -8,6 +8,7 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.util.*;
+import java.util.concurrent.Callable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -179,7 +180,7 @@ public final class SyncHandler {
         private static final Set<PlayerTracker> players = new HashSet<PlayerTracker>();
         public static final Set<PlayerTracker> playerSet = Collections.unmodifiableSet(players);
         private static final Set<ISyncableObjectOwner> globalObjects = new HashSet<ISyncableObjectOwner>();
-        private static final Queue<Runnable> delayedTasks = new LinkedList<Runnable>();
+        private static final Queue<Callable<Void>> delayedTasks = new LinkedList<Callable<Void>>();
         private static int lastSyncId = 0;
         private static boolean terminated = false;
 
@@ -218,7 +219,7 @@ public final class SyncHandler {
             return lastSyncId++;
         }
 
-        public static void addDelayedTask(Runnable task) {
+        public static void addDelayedTask(Callable<Void> task) {
             if (terminated) {
                 return;
             }
@@ -509,8 +510,11 @@ public final class SyncHandler {
                     HashSet<ISyncable> allChanged = null;
 
                     synchronized (SyncHandler.Server.delayedTasks) {
-                        for (Runnable task : SyncHandler.Server.delayedTasks) {
-                            task.run();
+                        for (Callable<Void> task : SyncHandler.Server.delayedTasks) {
+                            try {
+                                task.call();
+                            } catch (Exception e) {
+                            }
                         }
                         SyncHandler.Server.delayedTasks.clear();
                     }

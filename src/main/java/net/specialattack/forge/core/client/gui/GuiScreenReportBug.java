@@ -1,9 +1,12 @@
 package net.specialattack.forge.core.client.gui;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import org.lwjgl.input.Keyboard;
 
+@SideOnly(Side.CLIENT)
 public class GuiScreenReportBug extends GuiScreen {
 
     private GuiTextField title;
