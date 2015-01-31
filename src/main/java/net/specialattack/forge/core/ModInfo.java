@@ -23,6 +23,7 @@ public class ModInfo {
             stream.close();
             version = prop.getProperty("version");
         } catch (Exception e) {
+            version = "MISSING";
             e.printStackTrace();
         } finally {
             this.modVersion = version;
