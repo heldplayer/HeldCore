@@ -26,7 +26,9 @@ public class PlayerTracker {
         if (handler instanceof NetHandlerPlayServer) {
             NetHandlerPlayServer netHandlerPlayServer = (NetHandlerPlayServer) handler;
             this.uuid = netHandlerPlayServer.playerEntity.getUniqueID();
-            SyncHandler.Server.log.log(Level.INFO, String.format("Created tracker %s", this.uuid));
+            if (SyncHandler.debug) {
+                SyncHandler.Server.log.log(Level.INFO, String.format("Created tracker %s", this.uuid));
+            }
         } else {
             throw new IllegalArgumentException("handler must be of type NetHandlerPlayServer");
         }
