@@ -2,6 +2,8 @@ package net.specialattack.forge.core;
 
 import java.io.InputStream;
 import java.util.Properties;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 public class ModInfo {
 
@@ -24,7 +26,7 @@ public class ModInfo {
             version = prop.getProperty("version");
         } catch (Exception e) {
             version = "MISSING";
-            e.printStackTrace();
+            LogManager.getLogger(modId).log(Level.ERROR, "Failed loading mod version", e);
         } finally {
             this.modVersion = version;
         }
