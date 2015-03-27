@@ -19,10 +19,10 @@ public class GuiScreenReportBug extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int par1, int par2, float par3) {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
         this.drawCenteredString(this.fontRendererObj, "Report a bug", this.width / 2, 15, 16777215);
-        super.drawScreen(par1, par2, par3);
+        super.drawScreen(mouseX, mouseY, partialTicks);
         this.title.drawTextBox();
         this.content.drawTextBox();
     }

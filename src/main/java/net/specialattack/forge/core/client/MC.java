@@ -11,7 +11,7 @@ import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.settings.GameSettings;
 
 @SideOnly(Side.CLIENT)
@@ -58,8 +58,8 @@ public final class MC {
         return MC.getMinecraft().theWorld;
     }
 
-    public static IResourceManager getResourceManager() {
-        return MC.getMinecraft().getResourceManager();
+    public static IReloadableResourceManager getResourceManager() {
+        return (IReloadableResourceManager) MC.getMinecraft().getResourceManager();
     }
 
     public static SoundHandler getSoundHandler() {

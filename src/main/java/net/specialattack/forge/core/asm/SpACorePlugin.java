@@ -31,7 +31,7 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
     @Override
     public void injectData(Map<String, Object> data) {
         // Enable when NEI bugs
-        /*
+        //*
         if (FMLLaunchHandler.side().isClient() && !((Boolean) data.get("runtimeDeobfuscationEnabled"))) {
             debug = true;
         }

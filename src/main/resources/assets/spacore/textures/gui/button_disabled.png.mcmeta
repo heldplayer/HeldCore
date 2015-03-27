@@ -1,0 +1,12 @@
+{
+  "spacore:texture": {
+    "width": 128,
+    "height": 128,
+    "repeat": {
+      "border-left": 4,
+      "border-top": 4,
+      "border-right": 4,
+      "border-bottom": 4
+    }
+  }
+}
