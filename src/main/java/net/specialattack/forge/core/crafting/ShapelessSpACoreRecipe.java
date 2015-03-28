@@ -2,6 +2,7 @@ package net.specialattack.forge.core.crafting;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
@@ -25,11 +26,11 @@ public class ShapelessSpACoreRecipe implements ISpACoreRecipe {
 
         for (Object ingredient : ingredients) {
             if (ingredient instanceof ItemStack) {
-                this.ingredients.add(Arrays.asList(((ItemStack) ingredient).copy()));
+                this.ingredients.add(Collections.singletonList(((ItemStack) ingredient).copy()));
             } else if (ingredient instanceof Item) {
-                this.ingredients.add(Arrays.asList(new ItemStack((Item) ingredient)));
+                this.ingredients.add(Collections.singletonList(new ItemStack((Item) ingredient)));
             } else if (ingredient instanceof Block) {
-                this.ingredients.add(Arrays.asList(new ItemStack((Block) ingredient)));
+                this.ingredients.add(Collections.singletonList(new ItemStack((Block) ingredient)));
             } else if (ingredient instanceof String) {
                 this.ingredients.add(OreDictionary.getOres((String) ingredient));
             } else if (ingredient instanceof ItemStack[]) {
