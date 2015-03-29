@@ -39,11 +39,6 @@ public class ClientProxy extends CommonProxy {
     public static IIcon iconReportBug;
 
     @Override
-    public boolean allowSnooping() {
-        return MC.getGameSettings().snooperEnabled && super.allowSnooping();
-    }
-
-    @Override
     public EntityPlayer getClientPlayer() {
         return MC.getPlayer();
     }

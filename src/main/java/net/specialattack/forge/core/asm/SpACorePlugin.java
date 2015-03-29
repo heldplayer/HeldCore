@@ -1,6 +1,5 @@
 package net.specialattack.forge.core.asm;
 
-import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import cpw.mods.fml.relauncher.IFMLCallHook;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
@@ -14,8 +13,8 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
     @Override
     public String[] getASMTransformerClass() {
         return new String[] { "net.specialattack.forge.core.asm.SpACoreModTransformer", //
-                "net.specialattack.forge.core.asm.SpACoreLoggerTransformer", //
-                "net.specialattack.forge.core.asm.SpACoreDebugTransformer" };
+                //"net.specialattack.forge.core.asm.SpACoreDebugTransformer", //
+                "net.specialattack.forge.core.asm.SpACoreLoggerTransformer" };
     }
 
     @Override

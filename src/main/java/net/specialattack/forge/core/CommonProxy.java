@@ -13,10 +13,6 @@ import net.specialattack.forge.core.sync.SyncHandler;
 
 public class CommonProxy extends SpACoreProxy {
 
-    public boolean allowSnooping() {
-        return !SpACore.optOut.getValue();
-    }
-
     public EntityPlayer getClientPlayer() {
         throw new IllegalStateException("This code is client-side only!");
     }
