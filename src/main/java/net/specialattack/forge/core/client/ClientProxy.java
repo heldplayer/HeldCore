@@ -28,7 +28,6 @@ import net.specialattack.forge.core.CommonProxy;
 import net.specialattack.forge.core.SpACore;
 import net.specialattack.forge.core.client.gui.GuiButtonIcon;
 import net.specialattack.forge.core.client.gui.GuiScreenReportBug;
-import net.specialattack.forge.core.client.shader.FrameBufferStorage;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.packet.Packet1TrackingStatus;
@@ -55,8 +54,6 @@ public class ClientProxy extends CommonProxy {
         MC.getRenderEngine().loadTextureMap(Assets.TEXTURE_MAP, new TextureMap(SpACore.textureMapId.getValue(), "textures/spacore"));
 
         FMLCommonHandler.instance().bus().register(this);
-
-        FrameBufferStorage.initialize();
     }
 
     @SubscribeEvent
