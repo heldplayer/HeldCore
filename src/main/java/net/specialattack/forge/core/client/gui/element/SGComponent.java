@@ -39,19 +39,35 @@ public class SGComponent implements IComponentHolder {
     private boolean error;
     private boolean visible = true;
     private boolean forceSize;
+    private boolean preferredInner;
     private MouseHandler mouseHandler;
 
-    public void setPreferredSize(int width, int height) {
+    public void setPreferredInnerSize(int width, int height) {
         this.preferredWidth = width;
         this.preferredHeight = height;
+        this.preferredInner = true;
+    }
+
+    public void setPreferredTotalSize(int width, int height) {
+        this.preferredWidth = width;
+        this.preferredHeight = height;
+        this.preferredInner = false;
     }
 
     public int getPreferredWidth() {
-        return this.preferredWidth + this.getBorderWidth() * 2 + this.getOutlineWidth() * 2;
+        if (this.preferredInner) {
+            return this.preferredWidth + this.getBorderWidth() * 2 + this.getOutlineWidth() * 2;
+        } else {
+            return this.preferredWidth;
+        }
     }
 
     public int getPreferredHeight() {
-        return this.preferredHeight + this.getBorderWidth() * 2 + this.getOutlineWidth() * 2;
+        if (this.preferredInner) {
+            return this.preferredHeight + this.getBorderWidth() * 2 + this.getOutlineWidth() * 2;
+        } else {
+            return this.preferredHeight;
+        }
     }
 
     public boolean forcePreferredSize() {
@@ -119,7 +135,11 @@ public class SGComponent implements IComponentHolder {
     }
 
     public void setDimensions(Region region) {
-        this.setDimensions(region.left, region.top, region.width, region.height);
+        if (region == null) {
+            this.setDimensions(0, 0, 0, 0);
+        } else {
+            this.setDimensions(region.left, region.top, region.width, region.height);
+        }
     }
 
     public void setDimensions(int left, int top, int width, int height) {
@@ -175,11 +195,6 @@ public class SGComponent implements IComponentHolder {
                 for (SGComponent component : this.children) {
                     component.setDimensions(0, 0, component.getPreferredWidth(), component.getPreferredHeight());
                 }
-            }
-        }
-        if (this.children != null) {
-            for (SGComponent component : this.children) {
-                //component.updateLayout();
             }
         }
     }
@@ -240,6 +255,10 @@ public class SGComponent implements IComponentHolder {
      * @return A list containing the children of this component, or null if there are none.
      */
     public List<SGComponent> getChildren() {
+        if (this.children == null) {
+            this.children = new ArrayList<SGComponent>();
+            this.accessChildren = Collections.unmodifiableList(this.children);
+        }
         return this.accessChildren;
     }
 
@@ -315,35 +334,27 @@ public class SGComponent implements IComponentHolder {
             if (SGComponent.DEBUG) {
                 if (this.mouseOver || this.focus) {
                     int color = (this.hashCode() & 0xFFFFFF) | 0x88000000;
-                    GL11.glDepthMask(false);
+                    //GL11.glDepthMask(false);
                     if (this.mouseOver) {
                         GuiHelper.drawColoredRect(this.getLeft(SizeContext.OUTLINE), this.getTop(SizeContext.OUTLINE), this.getLeft(SizeContext.OUTLINE) + this.getWidth(SizeContext.OUTLINE), this.getTop(SizeContext.OUTLINE) + this.getHeight(SizeContext.OUTLINE), color, this.getZLevel());
+                        Region predicted = this.predictSize().atZero().offset(this.getLeft(SizeContext.OUTLINE), this.getTop(SizeContext.OUTLINE));
+                        SGUtils.drawBox(predicted.left, predicted.top, predicted.width, predicted.height, this.getZLevel(), (color >>> 16) | 0xFF000000);
                     }
                     if (this.focus) {
                         SGUtils.drawBox(this.getLeft(SizeContext.OUTLINE), this.getTop(SizeContext.OUTLINE), this.getWidth(SizeContext.OUTLINE), this.getHeight(SizeContext.OUTLINE), this.getZLevel(), color);
                     }
-                    GL11.glDepthMask(true);
+                    //GL11.glDepthMask(true);
                 }
             }
 
             int left = this.getLeft(SizeContext.INNER);
             int top = this.getTop(SizeContext.INNER);
             GL11.glTranslatef(left, top, this.getZLevel());
-            //this.drawHook(mouseX - left, mouseY - top, partialTicks);
             if (this.children != null) {
                 for (SGComponent component : this.children) {
                     component.draw(mouseX - left, mouseY - top, partialTicks);
                 }
             }
-            //if (this instanceof SGMenu) {
-            //Region predicted = this.predictSize();
-            //int pos = this.height / 3;
-            //GL11.glTranslatef(0, 0, 100);
-            //this.font.drawStringWithShadow(String.format("%dx%d", this.getPreferredWidth(), this.getPreferredHeight()), 0, pos, (this.hashCode() & 0xFFFFFF) | 0xFF000000);
-            //this.font.drawStringWithShadow(String.format("%dx%d", predicted.width, predicted.height), 0, pos + 10, (this.hashCode() & 0xFFFFFF) | 0xFF000000);
-            //this.font.drawStringWithShadow(String.format("%dx%d", this.width, this.height), 0, pos + 20, (this.hashCode() & 0xFFFFFF) | 0xFF000000);
-            //this.font.drawStringWithShadow(String.format("%dx%d", this.left, this.top), 0, pos + 30, (this.hashCode() & 0xFFFFFF) | 0xFF000000);
-            //}
             GL11.glPopMatrix();
             stack--;
         } catch (Exception e) {
@@ -541,10 +552,17 @@ public class SGComponent implements IComponentHolder {
     public Region getRenderingRegion() {
         IComponentHolder parent = this.getParent();
         if (parent != null) {
+            Location offset = parent.getChildOffset();
             Region parentRegion = parent.getRenderingRegion();
-            return this.getDimensions().offset(parentRegion.left, parentRegion.top);
+            Region result = this.getDimensions().offset(parentRegion.left, parentRegion.top);
+            return offset != null && offset != Location.ZERO ? result.offset(offset.invert()) : result; // Check against Location.ZERO to prevent excess objects
         }
         return this.getDimensions();
+    }
+
+    @Override
+    public Location getChildOffset() {
+        return Location.ZERO;
     }
 
     @Override
@@ -570,5 +588,14 @@ public class SGComponent implements IComponentHolder {
         if (parent != null) {
             parent.removePopout(component);
         }
+    }
+
+    @Override
+    public Region findPopoutRegion(boolean horizontal, Region around, Region size) {
+        IComponentHolder parent = this.getParent();
+        if (parent != null) {
+            return parent.findPopoutRegion(horizontal, around, size);
+        }
+        return size;
     }
 }

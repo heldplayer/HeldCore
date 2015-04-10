@@ -11,51 +11,28 @@ import net.specialattack.forge.core.client.gui.style.StyleDefs;
 // A menu item that can have sub-items
 public class SGMenu extends SGMenuItem {
 
-    private FlowDirection flowDirection;
-    private SGComponent popout = new SGScrollPane() {
-        {
-            this.setScrollbarSize(2);
-        }
-
+    private SGComponent popout = new SGPopout(this) {
         @Override
-        public void setParent(IComponentHolder holder) {
-        }
-
-        @Override
-        public IComponentHolder getParent() {
-            return SGMenu.this;
-        }
-
-        @Override // FIXME
-        public Region getRenderingRegion() {
-            return this.getDimensions();
+        public boolean onScroll(int mouseX, int mouseY, int scroll) {
+            boolean result = super.onScroll(mouseX, mouseY, scroll);
+            this.getRoot().elementClicked(this, 0);
+            return result;
         }
     };
     protected boolean inMenu = false;
     protected boolean canCount = false;
     private int counter;
 
-    public SGMenu(String text, FlowDirection direction) {
+    public SGMenu(String text) {
         super(text);
-        this.setFlowDirection(direction);
-        this.popout.setLayoutManager(new FlowSGLayoutManager(direction, FlowLayout.MIN));
+        this.popout.setLayoutManager(new FlowSGLayoutManager(FlowDirection.VERTICAL, FlowLayout.MIN));
         this.popout.setBackground(StyleDefs.BACKGROUND_MENU_ITEM_NORMAL);
         this.popout.setBorder(StyleDefs.BORDER_MENU);
-        //this.popout.setParent(this);
         this.popout.setVisible(false);
-
-    }
-
-    public SGMenu(String text) {
-        this(text, FlowDirection.VERTICAL);
     }
 
     public SGMenu() {
-        this(null, FlowDirection.VERTICAL);
-    }
-
-    public void setFlowDirection(FlowDirection direction) {
-        this.flowDirection = direction == null ? FlowDirection.VERTICAL : direction;
+        this(null);
     }
 
     @Override
@@ -83,7 +60,7 @@ public class SGMenu extends SGMenuItem {
     public Region predictSize() {
         Region inner = super.predictSize();
         if (this.inMenu) {
-            return new Region(0, 0, inner.width + 12, inner.height);
+            return inner.expanded(12, 0);
         } else {
             return inner;
         }
@@ -101,9 +78,6 @@ public class SGMenu extends SGMenuItem {
 
     @Override
     public void addChild(SGComponent child, Object param) {
-        if (child == null || !(child instanceof SGMenuItem || child instanceof SGSeperator)) {
-            throw new IllegalArgumentException("Can only add Menu Items or Splitters to a menu");
-        }
         if (child instanceof SGMenu) {
             SGMenu menu = (SGMenu) child;
             menu.inMenu = true;
@@ -146,44 +120,6 @@ public class SGMenu extends SGMenuItem {
     }
 
     @Override
-    public void updateLayout() {
-        super.updateLayout();
-
-        Region predicted = this.popout.predictSize();
-        Region rendering = this.getRenderingRegion();
-        if (this.inMenu) {
-            this.popout.setDimensions(rendering.left + rendering.width, rendering.top, predicted.width, predicted.height + 2);
-        } else {
-            this.popout.setDimensions(rendering.left, rendering.top + rendering.height, predicted.width, predicted.height + 2);
-        }
-        this.popout.updateLayout();
-
-    }
-    //
-    //    @Override
-    //    public Pair<SGComponent, Location> cascadeMouse(int mouseX, int mouseY) {
-    //        if (!this.isVisible()) {
-    //            return null;
-    //        }
-    //        if (this.isErrored() && this.isMouseOver(mouseX, mouseY)) {
-    //            return ImmutablePair.of((SGComponent) this, new Location(mouseX - this.getLeft(SizeContext.INNER), mouseY - this.getTop(SizeContext.INNER)));
-    //        }
-    //        try {
-    //            if (this.isMouseOver(mouseX, mouseY)) {
-    //                return ImmutablePair.of((SGComponent) this, new Location(mouseX - this.getLeft(SizeContext.INNER), mouseY - this.getTop(SizeContext.INNER)));
-    //            }
-    //            Pair<SGComponent, Location> over = this.popout.cascadeMouse(mouseX, mouseY);
-    //            if (over != null) {
-    //                return over;
-    //            }
-    //        } catch (Exception e) {
-    //            e.printStackTrace();
-    //            this.setErrored();
-    //        }
-    //        return null;
-    //    }
-
-    @Override
     public void elementClicked(SGComponent component, int button) {
         super.elementClicked(component, button);
         this.popout.elementClicked(component, button);
@@ -208,13 +144,10 @@ public class SGMenu extends SGMenuItem {
         return false;
     }
 
-    @Override // FIXME
-    public Region getRenderingRegion() {
-        return super.getRenderingRegion();
-    }
-
     private void showPopout() {
         if (!this.popout.isVisible()) {
+            this.popout.setDimensions(this.findPopoutRegion(this.inMenu, this.getRenderingRegion(), this.popout.predictSize()));
+            this.popout.updateLayout();
             this.popout.setVisible(true);
             this.addPopout(this.popout);
         }

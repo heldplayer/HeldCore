@@ -237,7 +237,7 @@ public class BorderedSGLayoutManager extends SGLayoutManager {
         return new Region(0, 0, MathHelper.min(width, limitWidth), MathHelper.min(height, limitHeight));
     }
 
-    public static enum Border {
+    public enum Border {
         TOP, BOTTOM, LEFT, RIGHT, CENTER
     }
 

@@ -1,9 +1,11 @@
 package net.specialattack.forge.core.client.gui.element;
 
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
+import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.specialattack.forge.core.client.gui.GuiHelper;
 import net.specialattack.forge.core.client.gui.GuiStateManager;
 import net.specialattack.forge.core.client.gui.SGUtils;
 import net.specialattack.forge.core.client.gui.layout.BorderedSGLayoutManager;
@@ -24,7 +26,8 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
     public SGComponent clicked;
     private Location outDragStartLoc, inDragStartLoc, inDragPrevLoc;
     private boolean mouseDown;
-    private List<SGComponent> popouts;
+    private LinkedList<SGComponent> popouts;
+    private List<SGComponent> reversedPopouts;
 
     public SGScreenRoot(SGComponent root) {
         this.outerRoot = new SGPanel();
@@ -77,9 +80,9 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
         GuiStateManager.reset();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         boolean hoverDone = false;
-        if (this.popouts != null) {
+        if (this.reversedPopouts != null) {
             if (this.eventButton == -1) {
-                for (SGComponent popout : this.popouts) {
+                for (SGComponent popout : this.reversedPopouts) {
                     Pair<SGComponent, Location> hover = popout.cascadeMouse(mouseX, mouseY);
 
                     SGComponent component = hover == null ? null : hover.getLeft();
@@ -119,10 +122,14 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
 
         if (this.popouts != null) {
             for (SGComponent popout : this.popouts) {
-                SGUtils.drawErrorBox(popout);
+                //SGUtils.drawErrorBox(popout);
                 popout.draw(mouseX, mouseY, partialTicks);
                 SGUtils.endAllClips();
             }
+        }
+        GuiHelper.drawColoredRect(mouseX, mouseY, mouseX + 1, mouseY + 1, 0xFFFFFFFF, 100);
+        if (this.hover != null) {
+            //this.fontRendererObj.drawStringWithShadow(this.hover.getClass().toString(), 0, 10, 0xFFFFFFFF);
         }
     }
 
@@ -154,7 +161,7 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
 
         int scroll = Mouse.getEventDWheel();
         if (scroll != 0 && this.hover != null) {
-            this.outerRoot.onScroll(mouseX, mouseY, scroll);
+            this.mouseScroll(mouseX, mouseY, scroll);
         }
     }
 
@@ -162,16 +169,16 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) { // Mouse down
         // TODO: Might do something about added buttons
         // super.mouseClicked(mouseX, mouseY, mouseButton);
-        if (this.popouts != null) {
-            for (SGComponent popout : this.popouts) {
+        if (this.reversedPopouts != null) {
+            for (SGComponent popout : this.reversedPopouts) {
                 Pair<SGComponent, Location> clicked = popout.cascadeMouse(mouseX, mouseY);
                 if (clicked != null) {
                     SGComponent component = clicked.getLeft();
                     Location location = clicked.getRight();
                     if (component != null && location != null) {
-                        (this.clicked = component).onMouseDown(this.inDragStartLoc.left, this.inDragStartLoc.top, mouseButton);
                         this.inDragPrevLoc = this.inDragStartLoc = location;
                         this.outDragStartLoc = new Location(mouseX, mouseY);
+                        (this.clicked = component).onMouseDown(this.inDragStartLoc.left, this.inDragStartLoc.top, mouseButton);
                         return;
                     }
                 }
@@ -195,8 +202,8 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
     @Override
     protected void mouseMovedOrUp(int mouseX, int mouseY, int mouseButton) { // Mouse up
         // super.mouseMovedOrUp(mouseX, mouseY, mouseButton);
-        if (this.popouts != null) {
-            for (SGComponent popout : this.popouts) {
+        if (this.reversedPopouts != null) {
+            for (SGComponent popout : this.reversedPopouts) {
                 Pair<SGComponent, Location> clicked = popout.cascadeMouse(mouseX, mouseY);
                 if (clicked != null) {
                     SGComponent component = clicked.getLeft();
@@ -234,6 +241,27 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
             int newY = mouseY - this.outDragStartLoc.top + this.inDragStartLoc.top;
             this.clicked.onMouseDrag(prevX, prevY, newX, newY, mouseButton, pressTime);
             this.inDragPrevLoc = new Location(newX, newY);
+        }
+    }
+
+    protected void mouseScroll(int mouseX, int mouseY, int amount) { // Mouse scroll
+        if (this.reversedPopouts != null) {
+            for (SGComponent popout : this.popouts) {
+                Pair<SGComponent, Location> hover = popout.cascadeMouse(mouseX, mouseY);
+                if (hover != null) {
+                    SGComponent component = hover.getLeft();
+                    Location location = hover.getRight();
+                    if (component != null && location != null) {
+                        popout.onScroll(mouseX, mouseY, amount);
+                        return;
+                    }
+                }
+            }
+        }
+
+        Pair<SGComponent, Location> hover = this.outerRoot.cascadeMouse(mouseX, mouseY);
+        if (hover != null) {
+            this.outerRoot.onScroll(mouseX, mouseY, amount);
         }
     }
 
@@ -277,6 +305,11 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
     }
 
     @Override
+    public Location getChildOffset() {
+        return Location.ZERO;
+    }
+
+    @Override
     public void updateLayout() {
         this.outerRoot.updateLayout();
     }
@@ -288,8 +321,9 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
 
     @Override
     public void addPopout(SGComponent component) {
-        if (this.popouts == null) {
-            this.popouts = new ArrayList<SGComponent>();
+        if (this.popouts == null || this.reversedPopouts == null) {
+            this.popouts = new LinkedList<SGComponent>();
+            this.reversedPopouts = Lists.reverse(this.popouts);
         }
         this.popouts.add(component);
     }
@@ -299,5 +333,10 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
         if (this.popouts != null) {
             this.popouts.remove(component);
         }
+    }
+
+    @Override
+    public Region findPopoutRegion(boolean horizontal, Region around, Region size) {
+        return SGUtils.findPopoutRegion(horizontal, around, size, this.width, this.height); // Delegate for reusability
     }
 }

@@ -8,7 +8,7 @@ import net.specialattack.forge.core.client.gui.style.background.SolidBackground;
 import net.specialattack.forge.core.client.gui.style.border.IBorder;
 import net.specialattack.forge.core.client.gui.style.border.SolidBorder;
 
-public final class StyleDefs {
+public class StyleDefs {
 
     // Textbox styles
     public static final Color COLOR_TEXTBOX_BACKGROUND = new Color(0xFF000000);
@@ -34,9 +34,11 @@ public final class StyleDefs {
     public static final Color COLOR_MENU_ITEM_BACKGROUND_HOVER = new Color(0xFFEEEEEE);
     public static final Color COLOR_MENU_ITEM_BACKGROUND_DISABLED = new Color(0xFFCCCCCC);
     public static final Color COLOR_MENU_BORDER = new Color(0xFF888888);
+    public static final Color COLOR_MENU_BAR_BACKGROUND = new Color(0xFF222222);
     public static final IBackground BACKGROUND_MENU_ITEM_NORMAL = new SolidBackground(COLOR_MENU_ITEM_BACKGROUND_NORMAL);
     public static final IBackground BACKGROUND_MENU_ITEM_HOVER = new SolidBackground(COLOR_MENU_ITEM_BACKGROUND_HOVER);
     public static final IBackground BACKGROUND_MENU_ITEM_DISABLED = new SolidBackground(COLOR_MENU_ITEM_BACKGROUND_DISABLED);
+    public static final IBackground BACKGROUND_MENU_BAR = new SolidBackground(COLOR_MENU_BAR_BACKGROUND);
     public static final IBorder BORDER_MENU = new SolidBorder(COLOR_MENU_BORDER, 1);
     // Progress bar styles
     public static final Color COLOR_PROGRESS_BAR_BACKGROUND = new Color(0xFF404040);
@@ -47,9 +49,7 @@ public final class StyleDefs {
     public static final IBackground BACKGROUND_PROGRESS_BAR = new SolidBackground(COLOR_PROGRESS_BAR_BACKGROUND);
     // Scrollbar stylesstyles
     public static final Color COLOR_SCROLLBAR_BACKGROUND = new Color(0xFF404040);
-    public static final Color COLOR_SCROLLBAR_FOREGROUND = new Color(0xFFCCCCCC);
-
-    private StyleDefs() {
-    }
+    public static final Color COLOR_SCROLLBAR_FOREGROUND = new Color(0xFFBBBBBB);
+    public static final Color COLOR_SCROLLBAR_FOREGROUND_HOVER = new Color(0xFFEEEEEE);
 
 }

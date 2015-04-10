@@ -32,7 +32,7 @@ public class SGLabel extends SGComponent {
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.text = text == null ? "null" : text;
         this.updatePreferredSize();
     }
 
@@ -54,8 +54,8 @@ public class SGLabel extends SGComponent {
         if (this.defaultSize) {
             if (this.shouldSplit) {
                 int preferredWidth = this.getPreferredWidth();
-                int height = this.font.listFormattedStringToWidth(this.text, (int) preferredWidth).size() * (this.font.FONT_HEIGHT + 1);
-                super.setPreferredSize(preferredWidth, height);
+                int height = this.font.listFormattedStringToWidth(this.text, preferredWidth).size() * (this.font.FONT_HEIGHT + 1);
+                super.setPreferredInnerSize(preferredWidth + 2, height);
             } else {
                 int width = 0;
                 int height = 0;
@@ -63,7 +63,7 @@ public class SGLabel extends SGComponent {
                     width = MathHelper.max(width, this.font.getStringWidth(str));
                     height += this.font.FONT_HEIGHT + 1;
                 }
-                super.setPreferredSize(width, height);
+                super.setPreferredInnerSize(width + 2, height);
             }
         }
     }
@@ -76,15 +76,15 @@ public class SGLabel extends SGComponent {
     }
 
     @Override
-    public void setPreferredSize(int width, int height) {
+    public void setPreferredInnerSize(int width, int height) {
         this.defaultSize = false;
-        super.setPreferredSize(width, height);
+        super.setPreferredInnerSize(width, height);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void drawForeground(int mouseX, int mouseY, float partialTicks) {
-        GL11.glTranslatef(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
+        GL11.glTranslatef(this.getLeft(SizeContext.INNER) + 1, this.getTop(SizeContext.INNER), this.getZLevel());
         if (this.text != null) {
             GuiStateManager.enableTextures();
             List<String> strings;
@@ -97,19 +97,19 @@ public class SGLabel extends SGComponent {
             int height = this.getHeight(SizeContext.INNER);
             int i = 0;
             int textHeight = strings.size() * (this.font.FONT_HEIGHT + 1);
-            int offset = (int) this.verticalLayout.decide(height, textHeight);
+            int offset = this.verticalLayout.decide(height, textHeight);
             for (String str : strings) {
                 if (i * (this.font.FONT_HEIGHT + 1) >= height) {
                     break;
                 }
-                String trimmed = this.font.trimStringToWidth(str, width, this.hasShadow);
+                String trimmed = str;//this.font.trimStringToWidth(str, width, this.hasShadow);
                 if (trimmed.length() < str.length()) {
-                    int length = width - 8;
+                    int length = width - 10;
                     if (length > 0) {
                         trimmed = this.font.trimStringToWidth(str, length, this.hasShadow) + "...";
                     }
                 }
-                int left = (int) this.horizontalLayout.decide(width, this.font.getStringWidth(trimmed));
+                int left = this.horizontalLayout.decide(width, this.font.getStringWidth(trimmed));
                 this.font.drawString(trimmed, left, offset + i * (this.font.FONT_HEIGHT + 1) + 1, this.color.colorHex, this.hasShadow);
                 i++;
             }

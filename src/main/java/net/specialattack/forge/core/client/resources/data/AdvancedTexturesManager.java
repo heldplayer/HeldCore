@@ -33,7 +33,9 @@ public class AdvancedTexturesManager implements IResourceManagerReloadListener {
             IResource resource;
             try {
                 resource = MC.getResourceManager().getResource(resourceLocation);
-                result.texture = (TextureMetadataSection) resource.getMetadata("spacore:texture");
+                if (resource.hasMetadata()) {
+                    result.texture = (TextureMetadataSection) resource.getMetadata("spacore:texture");
+                }
             } catch (IOException e) {
             }
             if (result.texture == null) {

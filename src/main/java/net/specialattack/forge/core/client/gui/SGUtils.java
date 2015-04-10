@@ -88,4 +88,70 @@ public final class SGUtils {
         }
     }
 
+    public static Region findPopoutRegion(boolean horizontal, Region around, Region size, int rootWidth, int rootHeight) {
+        if (horizontal) {
+            int left, width;
+            if (around.left + around.width + size.left + size.width < rootWidth) { // Check if there is enough room to display on the right
+                left = around.left + around.width + size.left;
+                width = size.width;
+            } else if (around.left - size.width - size.left >= 0) { // Check if there is enough room to display on the left
+                left = around.left - around.width - size.left - size.width;
+                width = size.width;
+            } else { // Well, let's just put it edged against the right end of the screen
+                width = Math.min(rootWidth, size.width);
+                left = rootWidth - width;
+            }
+            int top, height;
+            if (around.top + size.top + size.height < rootHeight) { // Check to see if there is enough room to go down
+                top = around.top;
+                height = size.height;
+            } else if (around.top + around.height - size.top - size.height >= 0) { // Check to see if there is enough room to go up
+                top = around.top + around.height - size.top - size.height;
+                height = size.height;
+            } else { // Well, let's just make it use the biggest space
+                int down = rootHeight - around.top;
+                int up = around.top + around.height;
+                if (down > up) { // We go down
+                    top = around.top;
+                    height = down;
+                } else { // We go up
+                    height = up;
+                    top = 0;
+                }
+            }
+            return new Region(left, top, width, height);
+        } else {
+            int top, height;
+            if (around.top + around.height + size.top + size.height < rootHeight) { // Check if there is enough room to display on the right
+                top = around.top + around.height + size.top;
+                height = size.height;
+            } else if (around.top - size.height - size.top >= 0) { // Check if there is enough room to display on the top
+                top = around.top - around.height - size.top - size.height;
+                height = size.height;
+            } else { // Well, let's just put it edged against the right end of the screen
+                height = Math.min(rootHeight - around.height, size.height);
+                top = rootHeight - height;
+            }
+            int left, width;
+            if (around.left + size.left + size.width < rootWidth) { // Check to see if there is enough room to go down
+                left = around.left;
+                width = size.width;
+            } else if (around.left + around.width - size.left - size.width >= 0) { // Check to see if there is enough room to go up
+                left = around.left + around.width - size.left - size.width;
+                width = size.width;
+            } else { // Well, let's just make it use the biggest space
+                int down = rootWidth - around.left;
+                int up = around.left + around.width;
+                if (down > up) { // We go down
+                    left = around.left;
+                    width = down;
+                } else { // We go up
+                    width = up;
+                    left = 0;
+                }
+            }
+            return new Region(left, top, width, height);
+        }
+    }
+
 }

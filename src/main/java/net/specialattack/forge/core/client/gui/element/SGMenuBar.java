@@ -3,11 +3,13 @@ package net.specialattack.forge.core.client.gui.element;
 import net.specialattack.forge.core.client.gui.layout.FlowDirection;
 import net.specialattack.forge.core.client.gui.layout.FlowLayout;
 import net.specialattack.forge.core.client.gui.layout.FlowSGLayoutManager;
+import net.specialattack.forge.core.client.gui.style.StyleDefs;
 
 public class SGMenuBar extends SGComponent {
 
     public SGMenuBar() {
         this.setLayoutManager(new FlowSGLayoutManager(FlowDirection.HORIZONTAL, FlowLayout.CENTER));
+        this.setBackground(StyleDefs.BACKGROUND_MENU_BAR);
     }
 
     @Override

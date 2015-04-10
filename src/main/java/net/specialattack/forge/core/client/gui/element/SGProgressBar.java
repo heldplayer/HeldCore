@@ -23,9 +23,9 @@ public class SGProgressBar extends SGComponent {
         this.setBorder(new InvisibleBorder(1));
         this.direction = direction;
         if (direction == FlowDirection.HORIZONTAL) {
-            this.setPreferredSize(50, 4);
+            this.setPreferredInnerSize(50, 4);
         } else {
-            this.setPreferredSize(4, 50);
+            this.setPreferredInnerSize(4, 50);
         }
     }
 

@@ -21,6 +21,14 @@ public class Region {
         return new Region(this.left + left, this.top + top, this.width, this.height);
     }
 
+    public Region offset(Location location) {
+        return new Region(this.left + location.left, this.top + location.top, this.width, this.height);
+    }
+
+    public Region expanded(int width, int height) {
+        return new Region(this.left, this.top, this.width + width, this.height + height);
+    }
+
     public boolean intersects(Region other) {
         if (other == null) {
             return false;

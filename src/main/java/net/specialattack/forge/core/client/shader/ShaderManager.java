@@ -32,7 +32,7 @@ public class ShaderManager implements IResourceManagerReloadListener {
             }
 
             data.shader = ShaderLoader.createShader(data.resource);
-            if (callbacks != null) {
+            if (data.shader != null && callbacks != null) {
                 for (ShaderCallback callback : callbacks) {
                     data.shader.addCallback(callback);
                 }

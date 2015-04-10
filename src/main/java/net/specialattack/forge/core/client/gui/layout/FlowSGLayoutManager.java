@@ -158,8 +158,9 @@ public class FlowSGLayoutManager extends SGLayoutManager {
                 width = MathHelper.max(currentWidth, width);
             }
         }
-        width = MathHelper.max(preferredWidth, width) + component.getBorderWidth() * 2;
-        height = MathHelper.max(preferredHeight, height) + component.getBorderWidth() * 2;
+        int borders = (component.getBorderWidth() + component.getOutlineWidth()) * 2;
+        width = MathHelper.max(preferredWidth, width);
+        height = MathHelper.max(preferredHeight, height);
         return new Region(0, 0, MathHelper.min(width, limitWidth), MathHelper.min(height, limitHeight));
     }
 

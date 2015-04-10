@@ -1,5 +1,6 @@
 package net.specialattack.forge.core.client.gui.element;
 
+import net.specialattack.forge.core.client.gui.layout.Location;
 import net.specialattack.forge.core.client.gui.layout.Region;
 
 public interface IComponentHolder {
@@ -12,6 +13,8 @@ public interface IComponentHolder {
 
     Region getRenderingRegion();
 
+    Location getChildOffset();
+
     void updateLayout();
 
     int getMouseState();
@@ -19,4 +22,6 @@ public interface IComponentHolder {
     void addPopout(SGComponent component);
 
     void removePopout(SGComponent component);
+
+    Region findPopoutRegion(boolean horizontal, Region around, Region size);
 }

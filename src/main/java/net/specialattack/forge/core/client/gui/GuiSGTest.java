@@ -7,13 +7,9 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.specialattack.forge.core.client.gui.element.*;
-import net.specialattack.forge.core.client.gui.layout.BorderedSGLayoutManager;
-import net.specialattack.forge.core.client.gui.layout.FlowDirection;
-import net.specialattack.forge.core.client.gui.layout.FlowLayout;
-import net.specialattack.forge.core.client.gui.layout.FlowSGLayoutManager;
+import net.specialattack.forge.core.client.gui.layout.*;
 import net.specialattack.forge.core.client.gui.style.StyleDefs;
 import net.specialattack.forge.core.client.gui.style.background.ColoredTextureBackground;
-import net.specialattack.forge.core.client.gui.style.background.SolidBackground;
 import net.specialattack.forge.core.client.gui.style.background.TextureBackground;
 import net.specialattack.forge.core.client.gui.style.border.InvisibleBorder;
 import net.specialattack.forge.core.client.gui.style.border.SolidBorder;
@@ -24,7 +20,6 @@ public class GuiSGTest extends SGScreenRoot {
 
     public GuiSGTest() {
         SGMenuBar menuRoot = new SGMenuBar();
-        menuRoot.setBackground(new SolidBackground(new Color(0xFF222222)));
         {
             SGMenu menu = new SGMenu("File");
             menuRoot.addChild(menu);
@@ -211,21 +206,22 @@ public class GuiSGTest extends SGScreenRoot {
         {
             SGPanel panel = new SGPanel();
             panel.setBackground(new TextureBackground(new ResourceLocation("textures/blocks/glass_pink.png"), 32.0F));
-            panel.setPreferredSize(16, 0);
+            panel.setPreferredInnerSize(16, 0);
             root.addChild(panel, BorderedSGLayoutManager.Border.LEFT);
 
             panel.setLayoutManager(new FlowSGLayoutManager(FlowDirection.VERTICAL, FlowLayout.CENTER));
             {
                 SGPanel side = new SGPanel();
                 side.setBackground(new TextureBackground(new ResourceLocation("textures/blocks/glass_white.png"), 16.0F));
-                side.setPreferredSize(32, 32);
+                side.setPreferredInnerSize(32, 32);
                 panel.addChild(side);
             }
             {
                 final SGScrollPane side = new SGScrollPane();
-                side.setCanScroll(false, true);
+                side.setCanScroll(true, true);
+                side.setBorder(new SolidBorder(StyleDefs.COLOR_MENU_BORDER, 3)); // FIXME
                 side.setBackground(new TextureBackground(new ResourceLocation("textures/blocks/glass_gray.png"), 16.0F));
-                side.setPreferredSize(64, 256);
+                side.setPreferredTotalSize(64, 256);
                 side.setLayoutManager(new FlowSGLayoutManager(FlowDirection.VERTICAL, FlowLayout.CENTER));
                 panel.addChild(side);
                 for (int i = 1; i <= 30; i++) {
@@ -244,19 +240,19 @@ public class GuiSGTest extends SGScreenRoot {
         {
             SGPanel panel = new SGPanel();
             panel.setBackground(new TextureBackground(new ResourceLocation("textures/blocks/glass_orange.png"), 32.0F));
-            panel.setPreferredSize(96, 0);
+            panel.setPreferredInnerSize(96, 0);
             root.addChild(panel, BorderedSGLayoutManager.Border.RIGHT);
             panel.setBorder(new SolidBorder(new Color(0x44FFFFFF), 3));
 
             panel.setLayoutManager(new FlowSGLayoutManager(FlowDirection.VERTICAL, FlowLayout.MIN));
             {
                 SGTextField text = new SGTextField("Text me!");
-                text.setPreferredSize(90, 14);
+                text.setPreferredInnerSize(90, 14);
                 panel.addChild(text, true);
             }
             {
                 SGPasswordField text = new SGPasswordField("Password?");
-                text.setPreferredSize(90, 14);
+                text.setPreferredInnerSize(90, 14);
                 panel.addChild(text, true);
             }
             {
@@ -286,25 +282,25 @@ public class GuiSGTest extends SGScreenRoot {
         {
             SGPanel panel = new SGPanel();
             panel.setBackground(new TextureBackground(new ResourceLocation("textures/blocks/glass_blue.png"), 16.0F));
-            panel.setPreferredSize(0, 32);
+            panel.setPreferredInnerSize(0, 32);
             root.addChild(panel, BorderedSGLayoutManager.Border.TOP);
 
             panel.setLayoutManager(new FlowSGLayoutManager(FlowDirection.HORIZONTAL, FlowLayout.CENTER));
             {
                 SGLabel label = new SGLabel("I want a border\nright here");
-                panel.addChild(label);
+                panel.addChild(label, true);
                 label.setColor(new Color(0xFFFF8888));
                 label.setBorder(new SolidBorder(new Color(0x44337777), 3));
             }
             {
                 SGLabel label = new SGLabel("Next label!");
-                panel.addChild(label);
+                panel.addChild(label, true);
                 label.setColor(new Color(0xFFFF8888));
                 label.setBorder(new InvisibleBorder(8));
             }
             {
                 SGButton button = new SGButton("I'm actually a button");
-                button.setPreferredSize(64, 30);
+                button.setPreferredInnerSize(64, 30);
                 button.setColors(StyleDefs.COLOR_TEXTBOX_TEXT_DISABLED, StyleDefs.COLOR_TEXTBOX_TEXT, StyleDefs.COLOR_TEXTBOX_TEXT_DISABLED);
                 button.setBackground(StyleDefs.BACKGROUND_TEXTBOX);
                 button.setBorder(StyleDefs.BORDER_TEXTBOX);
@@ -312,13 +308,13 @@ public class GuiSGTest extends SGScreenRoot {
             }
             {
                 SGButton button = new SGButton("I'm special");
-                //button.setPreferredSize(256.0F, 256.0F);
+                //button.setPreferredInnerSize(256.0F, 256.0F);
                 button.setBackgrounds(StyleDefs.BACKGROUND_BUTTON_NORMAL, StyleDefs.BACKGROUND_BUTTON_HOVER, StyleDefs.BACKGROUND_BUTTON_DISABLED);
                 panel.addChild(button);
             }
             {
                 SGTank tank = new SGTank(new FluidTank(new FluidStack(FluidRegistry.WATER, 2000), 3000));
-                tank.setPreferredSize(64, 30);
+                tank.setPreferredInnerSize(64, 30);
                 tank.setBorder(new SolidBorder(new Color(0xFF000000), 1));
                 panel.addChild(tank);
             }
@@ -333,11 +329,15 @@ public class GuiSGTest extends SGScreenRoot {
                 });
                 panel.addChild(checkbox);
             }
+            {
+                SGComboBox box = new SGComboBox("Test", "Tost", "Tast");
+                panel.addChild(box, false);
+            }
         }
         {
             SGPanel panel = new SGPanel();
             panel.setBackground(new TextureBackground(new ResourceLocation("textures/blocks/glass_green.png"), 64.0F));
-            panel.setPreferredSize(0, 64);
+            panel.setPreferredInnerSize(0, 64);
             root.addChild(panel, BorderedSGLayoutManager.Border.BOTTOM);
 
             panel.setLayoutManager(new FlowSGLayoutManager(FlowDirection.HORIZONTAL, FlowLayout.CENTER));
@@ -365,22 +365,50 @@ public class GuiSGTest extends SGScreenRoot {
                 panel.addChild(progressBar, true);
             }
             {
-                SGLabel label = new SGLabel("God damnit Techmac");
+                SGLabel label = new SGLabel("God damnit Techmac and manmaed");
                 label.setBorder(new InvisibleBorder(3));
                 panel.addChild(label);
                 label.setColor(new Color(0xFFFF0000));
             }
             {
-                SGScrollPane side = new SGScrollPane();
-                side.setCanScroll(true, false);
+                final SGScrollPane side = new SGScrollPane() {
+                    @Override
+                    public Region predictSize() {
+                        return super.predictSize();
+                    }
+
+                    @Override
+                    public void updateLayout() {
+                        super.updateLayout();
+                    }
+
+                    @Override
+                    public void setDimensions(int left, int top, int width, int height) {
+                        super.setDimensions(left, top, width, height);
+                    }
+
+                    @Override
+                    public void setPreferredInnerSize(int width, int height) {
+                        super.setPreferredInnerSize(width, height);
+                    }
+                };
+                side.setCanScroll(true, true);
+                side.setBorder(new SolidBorder(StyleDefs.COLOR_MENU_BORDER, 3)); // FIXME
                 side.setBackground(new TextureBackground(new ResourceLocation("textures/blocks/glass_gray.png"), 16.0F));
-                side.setPreferredSize(256, 64);
+                side.setPreferredTotalSize(256, 64);
                 side.setShouldForceSize(true);
                 side.setLayoutManager(new FlowSGLayoutManager(FlowDirection.HORIZONTAL, FlowLayout.CENTER));
                 panel.addChild(side);
                 for (int i = 0; i <= 100; i++) {
-                    SGProgressBar scroll = new SGProgressBar(SGProgressBar.State.NORMAL, FlowDirection.VERTICAL);
+                    final SGProgressBar scroll = new SGProgressBar(SGProgressBar.State.NORMAL, FlowDirection.VERTICAL);
                     scroll.setProgress(i);
+                    scroll.setMouseHandler(new MouseHandler() {
+                        @Override
+                        public boolean onClick(int mouseX, int mouseY, int button) {
+                            side.removeChild(scroll);
+                            return true;
+                        }
+                    });
                     side.addChild(scroll, true);
                 }
             }
@@ -397,7 +425,7 @@ public class GuiSGTest extends SGScreenRoot {
         super.updateScreen();
         if (this.prevSize == -1) {
             this.prevSize = this.mc.gameSettings.guiScale;
-            this.mc.gameSettings.guiScale = 2;
+            this.mc.gameSettings.guiScale = 0;
             ScaledResolution resolution = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
             this.setWorldAndResolution(this.mc, resolution.getScaledWidth(), resolution.getScaledHeight());
         }

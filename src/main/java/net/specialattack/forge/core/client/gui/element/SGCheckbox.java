@@ -15,7 +15,7 @@ public class SGCheckbox extends SGInteractable {
 
     public SGCheckbox(boolean checked) {
         this.checked = checked;
-        this.setPreferredSize(11, 11);
+        this.setPreferredInnerSize(11, 11);
         this.setBackgrounds(StyleDefs.BACKGROUND_BUTTON_NORMAL, StyleDefs.BACKGROUND_BUTTON_HOVER, StyleDefs.BACKGROUND_BUTTON_DISABLED);
         this.setOutline(new InvisibleOutline(2));
     }

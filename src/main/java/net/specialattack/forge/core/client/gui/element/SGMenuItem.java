@@ -20,9 +20,9 @@ public class SGMenuItem extends SGInteractable {
         super.setLayoutManager(new BorderedSGLayoutManager());
         super.addChild(this.innerLabel = new SGLabel(text), BorderedSGLayoutManager.Border.CENTER);
         this.innerLabel.setLayout(FlowLayout.MIN, FlowLayout.CENTER);
-        this.innerLabel.setBorder(new InvisibleBorder(1));
+        //this.innerLabel.setBorder(new InvisibleBorder(1));
         //this.setBackgrounds(StyleDefs.BACKGROUND_BUTTON_NORMAL, StyleDefs.BACKGROUND_BUTTON_HOVER, StyleDefs.BACKGROUND_BUTTON_DISABLED);
-        this.setBackgrounds(StyleDefs.BACKGROUND_MENU_ITEM_NORMAL, StyleDefs.BACKGROUND_MENU_ITEM_HOVER, StyleDefs.BACKGROUND_MENU_ITEM_DISABLED);
+        //this.setBackgrounds(StyleDefs.BACKGROUND_MENU_ITEM_NORMAL, StyleDefs.BACKGROUND_MENU_ITEM_HOVER, StyleDefs.BACKGROUND_MENU_ITEM_DISABLED);
         this.setColors(StyleDefs.COLOR_MENU_ITEM_NORMAL, StyleDefs.COLOR_MENU_ITEM_HOVER, StyleDefs.COLOR_MENU_ITEM_DISABLED);
         this.setHasShadow(false);
     }
@@ -45,13 +45,15 @@ public class SGMenuItem extends SGInteractable {
 
     @Override
     public Region predictSize() {
-        Region inner = super.predictSize();
-        return new Region(0, 0, inner.width + 2, inner.height - 2);
+        //Region inner = super.predictSize();
+        //return new Region(0, 0, inner.width + 2, inner.height - 2);
+        return super.predictSize(); // FIXME?
     }
 
     @Override
     public void setSizeRestrictions(int width, int height) {
-        super.setSizeRestrictions(width - 2, height + 2);
+        //super.setSizeRestrictions(width - 2, height + 2);
+        super.setSizeRestrictions(width, height); // FIXME
     }
 
     @Override
