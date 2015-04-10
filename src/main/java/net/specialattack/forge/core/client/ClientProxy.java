@@ -71,10 +71,8 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public void onTextureStitchedPost(TextureStitchEvent.Pre event) {
-        TextureMap map = event.map;
-
-        if (map.getTextureType() == SpACore.textureMapId.getValue()) {
-            ClientProxy.iconReportBug = map.registerIcon("spacore:report-bug");
+        if (event.map.getTextureType() == SpACore.textureMapId.getValue()) {
+            ClientProxy.iconReportBug = event.map.registerIcon(Assets.DOMAIN + "report-bug");
         }
     }
 

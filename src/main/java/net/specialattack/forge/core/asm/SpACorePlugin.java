@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 import java.util.Map;
 
 @TransformerExclusions({ "net.specialattack.forge.core.asm" })
+@IFMLLoadingPlugin.MCVersion("1.7.10")
 public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     protected static boolean debug = false;
@@ -13,13 +14,13 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
     @Override
     public String[] getASMTransformerClass() {
         return new String[] { "net.specialattack.forge.core.asm.SpACoreModTransformer", //
-                //"net.specialattack.forge.core.asm.SpACoreDebugTransformer", //
-                "net.specialattack.forge.core.asm.SpACoreLoggerTransformer" };
+                "net.specialattack.forge.core.asm.SpACoreLoggerTransformer", //
+        };
     }
 
     @Override
     public String getModContainerClass() {
-        return "net.specialattack.forge.core.asm.SpACoreModContainer";
+        return null;
     }
 
     @Override
@@ -29,12 +30,6 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
     public void injectData(Map<String, Object> data) {
-        // Enable when NEI bugs
-        /*
-        if (FMLLaunchHandler.side().isClient() && !((Boolean) data.get("runtimeDeobfuscationEnabled"))) {
-            debug = true;
-        }
-        //*/
     }
 
     @Override

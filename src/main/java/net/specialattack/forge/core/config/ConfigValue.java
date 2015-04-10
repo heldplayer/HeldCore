@@ -8,6 +8,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import java.util.List;
 import java.util.regex.Pattern;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Property;
 
 /**
@@ -27,19 +28,17 @@ public class ConfigValue<T> implements IConfigElement<T> {
     protected T deff;
     protected Property value;
     protected Side side;
-    protected String comment;
     protected boolean requiresWorldRestart;
     protected boolean requiresMcRestart;
     protected boolean showInGui = true;
 
     private int mode;
 
-    public ConfigValue(String name, String unlocalizedName, Side side, T deff, String comment) {
+    public ConfigValue(String name, String unlocalizedName, Side side, T deff) {
         this.name = name;
         this.unlocalizedName = unlocalizedName;
         this.side = side;
         this.deff = deff;
-        this.comment = comment;
 
         this.mode = -1;
 
@@ -89,38 +88,38 @@ public class ConfigValue<T> implements IConfigElement<T> {
         }
 
         if (this.mode == 0) {
-            this.value = this.category.config.config.get(this.category.name, this.name, ((IConfigurable) this.deff).serialize(), this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, ((IConfigurable) this.deff).serialize(), this.getComment());
         }
         if (this.mode == 1) {
-            this.value = this.category.config.config.get(this.category.name, this.name, (Boolean) this.deff, this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, (Boolean) this.deff, this.getComment());
         }
         if (this.mode == 2) {
-            this.value = this.category.config.config.get(this.category.name, this.name, (Double) this.deff, this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, (Double) this.deff, this.getComment());
         }
         if (this.mode == 3) {
-            this.value = this.category.config.config.get(this.category.name, this.name, (Integer) this.deff, this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, (Integer) this.deff, this.getComment());
         }
         if (this.mode == 4) {
-            this.value = this.category.config.config.get(this.category.name, this.name, (String) this.deff, this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, (String) this.deff, this.getComment());
         }
         if (this.mode == 5) {
             String[] values = new String[((IConfigurable[]) this.deff).length];
             for (int i = 0; i < values.length; i++) {
                 values[i] = ((IConfigurable[]) this.deff)[i].serialize();
             }
-            this.value = this.category.config.config.get(this.category.name, this.name, values, this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, values, this.getComment());
         }
         if (this.mode == 6) {
-            this.value = this.category.config.config.get(this.category.name, this.name, (boolean[]) this.deff, this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, (boolean[]) this.deff, this.getComment());
         }
         if (this.mode == 7) {
-            this.value = this.category.config.config.get(this.category.name, this.name, (double[]) this.deff, this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, (double[]) this.deff, this.getComment());
         }
         if (this.mode == 8) {
-            this.value = this.category.config.config.get(this.category.name, this.name, (int[]) this.deff, this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, (int[]) this.deff, this.getComment());
         }
         if (this.mode == 9) {
-            this.value = this.category.config.config.get(this.category.name, this.name, (String[]) this.deff, this.comment);
+            this.value = this.category.config.config.get(this.category.name, this.name, (String[]) this.deff, this.getComment());
         }
     }
 
@@ -176,7 +175,7 @@ public class ConfigValue<T> implements IConfigElement<T> {
 
     @Override
     public String getComment() {
-        return this.comment;
+        return I18n.format(this.unlocalizedName + ".comment");
     }
 
     @SuppressWarnings("rawtypes")
