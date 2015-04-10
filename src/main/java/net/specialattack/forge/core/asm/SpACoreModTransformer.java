@@ -39,6 +39,13 @@ public class SpACoreModTransformer implements IClassTransformer {
                     changed = true;
                     Type methodType = methodTypes[i];
                     String descriptor = Type.getMethodDescriptor(Type.VOID_TYPE, methodType);
+                    /*
+                     * Add
+                     * @Mod.EventHandler
+                     * public void [pre|post|]init(FML[Pre|Post|]InitializationEvent event) {
+                     *     super.[pre|post|]init(event);
+                     * }
+                     */
                     MethodNode method = new MethodNode(Opcodes.ASM4, Opcodes.ACC_PUBLIC, methods[i], descriptor, null, null);
                     AnnotationVisitor annotation = method.visitAnnotation("Lcpw/mods/fml/common/Mod$EventHandler;", true);
                     annotation.visitEnd();
