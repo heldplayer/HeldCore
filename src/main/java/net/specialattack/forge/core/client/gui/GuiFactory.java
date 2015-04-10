@@ -1,9 +1,9 @@
 package net.specialattack.forge.core.client.gui;
 
-import cpw.mods.fml.client.IModGuiFactory;
 import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.client.IModGuiFactory;
 
 public class GuiFactory implements IModGuiFactory {
 

@@ -1,10 +1,10 @@
 package net.specialattack.forge.core.asm;
 
 import com.google.common.eventbus.EventBus;
-import cpw.mods.fml.common.DummyModContainer;
-import cpw.mods.fml.common.LoadController;
-import cpw.mods.fml.common.ModMetadata;
 import java.util.Arrays;
+import net.minecraftforge.fml.common.DummyModContainer;
+import net.minecraftforge.fml.common.LoadController;
+import net.minecraftforge.fml.common.ModMetadata;
 import net.specialattack.forge.core.Objects;
 
 public class SpACoreModContainer extends DummyModContainer {

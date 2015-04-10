@@ -1,12 +1,5 @@
 package net.specialattack.forge.core.sync;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.network.FMLNetworkEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.*;
 import java.util.concurrent.Callable;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,6 +8,12 @@ import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.play.INetHandlerPlayServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.specialattack.forge.core.SpACore;
 import net.specialattack.forge.core.client.MC;
 import net.specialattack.forge.core.event.SyncEvent;
@@ -505,7 +504,7 @@ public final class SyncHandler {
             if (terminated) {
                 return;
             }
-            if (event.phase == Phase.END) {
+            if (event.phase == TickEvent.Phase.END) {
                 if (event.side.isServer()) {
                     HashSet<ISyncable> allChanged = null;
 

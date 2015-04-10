@@ -1,11 +1,10 @@
 package net.specialattack.forge.core.asm;
 
-import cpw.mods.fml.relauncher.IFMLCallHook;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 import java.util.Map;
+import net.minecraftforge.fml.relauncher.IFMLCallHook;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
-@TransformerExclusions({ "net.specialattack.forge.core.asm" })
+@IFMLLoadingPlugin.TransformerExclusions({ "net.specialattack.forge.core.asm" })
 public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     protected static boolean debug = false;

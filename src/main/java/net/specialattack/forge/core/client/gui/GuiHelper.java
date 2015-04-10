@@ -1,21 +1,22 @@
 package net.specialattack.forge.core.client.gui;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Timer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.specialattack.forge.core.client.MC;
 import net.specialattack.forge.core.client.RenderHelper;
 import org.lwjgl.opengl.GL11;
@@ -53,10 +54,10 @@ public final class GuiHelper {
         if (fluid.getSpriteNumber() == 0) {
             MC.getRenderEngine().bindTexture(TextureMap.locationBlocksTexture);
         } else {
-            MC.getRenderEngine().bindTexture(TextureMap.locationItemsTexture);
+            MC.getRenderEngine().bindTexture(TextureMap.field_174945_f);
         }
 
-        IIcon icon = RenderHelper.getIconSafe(fluid.getIcon(), fluid.getSpriteNumber() == 0);
+        TextureAtlasSprite icon = RenderHelper.getIconSafe(fluid.getIcon(), fluid.getSpriteNumber() == 0);
         int color = fluid.getColor();
         float red = (color >> 16 & 0xFF) / 255.0F;
         float green = (color >> 8 & 0xFF) / 255.0F;
@@ -102,7 +103,7 @@ public final class GuiHelper {
      *         The ending texture v location
      */
     public static void drawTexturedModalRect(int startX, int startY, int width, int height, float zLevel, float startU, float startV, float endU, float endV) {
-        Tessellator tes = Tessellator.instance;
+        WorldRenderer tes = Tessellator.getInstance().getWorldRenderer();
         tes.startDrawingQuads();
         tes.addVertexWithUV(startX, startY + height, zLevel, startU, endV);
         tes.addVertexWithUV(startX + width, startY + height, zLevel, endU, endV);
@@ -134,7 +135,7 @@ public final class GuiHelper {
      *         The ending texture v location
      */
     public static void drawTexturedModalRect(float startX, float startY, float width, float height, float zLevel, float startU, float startV, float endU, float endV) {
-        Tessellator tes = Tessellator.instance;
+        WorldRenderer tes = Tessellator.getInstance().getWorldRenderer();
         tes.startDrawingQuads();
         tes.addVertexWithUV(startX, startY + height, zLevel, startU, endV);
         tes.addVertexWithUV(startX + width, startY + height, zLevel, endU, endV);
@@ -230,7 +231,7 @@ public final class GuiHelper {
                     currentLine = "\u00a77" + currentLine;
                 }
 
-                fontRenderer.drawStringWithShadow(currentLine, xPos, yPos, -1);
+                fontRenderer.func_175063_a(currentLine, xPos, yPos, -1);
 
                 if (i == 0) {
                     yPos += 2;
@@ -355,7 +356,7 @@ public final class GuiHelper {
     }
 
     public static void drawTexturedModalRect(int startX, int startY, int width, int height, double zLevel, double startU, double startV, double endU, double endV) {
-        Tessellator tes = Tessellator.instance;
+        WorldRenderer tes = Tessellator.getInstance().getWorldRenderer();
         tes.startDrawingQuads();
         tes.addVertexWithUV(startX, startY + (double) height, zLevel, startU, endV);
         tes.addVertexWithUV(startX + (double) width, startY + (double) height, zLevel, endU, endV);
@@ -365,15 +366,13 @@ public final class GuiHelper {
     }
 
     public static void drawTexturedModalRect(int startX, int startY, int u, int v, int width, int height) {
-        float f = 0.00390625F;
-        float f1 = 0.00390625F;
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(startX, startY + height, 0.0D, u * f, (v + height) * f1);
-        tessellator.addVertexWithUV(startX + width, startY + height, 0.0D, (u + width) * f, (v + height) * f1);
-        tessellator.addVertexWithUV(startX + width, startY, 0.0D, (u + width) * f, v * f1);
-        tessellator.addVertexWithUV(startX, startY, 0.0D, u * f, v * f1);
-        tessellator.draw();
+        WorldRenderer tes = Tessellator.getInstance().getWorldRenderer();
+        tes.startDrawingQuads();
+        tes.addVertexWithUV(startX, startY + height, 0.0D, u / 256.0F, (v + height) / 256.0F);
+        tes.addVertexWithUV(startX + width, startY + height, 0.0D, (u + width) / 256.0F, (v + height) / 256.0F);
+        tes.addVertexWithUV(startX + width, startY, 0.0D, (u + width) / 256.0F, v / 256.0F);
+        tes.addVertexWithUV(startX, startY, 0.0D, u / 256.0F, v / 256.0F);
+        tes.draw();
     }
 
     public static Timer getMinecraftTimer() {

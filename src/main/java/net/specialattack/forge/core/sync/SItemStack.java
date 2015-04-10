@@ -34,7 +34,7 @@ public class SItemStack extends BaseSyncable {
 
     @Override
     public void read(ByteArrayDataInput in) throws IOException {
-        NBTTagCompound tag = CompressedStreamTools.func_152456_a(in, NBTSizeTracker.field_152451_a);
+        NBTTagCompound tag = CompressedStreamTools.func_152456_a(in, NBTSizeTracker.INFINITE);
         this.value = ItemStack.loadItemStackFromNBT(tag);
     }
 

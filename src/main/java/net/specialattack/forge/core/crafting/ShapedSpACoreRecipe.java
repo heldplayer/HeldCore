@@ -125,8 +125,20 @@ public class ShapedSpACoreRecipe implements ISpACoreRecipe {
     }
 
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting var1) {
+    public ItemStack getCraftingResult(InventoryCrafting crafting) {
         return this.tempOut.copy();
+    }
+
+    @Override
+    public ItemStack[] func_179532_b(InventoryCrafting crafting) {
+        ItemStack[] result = new ItemStack[crafting.getSizeInventory()];
+
+        for (int i = 0; i < result.length; ++i) {
+            ItemStack itemstack = crafting.getStackInSlot(i);
+            result[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+        }
+
+        return result;
     }
 
     @Override

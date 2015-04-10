@@ -1,18 +1,18 @@
 package net.specialattack.forge.core.config;
 
-import cpw.mods.fml.client.config.ConfigGuiType;
-import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
-import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
-import cpw.mods.fml.client.config.IConfigElement;
-import cpw.mods.fml.relauncher.Side;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.config.ConfigGuiType;
+import net.minecraftforge.fml.client.config.GuiConfigEntries;
+import net.minecraftforge.fml.client.config.GuiEditArrayEntries;
+import net.minecraftforge.fml.client.config.IConfigElement;
+import net.minecraftforge.fml.relauncher.Side;
 
-public class ConfigCategory<T> implements IConfigElement<T> {
+public class ConfigCategory<T> implements IConfigElement {
 
     protected String name;
     protected String unlocalizedName;
@@ -109,12 +109,12 @@ public class ConfigCategory<T> implements IConfigElement<T> {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public Class<? extends IConfigEntry> getConfigEntryClass() {
+    public Class<? extends GuiConfigEntries.IConfigEntry> getConfigEntryClass() {
         return null;
     }
 
     @Override
-    public Class<? extends IArrayEntry> getArrayEntryClass() {
+    public Class<? extends GuiEditArrayEntries.IArrayEntry> getArrayEntryClass() {
         return null;
     }
 
@@ -228,11 +228,11 @@ public class ConfigCategory<T> implements IConfigElement<T> {
     }
 
     @Override
-    public void set(T value) {
+    public void set(Object value) {
     }
 
     @Override
-    public void set(T[] aVal) {
+    public void set(Object[] aVal) {
     }
 
     @Override

@@ -1,25 +1,25 @@
 package net.specialattack.forge.core.client.gui;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.util.IIcon;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.specialattack.forge.core.client.RenderHelper;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class GuiButtonIcon extends GuiButton {
 
-    private IIcon normalIcon;
-    private IIcon hoverIcon;
-    private IIcon disabledIcon;
+    private TextureAtlasSprite normalIcon;
+    private TextureAtlasSprite hoverIcon;
+    private TextureAtlasSprite disabledIcon;
     private ResourceLocation iconMap;
 
-    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, IIcon normalIcon, ResourceLocation iconMap) {
+    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, TextureAtlasSprite normalIcon, ResourceLocation iconMap) {
         super(id, posX, posY, width, height, text);
         this.normalIcon = normalIcon;
         this.hoverIcon = normalIcon;
@@ -27,7 +27,7 @@ public class GuiButtonIcon extends GuiButton {
         this.iconMap = iconMap;
     }
 
-    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, IIcon normalIcon, IIcon hoverIcon, ResourceLocation iconMap) {
+    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, TextureAtlasSprite normalIcon, TextureAtlasSprite hoverIcon, ResourceLocation iconMap) {
         super(id, posX, posY, width, height, text);
         this.normalIcon = normalIcon;
         this.hoverIcon = hoverIcon;
@@ -35,7 +35,7 @@ public class GuiButtonIcon extends GuiButton {
         this.iconMap = iconMap;
     }
 
-    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, IIcon normalIcon, IIcon hoverIcon, IIcon disabledIcon, ResourceLocation iconMap) {
+    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, TextureAtlasSprite normalIcon, TextureAtlasSprite hoverIcon, TextureAtlasSprite disabledIcon, ResourceLocation iconMap) {
         super(id, posX, posY, width, height, text);
         this.normalIcon = normalIcon;
         this.hoverIcon = hoverIcon;
@@ -46,11 +46,11 @@ public class GuiButtonIcon extends GuiButton {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
-            FontRenderer font = mc.fontRenderer;
+            FontRenderer font = mc.fontRendererObj;
             mc.getTextureManager().bindTexture(GuiButton.buttonTextures);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-            int offsetV = this.getHoverState(this.field_146123_n);
+            this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+            int offsetV = this.getHoverState(this.hovered);
             GL11.glEnable(GL11.GL_BLEND);
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -59,14 +59,14 @@ public class GuiButtonIcon extends GuiButton {
             this.mouseDragged(mc, mouseX, mouseY);
             int textColor = 0xE0E0E0;
 
-            IIcon icon = this.normalIcon;
+            TextureAtlasSprite icon = this.normalIcon;
 
             if (this.packedFGColour != 0) {
                 textColor = this.packedFGColour;
             } else if (!this.enabled) {
                 textColor = 0xA0A0A0;
                 icon = this.disabledIcon;
-            } else if (this.field_146123_n) {
+            } else if (this.hovered) {
                 textColor = 0xFFFFA0;
                 icon = this.hoverIcon;
             }
@@ -82,7 +82,7 @@ public class GuiButtonIcon extends GuiButton {
             if (icon != null && this.iconMap != null) {
                 GL11.glColor3f(1.0F, 1.0F, 1.0F);
                 RenderHelper.bindTexture(this.iconMap);
-                this.drawTexturedModelRectFromIcon(iconX + this.xPosition, iconY + this.yPosition, icon, 16, 16);
+                this.func_175175_a(iconX + this.xPosition, iconY + this.yPosition, icon, 16, 16);
             }
         }
     }

@@ -1,10 +1,8 @@
 package net.specialattack.forge.core.client;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.particle.EffectRenderer;
@@ -13,6 +11,8 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class MC {
@@ -35,7 +35,7 @@ public final class MC {
     }
 
     public static FontRenderer getFontRenderer() {
-        return MC.getMinecraft().fontRenderer;
+        return MC.getMinecraft().fontRendererObj;
     }
 
     public static GameSettings getGameSettings() {
@@ -50,7 +50,7 @@ public final class MC {
         return MC.getMinecraft().renderGlobal;
     }
 
-    public static EntityClientPlayerMP getPlayer() {
+    public static EntityPlayerSP getPlayer() {
         return MC.getMinecraft().thePlayer;
     }
 

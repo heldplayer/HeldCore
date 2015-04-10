@@ -2,7 +2,6 @@ package net.specialattack.forge.core.sync.packet;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import java.io.ByteArrayOutputStream;
@@ -10,7 +9,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.relauncher.Side;
 import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.SpACore;
 import net.specialattack.forge.core.event.SyncEvent;
@@ -114,7 +115,7 @@ public class Packet2TrackingBegin extends SyncPacket {
 
         if (this.isWordly) {
             if (player.worldObj != null) {
-                TileEntity tile = player.worldObj.getTileEntity(this.posX, this.posY, this.posZ);
+                TileEntity tile = player.worldObj.getTileEntity(new BlockPos(this.posX, this.posY, this.posZ));
                 if (tile != null) {
                     if (tile instanceof ISyncableObjectOwner) {
                         ISyncableObjectOwner object = (ISyncableObjectOwner) tile;

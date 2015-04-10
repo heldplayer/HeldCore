@@ -103,6 +103,18 @@ public class ShapelessSpACoreRecipe implements ISpACoreRecipe {
     }
 
     @Override
+    public ItemStack[] func_179532_b(InventoryCrafting crafting) {
+        ItemStack[] result = new ItemStack[crafting.getSizeInventory()];
+
+        for (int i = 0; i < result.length; ++i) {
+            ItemStack itemstack = crafting.getStackInSlot(i);
+            result[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+        }
+
+        return result;
+    }
+
+    @Override
     public int getRecipeSize() {
         return this.ingredients.size();
     }

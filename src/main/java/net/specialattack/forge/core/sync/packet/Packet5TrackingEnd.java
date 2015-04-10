@@ -1,9 +1,9 @@
 package net.specialattack.forge.core.sync.packet;
 
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import java.io.IOException;
+import net.minecraftforge.fml.relauncher.Side;
 import net.specialattack.forge.core.sync.ISyncable;
 import net.specialattack.forge.core.sync.SyncHandler;
 

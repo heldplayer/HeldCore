@@ -1,12 +1,12 @@
 package net.specialattack.forge.core.client;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.specialattack.util.MathHelper;
 import net.specialattack.util.Vector;
 import net.specialattack.util.VectorPool;
@@ -20,12 +20,12 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public final class RenderHelper {
 
-    public static IIcon getIconSafe(IIcon icon, boolean block) {
+    public static TextureAtlasSprite getIconSafe(TextureAtlasSprite icon, boolean block) {
         if (icon == null) {
             if (block) {
                 icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
             } else {
-                icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.locationItemsTexture)).getAtlasSprite("missingno");
+                icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.field_174945_f)).getAtlasSprite("missingno");
             }
         }
 
@@ -40,7 +40,7 @@ public final class RenderHelper {
         }
     }
 
-    public static void renderBezierPlane(Vector[][] points, IIcon icon, int pointCount) {
+    public static void renderBezierPlane(Vector[][] points, TextureAtlasSprite icon, int pointCount) {
         Vector[] result = RenderHelper.getBezierPlanePoints(points, pointCount);
 
         GL11.glBegin(GL11.GL_QUADS);

@@ -1,7 +1,7 @@
 package net.specialattack.forge.core.asm;
 
-import cpw.mods.fml.common.asm.transformers.AccessTransformer;
 import java.io.IOException;
+import net.minecraftforge.fml.common.asm.transformers.AccessTransformer;
 
 public class SpACoreAccessTransformer extends AccessTransformer {
 

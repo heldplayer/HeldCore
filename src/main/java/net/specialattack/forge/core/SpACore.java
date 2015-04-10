@@ -1,16 +1,14 @@
 package net.specialattack.forge.core;
 
-import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppedEvent;
-import cpw.mods.fml.relauncher.Side;
 import java.io.File;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import net.specialattack.forge.core.client.MC;
 import net.specialattack.forge.core.config.Config;
 import net.specialattack.forge.core.config.ConfigCategory;
@@ -22,7 +20,7 @@ import net.specialattack.forge.core.sync.packet.*;
 @Mod(name = Objects.MOD_NAME, modid = Objects.MOD_ID, guiFactory = Objects.GUI_FACTORY)
 public class SpACore extends SpACoreMod {
 
-    @Instance(value = Objects.MOD_ID)
+    @Mod.Instance(value = Objects.MOD_ID)
     public static SpACore instance;
 
     @SidedProxy(clientSide = Objects.CLIENT_PROXY, serverSide = Objects.SERVER_PROXY)
@@ -39,7 +37,7 @@ public class SpACore extends SpACoreMod {
 
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    @EventHandler
+    @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         Objects.log = event.getModLog();
 
@@ -79,19 +77,19 @@ public class SpACore extends SpACoreMod {
     }
 
     @Override
-    public boolean configChanged(OnConfigChangedEvent event) {
+    public boolean configChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (MC.getWorld() != null) {
             SyncHandler.Client.sendUpdateInterval();
         }
         return true;
     }
 
-    @EventHandler
+    @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         SyncHandler.Server.reset(); // Make sure it is reset
     }
 
-    @EventHandler
+    @Mod.EventHandler
     public void serverStopped(FMLServerStoppedEvent event) {
         SyncHandler.Server.reset();
     }

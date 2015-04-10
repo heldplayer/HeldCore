@@ -1,9 +1,9 @@
 package net.specialattack.forge.core.asm;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.specialattack.forge.core.SpACoreMod;
 import org.objectweb.asm.*;
 import org.objectweb.asm.tree.ClassNode;

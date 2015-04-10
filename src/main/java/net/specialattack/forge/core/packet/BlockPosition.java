@@ -18,7 +18,7 @@ public final class BlockPosition {
     }
 
     public static void writeBlockPosition(ByteBuf out, BlockPosition position) {
-        out.writeInt(position.world.provider.dimensionId);
+        out.writeInt(position.world.provider.getDimensionId());
         out.writeInt(position.x);
         out.writeInt(position.y);
         out.writeInt(position.z);

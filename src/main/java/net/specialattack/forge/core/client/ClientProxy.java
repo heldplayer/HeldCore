@@ -1,12 +1,5 @@
 package net.specialattack.forge.core.client;
 
-import cpw.mods.fml.client.GuiModList;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.awt.Rectangle;
 import java.util.List;
 import java.util.Map;
@@ -14,15 +7,22 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.ChunkPosition;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.fml.client.GuiModList;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.specialattack.forge.core.Assets;
 import net.specialattack.forge.core.CommonProxy;
 import net.specialattack.forge.core.SpACore;
@@ -35,7 +35,8 @@ import net.specialattack.forge.core.sync.packet.Packet1TrackingStatus;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
 
-    public static IIcon iconReportBug;
+    public static TextureAtlasSprite iconReportBug;
+    private TextureMap textures;
 
     @Override
     public EntityPlayer getClientPlayer() {
@@ -51,7 +52,7 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent event) {
         super.init(event);
 
-        MC.getRenderEngine().loadTextureMap(Assets.TEXTURE_MAP, new TextureMap(SpACore.textureMapId.getValue(), "textures/spacore"));
+        MC.getRenderEngine().loadTickableTexture(Assets.TEXTURE_MAP, this.textures = new TextureMap("textures/spacore"));
 
         FMLCommonHandler.instance().bus().register(this);
     }
@@ -59,7 +60,7 @@ public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public void onChunkUnload(ChunkEvent.Unload event) {
         if (event.world.isRemote) {
-            @SuppressWarnings("unchecked") Map<ChunkPosition, TileEntity> tiles = event.getChunk().chunkTileEntityMap;
+            @SuppressWarnings("unchecked") Map<BlockPos, TileEntity> tiles = event.getChunk().chunkTileEntityMap;
 
             for (TileEntity tile : tiles.values()) {
                 if (tile instanceof ISyncableObjectOwner) {
@@ -71,10 +72,8 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public void onTextureStitchedPost(TextureStitchEvent.Pre event) {
-        TextureMap map = event.map;
-
-        if (map.getTextureType() == SpACore.textureMapId.getValue()) {
-            ClientProxy.iconReportBug = map.registerIcon("spacore:report-bug");
+        if (event.map == this.textures) {
+            ClientProxy.iconReportBug = event.map.getAtlasSprite("spacore:report-bug");
         }
     }
 
@@ -149,14 +148,14 @@ public class ClientProxy extends CommonProxy {
             if (event.button != null && event.button.id == -123 && event.gui != null && event.gui instanceof GuiMainMenu) {
                 MC.getMinecraft().displayGuiScreen(new GuiScreenReportBug());
                 event.setCanceled(true);
-                event.button.func_146113_a(MC.getSoundHandler());
+                event.button.playPressSound(MC.getSoundHandler());
             }
         }
         if (SpACore.replaceModOptions.getValue()) {
             if (event.button != null && event.button.id == 12 && event.gui != null && event.gui instanceof GuiIngameMenu) {
                 MC.getMinecraft().displayGuiScreen(new GuiModList(event.gui));
                 event.setCanceled(true);
-                event.button.func_146113_a(MC.getSoundHandler());
+                event.button.playPressSound(MC.getSoundHandler());
             }
         }
     }

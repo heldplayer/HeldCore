@@ -66,7 +66,7 @@ public class SInventoryStack extends BaseSyncable {
         if (isNull) {
             this.inventory.setInventorySlotContents(this.slot, null);
         } else {
-            NBTTagCompound tag = CompressedStreamTools.func_152456_a(in, NBTSizeTracker.field_152451_a);
+            NBTTagCompound tag = CompressedStreamTools.func_152456_a(in, NBTSizeTracker.INFINITE);
             this.inventory.setInventorySlotContents(this.slot, ItemStack.loadItemStackFromNBT(tag));
         }
     }

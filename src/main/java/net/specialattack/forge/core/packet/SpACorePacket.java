@@ -1,6 +1,5 @@
 package net.specialattack.forge.core.packet;
 
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.Attribute;
@@ -10,6 +9,7 @@ import java.io.IOException;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
 
 public abstract class SpACorePacket implements AttributeMap {
 

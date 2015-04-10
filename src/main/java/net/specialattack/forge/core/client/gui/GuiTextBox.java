@@ -1,15 +1,16 @@
 package net.specialattack.forge.core.client.gui;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
@@ -186,7 +187,7 @@ public class GuiTextBox extends Gui {
 
         if (multiLine) {
             for (int i = 0; i < lines.length; i++) {
-                String line = ChatAllowedCharacters.filerAllowedCharacters(lines[i]);
+                String line = ChatAllowedCharacters.filterAllowedCharacters(lines[i]);
 
                 if (i == lines.length - 1) {
                     this.chatLines.add(this.cursorPositionComponent, new ChatComponentText(line + endText));
@@ -923,7 +924,7 @@ public class GuiTextBox extends Gui {
                         if (remainingLines > height - 1) {
                             break label;
                         } else if (remainingLines >= 0) {
-                            this.font.drawStringWithShadow(line, textOffsetX, textOffsetY + offsetY, textColor);
+                            this.font.func_175063_a(line, textOffsetX, textOffsetY + offsetY, textColor);
                             offsetY += this.font.FONT_HEIGHT;
                         }
                         remainingLines++;
@@ -934,13 +935,13 @@ public class GuiTextBox extends Gui {
                     if (drawCursorAsLine) {
                         Gui.drawRect(cursorX, cursorY - 1, cursorX + 1, cursorY + 1 + this.font.FONT_HEIGHT, 0xFFD0D0D0);
                     } else {
-                        this.font.drawStringWithShadow("_", cursorX, cursorY, textColor);
+                        this.font.func_175063_a("_", cursorX, cursorY, textColor);
                     }
                 }
 
-                this.font.drawStringWithShadow(this.chatLines.size() + " lines +" + this.lineScrollOffset, this.posX + 4, this.posY + this.height + 2, textColor);
-                this.font.drawStringWithShadow(this.cursorPositionComponent + "," + this.cursorPosition + " " + this.selectionEndComponent + "," + this.selectionEnd, this.posX + 4, this.posY + this.height + 11, textColor);
-                this.font.drawStringWithShadow(cursorX + "," + cursorY + " " + selectionEndX + "," + selectionEndY, this.posX + 4, this.posY + this.height + 20, textColor);
+                this.font.func_175063_a(this.chatLines.size() + " lines +" + this.lineScrollOffset, this.posX + 4, this.posY + this.height + 2, textColor);
+                this.font.func_175063_a(this.cursorPositionComponent + "," + this.cursorPosition + " " + this.selectionEndComponent + "," + this.selectionEnd, this.posX + 4, this.posY + this.height + 11, textColor);
+                this.font.func_175063_a(cursorX + "," + cursorY + " " + selectionEndX + "," + selectionEndY, this.posX + 4, this.posY + this.height + 20, textColor);
 
                 if (hasSelection) {
                     if (selectionEndY < cursorY) {
@@ -1009,7 +1010,7 @@ public class GuiTextBox extends Gui {
             startX = this.posX + this.width;
         }
 
-        Tessellator tessellator = Tessellator.instance;
+        WorldRenderer tessellator = Tessellator.getInstance().getWorldRenderer();
         GL11.glColor4f(0.0F, 0.0F, 255.0F, 255.0F);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_COLOR_LOGIC_OP);

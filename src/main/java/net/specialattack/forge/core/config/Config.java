@@ -1,10 +1,9 @@
 package net.specialattack.forge.core.config;
 
-import cpw.mods.fml.client.config.IConfigElement;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import java.io.File;
 import java.util.List;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.config.IConfigElement;
 
 /**
  * Class used for configurations
@@ -20,7 +19,7 @@ public class Config<T> extends ConfigCategory<T> {
      *
      * @param file
      *         The configuration file, usually from
-     *         {@link FMLPreInitializationEvent#getSuggestedConfigurationFile()}
+     *         {@link net.minecraftforge.fml.common.event.FMLPreInitializationEvent#getSuggestedConfigurationFile()}
      */
     public Config(File file) {
         super("", "root", null, "");

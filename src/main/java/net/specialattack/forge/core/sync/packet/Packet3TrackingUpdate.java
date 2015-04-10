@@ -2,12 +2,12 @@ package net.specialattack.forge.core.sync.packet;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import net.minecraftforge.fml.relauncher.Side;
 import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.sync.ISyncable;
 import net.specialattack.forge.core.sync.SyncHandler;

@@ -1,14 +1,14 @@
 package net.specialattack.forge.core.config;
 
-import cpw.mods.fml.client.config.ConfigGuiType;
-import cpw.mods.fml.client.config.GuiConfigEntries.IConfigEntry;
-import cpw.mods.fml.client.config.GuiEditArrayEntries.IArrayEntry;
-import cpw.mods.fml.client.config.IConfigElement;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.client.config.ConfigGuiType;
+import net.minecraftforge.fml.client.config.GuiConfigEntries;
+import net.minecraftforge.fml.client.config.GuiEditArrayEntries;
+import net.minecraftforge.fml.client.config.IConfigElement;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Class used for storing a configuration entry
@@ -19,7 +19,7 @@ import net.minecraftforge.common.config.Property;
  * @author heldplayer
  */
 @SuppressWarnings("ConstantConditions")
-public class ConfigValue<T> implements IConfigElement<T> {
+public class ConfigValue<T> implements IConfigElement {
 
     protected ConfigCategory<?> category;
     protected String name;
@@ -150,12 +150,12 @@ public class ConfigValue<T> implements IConfigElement<T> {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public Class<? extends IConfigEntry> getConfigEntryClass() {
+    public Class<? extends GuiConfigEntries.IConfigEntry> getConfigEntryClass() {
         return null;
     }
 
     @Override
-    public Class<? extends IArrayEntry> getArrayEntryClass() {
+    public Class<? extends GuiEditArrayEntries.IArrayEntry> getArrayEntryClass() {
         return null;
     }
 
@@ -382,8 +382,8 @@ public class ConfigValue<T> implements IConfigElement<T> {
     }
 
     @Override
-    public void set(T value) {
-        this.setValue(value);
+    public void set(Object value) {
+        this.setValue((T) value);
     }
 
     @SuppressWarnings("unchecked")
