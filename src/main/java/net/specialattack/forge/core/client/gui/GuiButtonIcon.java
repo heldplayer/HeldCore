@@ -82,7 +82,7 @@ public class GuiButtonIcon extends GuiButton {
             if (icon != null && this.iconMap != null) {
                 GL11.glColor3f(1.0F, 1.0F, 1.0F);
                 RenderHelper.bindTexture(this.iconMap);
-                this.func_175175_a(iconX + this.xPosition, iconY + this.yPosition, icon, 16, 16);
+                this.drawTexturedModalRect(iconX + this.xPosition, iconY + this.yPosition, icon, 16, 16);
             }
         }
     }

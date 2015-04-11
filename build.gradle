@@ -75,6 +75,7 @@ dependencies {
 minecraft {
     version = minecraft_version + "-" + forge_version
     runDir = "../../jar"
+    mappings = "snapshot_20141130"
 
     if (project.hasProperty("signature"))
         replace "@FINGERPRINT@", project.signature

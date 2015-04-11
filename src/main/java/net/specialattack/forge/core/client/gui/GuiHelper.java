@@ -51,13 +51,8 @@ public final class GuiHelper {
      *         The height of the tank to render
      */
     public static void drawFluid(Fluid fluid, int left, int top, int width, int height, float zLevel) {
-        if (fluid.getSpriteNumber() == 0) {
-            MC.getRenderEngine().bindTexture(TextureMap.locationBlocksTexture);
-        } else {
-            MC.getRenderEngine().bindTexture(TextureMap.field_174945_f);
-        }
-
-        TextureAtlasSprite icon = RenderHelper.getIconSafe(fluid.getIcon(), fluid.getSpriteNumber() == 0);
+        MC.getRenderEngine().bindTexture(TextureMap.locationBlocksTexture);
+        TextureAtlasSprite icon = RenderHelper.getIconSafe(fluid.getIcon());
         int color = fluid.getColor();
         float red = (color >> 16 & 0xFF) / 255.0F;
         float green = (color >> 8 & 0xFF) / 255.0F;
@@ -109,7 +104,7 @@ public final class GuiHelper {
         tes.addVertexWithUV(startX + width, startY + height, zLevel, endU, endV);
         tes.addVertexWithUV(startX + width, startY, zLevel, endU, startV);
         tes.addVertexWithUV(startX, startY, zLevel, startU, startV);
-        tes.draw();
+        tes.finishDrawing();
     }
 
     /**
@@ -141,7 +136,7 @@ public final class GuiHelper {
         tes.addVertexWithUV(startX + width, startY + height, zLevel, endU, endV);
         tes.addVertexWithUV(startX + width, startY, zLevel, endU, startV);
         tes.addVertexWithUV(startX, startY, zLevel, startU, startV);
-        tes.draw();
+        tes.finishDrawing();
     }
 
     /**
@@ -231,7 +226,7 @@ public final class GuiHelper {
                     currentLine = "\u00a77" + currentLine;
                 }
 
-                fontRenderer.func_175063_a(currentLine, xPos, yPos, -1);
+                fontRenderer.drawStringWithShadow(currentLine, xPos, yPos, -1);
 
                 if (i == 0) {
                     yPos += 2;
@@ -362,7 +357,7 @@ public final class GuiHelper {
         tes.addVertexWithUV(startX + (double) width, startY + (double) height, zLevel, endU, endV);
         tes.addVertexWithUV(startX + (double) width, startY, zLevel, endU, startV);
         tes.addVertexWithUV(startX, startY, zLevel, startU, startV);
-        tes.draw();
+        tes.finishDrawing();
     }
 
     public static void drawTexturedModalRect(int startX, int startY, int u, int v, int width, int height) {
@@ -372,7 +367,7 @@ public final class GuiHelper {
         tes.addVertexWithUV(startX + width, startY + height, 0.0D, (u + width) / 256.0F, (v + height) / 256.0F);
         tes.addVertexWithUV(startX + width, startY, 0.0D, (u + width) / 256.0F, v / 256.0F);
         tes.addVertexWithUV(startX, startY, 0.0D, u / 256.0F, v / 256.0F);
-        tes.draw();
+        tes.finishDrawing();
     }
 
     public static Timer getMinecraftTimer() {

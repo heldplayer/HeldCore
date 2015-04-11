@@ -20,13 +20,9 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public final class RenderHelper {
 
-    public static TextureAtlasSprite getIconSafe(TextureAtlasSprite icon, boolean block) {
+    public static TextureAtlasSprite getIconSafe(TextureAtlasSprite icon) {
         if (icon == null) {
-            if (block) {
-                icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
-            } else {
-                icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.field_174945_f)).getAtlasSprite("missingno");
-            }
+            icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
         }
 
         return icon;

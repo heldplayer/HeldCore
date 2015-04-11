@@ -924,7 +924,7 @@ public class GuiTextBox extends Gui {
                         if (remainingLines > height - 1) {
                             break label;
                         } else if (remainingLines >= 0) {
-                            this.font.func_175063_a(line, textOffsetX, textOffsetY + offsetY, textColor);
+                            this.font.drawStringWithShadow(line, textOffsetX, textOffsetY + offsetY, textColor);
                             offsetY += this.font.FONT_HEIGHT;
                         }
                         remainingLines++;
@@ -935,13 +935,13 @@ public class GuiTextBox extends Gui {
                     if (drawCursorAsLine) {
                         Gui.drawRect(cursorX, cursorY - 1, cursorX + 1, cursorY + 1 + this.font.FONT_HEIGHT, 0xFFD0D0D0);
                     } else {
-                        this.font.func_175063_a("_", cursorX, cursorY, textColor);
+                        this.font.drawStringWithShadow("_", cursorX, cursorY, textColor);
                     }
                 }
 
-                this.font.func_175063_a(this.chatLines.size() + " lines +" + this.lineScrollOffset, this.posX + 4, this.posY + this.height + 2, textColor);
-                this.font.func_175063_a(this.cursorPositionComponent + "," + this.cursorPosition + " " + this.selectionEndComponent + "," + this.selectionEnd, this.posX + 4, this.posY + this.height + 11, textColor);
-                this.font.func_175063_a(cursorX + "," + cursorY + " " + selectionEndX + "," + selectionEndY, this.posX + 4, this.posY + this.height + 20, textColor);
+                this.font.drawStringWithShadow(this.chatLines.size() + " lines +" + this.lineScrollOffset, this.posX + 4, this.posY + this.height + 2, textColor);
+                this.font.drawStringWithShadow(this.cursorPositionComponent + "," + this.cursorPosition + " " + this.selectionEndComponent + "," + this.selectionEnd, this.posX + 4, this.posY + this.height + 11, textColor);
+                this.font.drawStringWithShadow(cursorX + "," + cursorY + " " + selectionEndX + "," + selectionEndY, this.posX + 4, this.posY + this.height + 20, textColor);
 
                 if (hasSelection) {
                     if (selectionEndY < cursorY) {
@@ -1020,7 +1020,7 @@ public class GuiTextBox extends Gui {
         tessellator.addVertex(width, height, 0.0D);
         tessellator.addVertex(width, startY, 0.0D);
         tessellator.addVertex(startX, startY, 0.0D);
-        tessellator.draw();
+        tessellator.finishDrawing();
         GL11.glDisable(GL11.GL_COLOR_LOGIC_OP);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }

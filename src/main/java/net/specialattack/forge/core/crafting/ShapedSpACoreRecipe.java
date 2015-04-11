@@ -130,7 +130,7 @@ public class ShapedSpACoreRecipe implements ISpACoreRecipe {
     }
 
     @Override
-    public ItemStack[] func_179532_b(InventoryCrafting crafting) {
+    public ItemStack[] getRemainingItems(InventoryCrafting crafting) {
         ItemStack[] result = new ItemStack[crafting.getSizeInventory()];
 
         for (int i = 0; i < result.length; ++i) {
