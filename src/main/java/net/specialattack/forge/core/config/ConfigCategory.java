@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.config.ConfigGuiType;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
@@ -20,17 +21,15 @@ public class ConfigCategory<T> implements IConfigElement {
     protected ConfigCategory<?> parent;
     protected ArrayList<ConfigValue<?>> keys;
     protected ArrayList<ConfigCategory<?>> children;
-    protected String comment;
     protected Side side;
     protected boolean requiresWorldRestart;
     protected boolean requiresMcRestart;
     protected boolean showInGui = true;
 
-    public ConfigCategory(String name, String unlocalizedName, Side side, String comment) {
+    public ConfigCategory(String name, String unlocalizedName, Side side) {
         this.name = name;
         this.unlocalizedName = unlocalizedName;
         this.side = side;
-        this.comment = comment;
         this.keys = new ArrayList<ConfigValue<?>>();
         this.children = new ArrayList<ConfigCategory<?>>();
     }
@@ -138,7 +137,7 @@ public class ConfigCategory<T> implements IConfigElement {
 
     @Override
     public String getComment() {
-        return this.comment;
+        return I18n.format(this.unlocalizedName + ".comment");
     }
 
     @SuppressWarnings("rawtypes")

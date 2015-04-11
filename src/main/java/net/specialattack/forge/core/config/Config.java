@@ -22,7 +22,7 @@ public class Config<T> extends ConfigCategory<T> {
      *         {@link net.minecraftforge.fml.common.event.FMLPreInitializationEvent#getSuggestedConfigurationFile()}
      */
     public Config(File file) {
-        super("", "root", null, "");
+        super("", "root", null);
 
         this.config = new Configuration(file);
         super.config = this;

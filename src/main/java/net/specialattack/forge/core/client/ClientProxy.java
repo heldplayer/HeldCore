@@ -73,7 +73,7 @@ public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public void onTextureStitchedPost(TextureStitchEvent.Pre event) {
         if (event.map == this.textures) {
-            ClientProxy.iconReportBug = event.map.getAtlasSprite("spacore:report-bug");
+            ClientProxy.iconReportBug = event.map.getAtlasSprite(Assets.DOMAIN + "report-bug");
         }
     }
 
