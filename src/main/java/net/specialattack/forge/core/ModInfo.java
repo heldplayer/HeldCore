@@ -21,6 +21,9 @@ public class ModInfo {
 
         try {
             InputStream stream = Objects.class.getClassLoader().getResourceAsStream(this.modId.toLowerCase() + ".version");
+            if (stream == null) {
+                throw new NullPointerException(String.format("Could not load version file '%s'", this.modId.toLowerCase() + ".version"));
+            }
             prop.load(stream);
             stream.close();
             version = prop.getProperty("version");

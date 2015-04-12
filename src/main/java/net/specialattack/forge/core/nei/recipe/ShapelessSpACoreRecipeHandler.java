@@ -11,6 +11,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -25,7 +26,7 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
 
     @Override
     public String getRecipeName() {
-        return NEIClientUtils.translate("recipe.shapeless.spacore");
+        return I18n.format("spacore:recipe.shapeless.modded");
     }
 
     @Override
@@ -150,7 +151,7 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
 
     public class CachedShapelessRecipe extends CachedRecipe {
 
-        public ArrayList<PositionedStack> ingredients;
+        public List<PositionedStack> ingredients;
         public List<ItemStack> input;
         public PositionedStack result;
         public ShapelessSpACoreRecipe recipe;
@@ -176,9 +177,9 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
             this.setResult(this.recipe.handler.getOutput(this.recipe, this.input));
         }
 
-        // Strangeness @Override
-        public ArrayList<PositionedStack> getCycledIngredients(int cycle, ArrayList<PositionedStack> ingredients) {
-            ArrayList<PositionedStack> result = (ArrayList<PositionedStack>) super.getCycledIngredients(cycle, ingredients);
+        @Override
+        public List<PositionedStack> getCycledIngredients(int cycle, List<PositionedStack> ingredients) {
+            List<PositionedStack> result = super.getCycledIngredients(cycle, ingredients);
 
             this.input.clear();
 
@@ -204,12 +205,12 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
         }
 
         @Override
-        public ArrayList<PositionedStack> getIngredients() {
+        public List<PositionedStack> getIngredients() {
             return this.ingredients;
         }
 
         public void setIngredients(ShapelessSpACoreRecipe recipe) {
-            ArrayList<List<ItemStack>> items = recipe.ingredients;
+            List<List<ItemStack>> items = recipe.ingredients;
 
             this.setIngredients(items);
         }

@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiCrafting;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -28,6 +29,11 @@ import net.specialattack.forge.core.crafting.ShapedSpACoreRecipe;
 
 @SuppressWarnings("unchecked")
 public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
+
+    @Override
+    public String getRecipeName() {
+        return I18n.format("spacore:recipe.shaped.modded");
+    }
 
     @Override
     public void loadTransferRects() {
@@ -205,14 +211,9 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
         return true;
     }
 
-    @Override
-    public String getRecipeName() {
-        return NEIClientUtils.translate("recipe.shaped.spacore");
-    }
-
     public class CachedShapedRecipe extends CachedRecipe {
 
-        public ArrayList<PositionedStack> ingredients;
+        public List<PositionedStack> ingredients;
         public List<ItemStack> input;
         public PositionedStack result;
         public ShapedSpACoreRecipe recipe;
@@ -243,9 +244,9 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
             this.setResult(this.recipe.handler.getOutput(this.recipe, this.input));
         }
 
-        // Strangeness @Override
-        public ArrayList<PositionedStack> getCycledIngredients(int cycle, ArrayList<PositionedStack> ingredients) {
-            ArrayList<PositionedStack> result = (ArrayList<PositionedStack>) super.getCycledIngredients(cycle, ingredients);
+        @Override
+        public List<PositionedStack> getCycledIngredients(int cycle, List<PositionedStack> ingredients) {
+            List<PositionedStack> result = super.getCycledIngredients(cycle, ingredients);
 
             this.input.clear();
 
@@ -271,7 +272,7 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
         }
 
         @Override
-        public ArrayList<PositionedStack> getIngredients() {
+        public List<PositionedStack> getIngredients() {
             return this.ingredients;
         }
 

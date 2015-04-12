@@ -30,19 +30,9 @@ public abstract class SpACoreMod {
     public abstract SpACoreProxy getProxy();
 
     public void init(FMLInitializationEvent event) {
-        if (this.shouldReport()) {
-            ModInfo info = this.getModInfo();
-
-            SpACore.initializeReporter(info.modId, info.modVersion);
-        }
-
         this.getProxy().init(event);
 
         FMLCommonHandler.instance().bus().register(this);
-    }
-
-    public boolean shouldReport() {
-        return true;
     }
 
     public void postInit(FMLPostInitializationEvent event) {
