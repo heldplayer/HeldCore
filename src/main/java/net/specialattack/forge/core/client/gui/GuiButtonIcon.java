@@ -3,7 +3,7 @@ package net.specialattack.forge.core.client.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -48,12 +48,11 @@ public class GuiButtonIcon extends GuiButton {
         if (this.visible) {
             FontRenderer font = mc.fontRendererObj;
             mc.getTextureManager().bindTexture(GuiButton.buttonTextures);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
             int offsetV = this.getHoverState(this.hovered);
-            GL11.glEnable(GL11.GL_BLEND);
-            OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GlStateManager.enableBlend();
+            GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
             this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + offsetV * 20, this.width / 2, this.height);
             this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + offsetV * 20, this.width / 2, this.height);
             this.mouseDragged(mc, mouseX, mouseY);
@@ -80,7 +79,7 @@ public class GuiButtonIcon extends GuiButton {
             }
 
             if (icon != null && this.iconMap != null) {
-                GL11.glColor3f(1.0F, 1.0F, 1.0F);
+                GlStateManager.color(1.0F, 1.0F, 1.0F);
                 RenderHelper.bindTexture(this.iconMap);
                 this.drawTexturedModalRect(iconX + this.xPosition, iconY + this.yPosition, icon, 16, 16);
             }

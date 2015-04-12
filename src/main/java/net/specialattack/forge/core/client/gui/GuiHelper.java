@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -58,7 +59,7 @@ public final class GuiHelper {
         float green = (color >> 8 & 0xFF) / 255.0F;
         float blue = (color & 0xFF) / 255.0F;
 
-        GL11.glColor4f(red, green, blue, 1.0F);
+        GlStateManager.color(red, green, blue, 1.0F);
 
         for (int x = 0; x < width; x += 16) {
             for (int y = 0; y < height; y += 16) {
@@ -176,10 +177,10 @@ public final class GuiHelper {
      *         The height of the GUI
      */
     public static void drawTooltip(List<String> strings, FontRenderer fontRenderer, int mouseX, int mouseY, int guiTop, int height) {
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        GlStateManager.disableRescaleNormal();
         net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepth();
 
         if (!strings.isEmpty()) {
             int startY = 0;
@@ -264,12 +265,12 @@ public final class GuiHelper {
         float endRed = (float) (endColor >> 16 & 255) / 255.0F;
         float endGreen = (float) (endColor >> 8 & 255) / 255.0F;
         float endBlue = (float) (endColor & 255) / 255.0F;
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
-        GL11.glColor4f(startRed, startGreen, startBlue, startAlpha);
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        GlStateManager.color(startRed, startGreen, startBlue, startAlpha);
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glVertex3f(endX, startY, zLevel);
         GL11.glVertex3f(startX, startY, zLevel);
@@ -277,10 +278,10 @@ public final class GuiHelper {
         GL11.glVertex3f(startX, endY, zLevel);
         GL11.glVertex3f(endX, endY, zLevel);
         GL11.glEnd();
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
     }
 
     /**
@@ -310,12 +311,12 @@ public final class GuiHelper {
         float endRed = (float) (endColor >> 16 & 255) / 255.0F;
         float endGreen = (float) (endColor >> 8 & 255) / 255.0F;
         float endBlue = (float) (endColor & 255) / 255.0F;
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
-        GL11.glColor4f(startRed, startGreen, startBlue, startAlpha);
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        GlStateManager.color(startRed, startGreen, startBlue, startAlpha);
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glVertex3f(endX, startY, zLevel);
         GL11.glVertex3f(startX, startY, zLevel);
@@ -323,10 +324,10 @@ public final class GuiHelper {
         GL11.glVertex3f(startX, endY, zLevel);
         GL11.glVertex3f(endX, endY, zLevel);
         GL11.glEnd();
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
     }
 
     public static ArrayList<String> getFluidString(IFluidTank tank) {

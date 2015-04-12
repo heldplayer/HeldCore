@@ -4,6 +4,7 @@ import java.util.List;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.ChatAllowedCharacters;
@@ -1011,18 +1012,18 @@ public class GuiTextBox extends Gui {
         }
 
         WorldRenderer tessellator = Tessellator.getInstance().getWorldRenderer();
-        GL11.glColor4f(0.0F, 0.0F, 255.0F, 255.0F);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_COLOR_LOGIC_OP);
-        GL11.glLogicOp(GL11.GL_OR_REVERSE);
+        GlStateManager.color(0.0F, 0.0F, 1.0F, 1.0F);
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableColorLogic();
+        GlStateManager.colorLogicOp(GL11.GL_OR_REVERSE);
         tessellator.startDrawingQuads();
         tessellator.addVertex(startX, height, 0.0D);
         tessellator.addVertex(width, height, 0.0D);
         tessellator.addVertex(width, startY, 0.0D);
         tessellator.addVertex(startX, startY, 0.0D);
         tessellator.finishDrawing();
-        GL11.glDisable(GL11.GL_COLOR_LOGIC_OP);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GlStateManager.disableColorLogic();
+        GlStateManager.enableTexture2D();
     }
 
     public void setVisible(boolean visible) {
