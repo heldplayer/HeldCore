@@ -12,6 +12,9 @@ public class SpACoreDebugTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] original) {
+        if (original == null) {
+            return null;
+        }
         if (!SpACorePlugin.debug || !transformedName.startsWith("net.minecraft.client.")) {
             return original;
         }
