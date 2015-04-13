@@ -17,6 +17,9 @@ public class SpACoreModTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] original) {
+        if (original == null) {
+            return null;
+        }
         ClassReader reader = new ClassReader(original);
 
         if (reader.getSuperName().equals(type)) {

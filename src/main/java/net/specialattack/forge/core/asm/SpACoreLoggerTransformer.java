@@ -7,6 +7,9 @@ public class SpACoreLoggerTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] original) {
+        if (original == null) {
+            return null;
+        }
         if (transformedName.equals("net.minecraft.client.renderer.texture.TextureMap")) {
             ClassReader reader = new ClassReader(original);
             ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
