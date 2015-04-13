@@ -218,8 +218,8 @@ public class GuiSGTest extends SGScreenRoot {
             }
             {
                 final SGScrollPane side = new SGScrollPane();
-                side.setCanScroll(true, true);
-                side.setBorder(new SolidBorder(StyleDefs.COLOR_MENU_BORDER, 3)); // FIXME
+                side.setCanScroll(false, true);
+                side.setBorder(new SolidBorder(StyleDefs.COLOR_MENU_BORDER, 3));
                 side.setBackground(new TextureBackground(new ResourceLocation("textures/blocks/glass_gray.png"), 16.0F));
                 side.setPreferredTotalSize(64, 256);
                 side.setLayoutManager(new FlowSGLayoutManager(FlowDirection.VERTICAL, FlowLayout.CENTER));
@@ -392,8 +392,8 @@ public class GuiSGTest extends SGScreenRoot {
                         super.setPreferredInnerSize(width, height);
                     }
                 };
-                side.setCanScroll(true, true);
-                side.setBorder(new SolidBorder(StyleDefs.COLOR_MENU_BORDER, 3)); // FIXME
+                side.setCanScroll(true, false);
+                side.setBorder(new SolidBorder(StyleDefs.COLOR_MENU_BORDER, 3));
                 side.setBackground(new TextureBackground(new ResourceLocation("textures/blocks/glass_gray.png"), 16.0F));
                 side.setPreferredTotalSize(256, 64);
                 side.setShouldForceSize(true);
@@ -425,7 +425,7 @@ public class GuiSGTest extends SGScreenRoot {
         super.updateScreen();
         if (this.prevSize == -1) {
             this.prevSize = this.mc.gameSettings.guiScale;
-            this.mc.gameSettings.guiScale = 0;
+            this.mc.gameSettings.guiScale = 3;
             ScaledResolution resolution = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
             this.setWorldAndResolution(this.mc, resolution.getScaledWidth(), resolution.getScaledHeight());
         }

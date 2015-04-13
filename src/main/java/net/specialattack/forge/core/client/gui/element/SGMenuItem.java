@@ -22,7 +22,7 @@ public class SGMenuItem extends SGInteractable {
         this.innerLabel.setLayout(FlowLayout.MIN, FlowLayout.CENTER);
         //this.innerLabel.setBorder(new InvisibleBorder(1));
         //this.setBackgrounds(StyleDefs.BACKGROUND_BUTTON_NORMAL, StyleDefs.BACKGROUND_BUTTON_HOVER, StyleDefs.BACKGROUND_BUTTON_DISABLED);
-        //this.setBackgrounds(StyleDefs.BACKGROUND_MENU_ITEM_NORMAL, StyleDefs.BACKGROUND_MENU_ITEM_HOVER, StyleDefs.BACKGROUND_MENU_ITEM_DISABLED);
+        this.setBackgrounds(StyleDefs.BACKGROUND_MENU_ITEM_NORMAL, StyleDefs.BACKGROUND_MENU_ITEM_HOVER, StyleDefs.BACKGROUND_MENU_ITEM_DISABLED);
         this.setColors(StyleDefs.COLOR_MENU_ITEM_NORMAL, StyleDefs.COLOR_MENU_ITEM_HOVER, StyleDefs.COLOR_MENU_ITEM_DISABLED);
         this.setHasShadow(false);
     }

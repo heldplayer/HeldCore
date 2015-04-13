@@ -32,7 +32,7 @@ import net.specialattack.forge.core.Assets;
 import net.specialattack.forge.core.CommonProxy;
 import net.specialattack.forge.core.SpACore;
 import net.specialattack.forge.core.client.gui.GuiButtonIcon;
-import net.specialattack.forge.core.client.gui.GuiScreenReportBug;
+import net.specialattack.forge.core.client.gui.GuiSGTest;
 import net.specialattack.forge.core.client.resources.data.*;
 import net.specialattack.forge.core.client.shader.GLUtil;
 import net.specialattack.forge.core.client.shader.ShaderManager;
@@ -181,7 +181,7 @@ public class ClientProxy extends CommonProxy {
     public void onActionPerformedPost(ActionPerformedEvent.Pre event) {
         if (SpACore.showReportBugs.getValue()) {
             if (event.button != null && event.button.id == -123 && event.gui != null && event.gui instanceof GuiMainMenu) {
-                MC.getMinecraft().displayGuiScreen(new GuiScreenReportBug());
+                MC.getMinecraft().displayGuiScreen(new GuiSGTest());
                 event.setCanceled(true);
                 event.button.func_146113_a(MC.getSoundHandler());
             }

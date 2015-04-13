@@ -77,8 +77,8 @@ public class SGScrollPane extends SGComponent {
             GL11.glPushMatrix();
             this.drawBackground(mouseX, mouseY, partialTicks);
             this.drawForeground(mouseX, mouseY, partialTicks);
-            GL11.glTranslatef(this.getLeft(SizeContext.INNER) - (int) this.scrollLeft, this.getTop(SizeContext.INNER) - (int) this.scrollTop, 0.0F);
-            SGUtils.drawErrorBox(this.innerPanel);
+            //GL11.glTranslatef(this.getLeft(SizeContext.INNER) - (int) this.scrollLeft, this.getTop(SizeContext.INNER) - (int) this.scrollTop, 0.0F);
+            //SGUtils.drawErrorBox(this.innerPanel);
             GL11.glPopMatrix();
             stack--;
             if (SGComponent.DEBUG) {
@@ -98,7 +98,7 @@ public class SGScrollPane extends SGComponent {
                     GL11.glDepthMask(true);
                 }
             }
-            SGUtils.clipComponent(this.innerPanel); // FIXME
+            SGUtils.clipComponent(this.innerPanel);
             int left = this.getLeft(SizeContext.INNER) - (int) this.scrollLeft;
             int top = this.getTop(SizeContext.INNER) - (int) this.scrollTop;
             GL11.glTranslatef(left, top, this.getZLevel());
@@ -372,33 +372,55 @@ public class SGScrollPane extends SGComponent {
 
     @Override
     public void setDimensions(int left, int top, int width, int height) {
-        int borders = (this.getBorderWidth() + this.getOutlineWidth()) * 2;
-        int innerWidth = width - borders - (this.vertical ? this.scrollbarWidth : 0);
-        int innerHeight = height - borders - (this.horizontal ? this.scrollbarWidth : 0);
-        this.innerPanel.setPreferredInnerSize(innerWidth, innerHeight);
+        //int borders = (this.getBorderWidth() + this.getOutlineWidth()) * 2;
+        //int innerWidth = width - borders - (this.vertical ? this.scrollbarWidth : 0);
+        //int innerHeight = height - borders - (this.horizontal ? this.scrollbarWidth : 0);
+        //this.innerPanel.setPreferredInnerSize(innerWidth, innerHeight);
         //this.innerPanel.setPreferredInnerSize(innerWidth - (this.vertical ? this.scrollbarWidth : 0), innerHeight - (this.horizontal ? this.scrollbarWidth : 0));
         super.setDimensions(left, top, width, height);
+        //this.innerPanel.updateLayout();
         //this.innerPanel.setPreferredInnerSize(this.getWidth(SizeContext.INNER), this.getHeight(SizeContext.INNER));
         //this.updateLayout();
     }
 
     @Override
-    public void updateLayout() { // FIXME
+    public void updateLayout() {
         super.updateLayout();
-        int borders = (this.getBorderWidth() + this.getOutlineWidth());
-        int horiz = borders - (this.vertical ? this.scrollbarWidth : 0);
-        int vert = borders - (this.horizontal ? this.scrollbarWidth : 0);
-        this.innerPanel.setDimensions(this.innerPanel.predictSize().expanded(horiz, vert));
+        int borders = (this.getBorderWidth() + this.getOutlineWidth()) * 2;
+        int horiz = borders + (this.vertical ? this.scrollbarWidth : 0);
+        int vert = borders + (this.horizontal ? this.scrollbarWidth : 0);
+        int width, height;
+        Region predicted = this.innerPanel.predictSize();
         if (this.vertical) {
-            this.scrollTop = MathHelper.clamp_float(this.scrollTop, 0, Math.max(0, this.innerPanel.getHeight(SizeContext.OUTLINE) - this.getHeight(SizeContext.INNER)));
-        } else if (this.horizontal) {
-            this.scrollLeft = MathHelper.clamp_float(this.scrollLeft, 0, Math.max(0, this.innerPanel.getWidth(SizeContext.OUTLINE) - this.getWidth(SizeContext.INNER)));
+            height = Math.max(this.getHeight(SizeContext.INNER), predicted.height);
+        } else {
+            height = this.getHeight(SizeContext.INNER);
         }
+        if (this.horizontal) {
+            width = Math.max(this.getWidth(SizeContext.INNER), predicted.width);
+        } else {
+            width = this.getWidth(SizeContext.INNER);
+        }
+        this.innerPanel.setDimensions(0, 0, width, height);
+        //this.innerPanel.setDimensions(this.innerPanel.predictSize().expanded(-horiz, -vert));
+        //if (this.vertical) {
+        //this.scrollTop = MathHelper.clamp_float(this.scrollTop, 0, Math.max(0, this.innerPanel.getHeight(SizeContext.OUTLINE) - this.getHeight(SizeContext.INNER)));
+        //} else if (this.horizontal) {
+        //this.scrollLeft = MathHelper.clamp_float(this.scrollLeft, 0, Math.max(0, this.innerPanel.getWidth(SizeContext.OUTLINE) - this.getWidth(SizeContext.INNER)));
+        //}
     }
 
     @Override
     public Region predictSize() {
-        return super.predictSize();//.expanded(this.vertical ? this.scrollbarWidth : 0, this.horizontal ? this.scrollbarWidth : 0);
+        int borders = (this.getBorderWidth() + this.getOutlineWidth()) * 2;
+        Region predicted = super.predictSize().expanded(borders + (this.vertical ? this.scrollbarWidth : 0), borders + (this.horizontal ? this.scrollbarWidth : 0));
+        int preferredWidth = this.getPreferredWidth();
+        int preferredHeight = this.getPreferredHeight();
+        int width = preferredWidth <= 0 ? predicted.width : Math.min(preferredWidth, predicted.width);
+        int height = preferredHeight <= 0 ? predicted.height : Math.min(preferredHeight, predicted.height);
+
+        return new Region(0, 0, width, height);
+        //return super.predictSize();//.expanded(this.vertical ? this.scrollbarWidth : 0, this.horizontal ? this.scrollbarWidth : 0);
     }
 
     private class Inner extends SGPanel {
@@ -427,8 +449,8 @@ public class SGScrollPane extends SGComponent {
 
         @Override
         public Region predictSize() {
-            int borders = (SGScrollPane.this.getBorderWidth() + SGScrollPane.this.getOutlineWidth());
-            return super.predictSize().expanded(borders * 2 - 1, borders * 2 - 1);
+            //int borders = (SGScrollPane.this.getBorderWidth() + SGScrollPane.this.getOutlineWidth());
+            return super.predictSize();//.expanded(borders * 2 - 1, borders * 2 - 1);
         }
 
         @Override
