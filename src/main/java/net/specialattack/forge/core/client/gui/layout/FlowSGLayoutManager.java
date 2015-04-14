@@ -45,8 +45,8 @@ public class FlowSGLayoutManager extends SGLayoutManager {
                 height = current.getPreferredHeight();
                 width = current.getPreferredWidth();
             } else {
-                height = MathHelper.max(current.getPreferredHeight(), predicted.height);
-                width = MathHelper.max(current.getPreferredWidth(), predicted.width);
+                height = MathHelper.max(current.getPreferredHeight(), predicted.getHeight());
+                width = MathHelper.max(current.getPreferredWidth(), predicted.getWidth());
             }
             if (height > limitHeight)
                 height = limitHeight;
@@ -146,8 +146,8 @@ public class FlowSGLayoutManager extends SGLayoutManager {
                 currentHeight = current.getPreferredHeight();
                 currentWidth = current.getPreferredWidth();
             } else {
-                currentHeight = MathHelper.max(current.getPreferredHeight(), predicted.height);
-                currentWidth = MathHelper.max(current.getPreferredWidth(), predicted.width);
+                currentHeight = MathHelper.max(current.getPreferredHeight(), predicted.getHeight());
+                currentWidth = MathHelper.max(current.getPreferredWidth(), predicted.getWidth());
             }
 
             if (this.direction == FlowDirection.HORIZONTAL) {

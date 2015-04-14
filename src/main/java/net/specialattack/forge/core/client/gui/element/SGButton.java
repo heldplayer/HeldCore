@@ -5,19 +5,23 @@ import java.util.List;
 import net.specialattack.forge.core.client.gui.Color;
 import net.specialattack.forge.core.client.gui.GuiHelper;
 import net.specialattack.forge.core.client.gui.layout.BorderedSGLayoutManager;
-import net.specialattack.forge.core.client.gui.layout.Location;
 import net.specialattack.forge.core.client.gui.layout.Region;
 import net.specialattack.forge.core.client.gui.layout.SGLayoutManager;
 import net.specialattack.forge.core.client.gui.style.StyleDefs;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class SGButton extends SGInteractable {
 
-    private SGLabel innerLabel;
+    private SGLabel innerLabel = new SGLabel() {
+        @Override
+        public Color getColor() {
+            return SGButton.this.getTextColor();
+        }
+    };
 
     public SGButton(String text) {
         super.setLayoutManager(new BorderedSGLayoutManager());
-        super.addChild(this.innerLabel = new SGLabel(text), BorderedSGLayoutManager.Border.CENTER);
+        super.addChild(this.innerLabel, BorderedSGLayoutManager.Border.CENTER);
+        this.innerLabel.setText(text);
         this.setBackgrounds(StyleDefs.BACKGROUND_BUTTON_NORMAL, StyleDefs.BACKGROUND_BUTTON_HOVER, StyleDefs.BACKGROUND_BUTTON_DISABLED);
         this.setText(text);
     }
@@ -41,7 +45,7 @@ public class SGButton extends SGInteractable {
     @Override
     public Region predictSize() {
         Region inner = super.predictSize();
-        return new Region(0, 0, inner.width + 4, inner.height + 4);
+        return new Region(0, 0, inner.getWidth() + 4, inner.getHeight() + 4);
     }
 
     @Override

@@ -331,6 +331,7 @@ public class GuiSGTest extends SGScreenRoot {
             }
             {
                 SGComboBox box = new SGComboBox("Test", "Tost", "Tast");
+                box.setPreferredTotalSize(100, 20);
                 panel.addChild(box, false);
             }
         }

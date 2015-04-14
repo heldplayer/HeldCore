@@ -50,10 +50,10 @@ public final class SGUtils {
         float scaleW = (float) mc.displayWidth / (float) resolution.getScaledWidth_double();
         float scaleH = (float) mc.displayHeight / (float) resolution.getScaledHeight_double();
 
-        int x = (int) (region.left * scaleW);
-        int y = (int) (region.top * scaleH);
-        int width = (int) (region.width * scaleW);
-        int height = (int) (region.height * scaleH);
+        int x = (int) (region.getLeft() * scaleW);
+        int y = (int) (region.getTop() * scaleH);
+        int width = (int) (region.getWidth() * scaleW);
+        int height = (int) (region.getHeight() * scaleH);
 
         if (width < 0)
             width = 0;
@@ -91,28 +91,28 @@ public final class SGUtils {
     public static Region findPopoutRegion(boolean horizontal, Region around, Region size, int rootWidth, int rootHeight) {
         if (horizontal) {
             int left, width;
-            if (around.left + around.width + size.left + size.width < rootWidth) { // Check if there is enough room to display on the right
-                left = around.left + around.width + size.left;
-                width = size.width;
-            } else if (around.left - size.width - size.left >= 0) { // Check if there is enough room to display on the left
-                left = around.left - around.width - size.left - size.width;
-                width = size.width;
+            if (around.getLeft() + around.getWidth() + size.getLeft() + size.getWidth() < rootWidth) { // Check if there is enough room to display on the right
+                left = around.getLeft() + around.getWidth() + size.getLeft();
+                width = size.getWidth();
+            } else if (around.getLeft() - size.getWidth() - size.getLeft() >= 0) { // Check if there is enough room to display on the left
+                left = around.getLeft() - around.getWidth() - size.getLeft() - size.getWidth();
+                width = size.getWidth();
             } else { // Well, let's just put it edged against the right end of the screen
-                width = Math.min(rootWidth, size.width);
+                width = Math.min(rootWidth, size.getWidth());
                 left = rootWidth - width;
             }
             int top, height;
-            if (around.top + size.top + size.height < rootHeight) { // Check to see if there is enough room to go down
-                top = around.top;
-                height = size.height;
-            } else if (around.top + around.height - size.top - size.height >= 0) { // Check to see if there is enough room to go up
-                top = around.top + around.height - size.top - size.height;
-                height = size.height;
+            if (around.getTop() + size.getTop() + size.getHeight() < rootHeight) { // Check to see if there is enough room to go down
+                top = around.getTop();
+                height = size.getHeight();
+            } else if (around.getTop() + around.getHeight() - size.getTop() - size.getHeight() >= 0) { // Check to see if there is enough room to go up
+                top = around.getTop() + around.getHeight() - size.getTop() - size.getHeight();
+                height = size.getHeight();
             } else { // Well, let's just make it use the biggest space
-                int down = rootHeight - around.top;
-                int up = around.top + around.height;
+                int down = rootHeight - around.getTop();
+                int up = around.getTop() + around.getHeight();
                 if (down > up) { // We go down
-                    top = around.top;
+                    top = around.getTop();
                     height = down;
                 } else { // We go up
                     height = up;
@@ -122,28 +122,28 @@ public final class SGUtils {
             return new Region(left, top, width, height);
         } else {
             int top, height;
-            if (around.top + around.height + size.top + size.height < rootHeight) { // Check if there is enough room to display on the right
-                top = around.top + around.height + size.top;
-                height = size.height;
-            } else if (around.top - size.height - size.top >= 0) { // Check if there is enough room to display on the top
-                top = around.top - around.height - size.top - size.height;
-                height = size.height;
+            if (around.getTop() + around.getHeight() + size.getTop() + size.getHeight() < rootHeight) { // Check if there is enough room to display on the right
+                top = around.getTop() + around.getHeight() + size.getTop();
+                height = size.getHeight();
+            } else if (around.getTop() - size.getHeight() - size.getTop() >= 0) { // Check if there is enough room to display on the top
+                top = around.getTop() - around.getHeight() - size.getTop() - size.getHeight();
+                height = size.getHeight();
             } else { // Well, let's just put it edged against the right end of the screen
-                height = Math.min(rootHeight - around.height, size.height);
+                height = Math.min(rootHeight - around.getHeight(), size.getHeight());
                 top = rootHeight - height;
             }
             int left, width;
-            if (around.left + size.left + size.width < rootWidth) { // Check to see if there is enough room to go down
-                left = around.left;
-                width = size.width;
-            } else if (around.left + around.width - size.left - size.width >= 0) { // Check to see if there is enough room to go up
-                left = around.left + around.width - size.left - size.width;
-                width = size.width;
+            if (around.getLeft() + size.getLeft() + size.getWidth() < rootWidth) { // Check to see if there is enough room to go down
+                left = around.getLeft();
+                width = size.getWidth();
+            } else if (around.getLeft() + around.getWidth() - size.getLeft() - size.getWidth() >= 0) { // Check to see if there is enough room to go up
+                left = around.getLeft() + around.getWidth() - size.getLeft() - size.getWidth();
+                width = size.getWidth();
             } else { // Well, let's just make it use the biggest space
-                int down = rootWidth - around.left;
-                int up = around.left + around.width;
+                int down = rootWidth - around.getLeft();
+                int up = around.getLeft() + around.getWidth();
                 if (down > up) { // We go down
-                    left = around.left;
+                    left = around.getLeft();
                     width = down;
                 } else { // We go up
                     width = up;

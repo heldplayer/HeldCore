@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.specialattack.forge.core.client.gui.GuiHelper;
 import net.specialattack.forge.core.client.gui.GuiStateManager;
 import net.specialattack.forge.core.client.gui.SGUtils;
 import net.specialattack.forge.core.client.gui.layout.BorderedSGLayoutManager;
@@ -127,7 +126,7 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
                 SGUtils.endAllClips();
             }
         }
-        GuiHelper.drawColoredRect(mouseX, mouseY, mouseX + 1, mouseY + 1, 0xFFFFFFFF, 100);
+        //GuiHelper.drawColoredRect(mouseX, mouseY, mouseX + 1, mouseY + 1, 0xFFFFFFFF, 100);
         if (this.hover != null) {
             //this.fontRendererObj.drawStringWithShadow(this.hover.getClass().toString(), 0, 10, 0xFFFFFFFF);
         }
@@ -202,34 +201,40 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
     @Override
     protected void mouseMovedOrUp(int mouseX, int mouseY, int mouseButton) { // Mouse up
         // super.mouseMovedOrUp(mouseX, mouseY, mouseButton);
-        if (this.reversedPopouts != null) {
-            for (SGComponent popout : this.reversedPopouts) {
-                Pair<SGComponent, Location> clicked = popout.cascadeMouse(mouseX, mouseY);
-                if (clicked != null) {
-                    SGComponent component = clicked.getLeft();
-                    if (component == this.clicked) {
-                        Location loc = clicked.getRight();
-                        component.onMouseUp(loc.left, loc.top, mouseButton);
-                        component.doClick(loc.left, loc.top, mouseButton);
-                        this.outerRoot.elementClicked(component, mouseButton);
-                        return;
+        if (this.clicked != null) {
+            int newX = mouseX - this.outDragStartLoc.left + this.inDragStartLoc.left;
+            int newY = mouseY - this.outDragStartLoc.top + this.inDragStartLoc.top;
+            this.clicked.onMouseUp(newX, newY, mouseButton);
+
+            if (this.reversedPopouts != null) {
+                for (SGComponent popout : this.reversedPopouts) {
+                    Pair<SGComponent, Location> clicked = popout.cascadeMouse(mouseX, mouseY);
+                    if (clicked != null) {
+                        SGComponent component = clicked.getLeft();
+                        if (component == this.clicked) {
+                            Location loc = clicked.getRight();
+                            component.onMouseUp(loc.left, loc.top, mouseButton);
+                            component.doClick(loc.left, loc.top, mouseButton);
+                            this.outerRoot.elementClicked(component, mouseButton);
+                            return;
+                        }
                     }
                 }
             }
-        }
 
-        Pair<SGComponent, Location> clicked = this.outerRoot.cascadeMouse(mouseX, mouseY);
+            Pair<SGComponent, Location> clicked = this.outerRoot.cascadeMouse(mouseX, mouseY);
 
-        if (clicked != null) {
-            SGComponent component = clicked.getLeft();
-            if (component == this.clicked) {
-                Location loc = clicked.getRight();
-                component.onMouseUp(loc.left, loc.top, mouseButton);
-                component.doClick(loc.left, loc.top, mouseButton);
-                this.outerRoot.elementClicked(component, mouseButton);
+            if (clicked != null) {
+                SGComponent component = clicked.getLeft();
+                if (component == this.clicked) {
+                    Location loc = clicked.getRight();
+                    component.onMouseUp(loc.left, loc.top, mouseButton);
+                    component.doClick(loc.left, loc.top, mouseButton);
+                    this.outerRoot.elementClicked(component, mouseButton);
+                }
             }
+            this.clicked = null;
         }
-        this.clicked = null;
     }
 
     @Override

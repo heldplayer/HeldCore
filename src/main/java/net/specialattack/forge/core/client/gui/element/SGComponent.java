@@ -1,5 +1,6 @@
 package net.specialattack.forge.core.client.gui.element;
 
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +30,7 @@ public class SGComponent implements IComponentHolder {
     private float zLevel;
     private int limitWidth = Integer.MAX_VALUE, limitHeight = Integer.MAX_VALUE;
     private IComponentHolder parent;
-    private List<SGComponent> children;
+    private List<SGComponent> children, reverseChildren;
     private List<SGComponent> accessChildren;
     private SGLayoutManager layoutManager;
     private IBackground background;
@@ -138,8 +139,16 @@ public class SGComponent implements IComponentHolder {
         if (region == null) {
             this.setDimensions(0, 0, 0, 0);
         } else {
-            this.setDimensions(region.left, region.top, region.width, region.height);
+            this.setDimensions(region.getLeft(), region.getTop(), region.getWidth(), region.getHeight());
         }
+    }
+
+    public void setLeft(int left) {
+        this.left = left;
+    }
+
+    public void setTop(int top) {
+        this.top = top;
     }
 
     public void setDimensions(int left, int top, int width, int height) {
@@ -216,21 +225,23 @@ public class SGComponent implements IComponentHolder {
     }
 
     public void addChild(SGComponent child, Object param) {
-        if (this.layoutManager != null) {
-            this.layoutManager.addComponent(child, param);
-        }
         if (child != null) {
+            if (this.layoutManager != null) {
+                this.layoutManager.addComponent(child, param);
+            }
             if (child.isComponentIn(this)) {
                 throw new RuntimeException(String.format("Cannot make %s a child of %s", child, this));
             }
             if (this.children == null) {
                 this.children = new ArrayList<SGComponent>();
+                this.reverseChildren = Lists.reverse(this.children);
                 this.accessChildren = Collections.unmodifiableList(this.children);
             }
             child.parent = this;
             if (!this.children.contains(child)) {
                 this.children.add(child);
             }
+            //this.updateLayout();
         }
     }
 
@@ -257,9 +268,28 @@ public class SGComponent implements IComponentHolder {
     public List<SGComponent> getChildren() {
         if (this.children == null) {
             this.children = new ArrayList<SGComponent>();
+            this.reverseChildren = Lists.reverse(this.children);
             this.accessChildren = Collections.unmodifiableList(this.children);
         }
         return this.accessChildren;
+    }
+
+    public List<SGComponent> getRawChildren() {
+        if (this.children == null) {
+            this.children = new ArrayList<SGComponent>();
+            this.reverseChildren = Lists.reverse(this.children);
+            this.accessChildren = Collections.unmodifiableList(this.children);
+        }
+        return this.children;
+    }
+
+    public List<SGComponent> getRawReverseChildren() {
+        if (this.children == null) {
+            this.children = new ArrayList<SGComponent>();
+            this.reverseChildren = Lists.reverse(this.children);
+            this.accessChildren = Collections.unmodifiableList(this.children);
+        }
+        return this.reverseChildren;
     }
 
     public Pair<SGComponent, Location> cascadeMouse(int mouseX, int mouseY) {
@@ -270,8 +300,8 @@ public class SGComponent implements IComponentHolder {
             return ImmutablePair.of(this, new Location(mouseX - this.getLeft(SizeContext.INNER), mouseY - this.getTop(SizeContext.INNER)));
         }
         try {
-            if (this.children != null) {
-                for (SGComponent component : this.children) {
+            if (this.reverseChildren != null) {
+                for (SGComponent component : this.reverseChildren) {
                     Pair<SGComponent, Location> over = component.cascadeMouse(mouseX - this.getLeft(SizeContext.INNER), mouseY - this.getTop(SizeContext.INNER));
                     if (over != null) {
                         return over;
@@ -338,7 +368,7 @@ public class SGComponent implements IComponentHolder {
                     if (this.mouseOver) {
                         GuiHelper.drawColoredRect(this.getLeft(SizeContext.OUTLINE), this.getTop(SizeContext.OUTLINE), this.getLeft(SizeContext.OUTLINE) + this.getWidth(SizeContext.OUTLINE), this.getTop(SizeContext.OUTLINE) + this.getHeight(SizeContext.OUTLINE), color, this.getZLevel());
                         Region predicted = this.predictSize().atZero().offset(this.getLeft(SizeContext.OUTLINE), this.getTop(SizeContext.OUTLINE));
-                        SGUtils.drawBox(predicted.left, predicted.top, predicted.width, predicted.height, this.getZLevel(), (color >>> 16) | 0xFF000000);
+                        SGUtils.drawBox(predicted.getLeft(), predicted.getTop(), predicted.getWidth(), predicted.getHeight(), this.getZLevel(), (color >>> 16) | 0xFF000000);
                     }
                     if (this.focus) {
                         SGUtils.drawBox(this.getLeft(SizeContext.OUTLINE), this.getTop(SizeContext.OUTLINE), this.getWidth(SizeContext.OUTLINE), this.getHeight(SizeContext.OUTLINE), this.getZLevel(), color);
@@ -554,7 +584,7 @@ public class SGComponent implements IComponentHolder {
         if (parent != null) {
             Location offset = parent.getChildOffset();
             Region parentRegion = parent.getRenderingRegion();
-            Region result = this.getDimensions().offset(parentRegion.left, parentRegion.top);
+            Region result = this.getDimensions().offset(parentRegion.getLeft(), parentRegion.getTop());
             return offset != null && offset != Location.ZERO ? result.offset(offset.invert()) : result; // Check against Location.ZERO to prevent excess objects
         }
         return this.getDimensions();

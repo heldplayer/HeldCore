@@ -9,16 +9,21 @@ import net.specialattack.forge.core.client.gui.layout.FlowLayout;
 import net.specialattack.forge.core.client.gui.layout.Region;
 import net.specialattack.forge.core.client.gui.layout.SGLayoutManager;
 import net.specialattack.forge.core.client.gui.style.StyleDefs;
-import net.specialattack.forge.core.client.gui.style.border.InvisibleBorder;
 
 // A simple item in a menu
 public class SGMenuItem extends SGInteractable {
 
-    private SGLabel innerLabel;
+    private SGLabel innerLabel = new SGLabel() {
+        @Override
+        public Color getColor() {
+            return SGMenuItem.this.getTextColor();
+        }
+    };
 
     public SGMenuItem(String text) {
         super.setLayoutManager(new BorderedSGLayoutManager());
-        super.addChild(this.innerLabel = new SGLabel(text), BorderedSGLayoutManager.Border.CENTER);
+        super.addChild(this.innerLabel, BorderedSGLayoutManager.Border.CENTER);
+        this.innerLabel.setText(text);
         this.innerLabel.setLayout(FlowLayout.MIN, FlowLayout.CENTER);
         //this.innerLabel.setBorder(new InvisibleBorder(1));
         //this.setBackgrounds(StyleDefs.BACKGROUND_BUTTON_NORMAL, StyleDefs.BACKGROUND_BUTTON_HOVER, StyleDefs.BACKGROUND_BUTTON_DISABLED);

@@ -75,6 +75,10 @@ public class SGLabel extends SGComponent {
         this.color = color;
     }
 
+    public Color getColor() {
+        return this.color;
+    }
+
     @Override
     public void setPreferredInnerSize(int width, int height) {
         this.defaultSize = false;
@@ -110,7 +114,7 @@ public class SGLabel extends SGComponent {
                     }
                 }
                 int left = this.horizontalLayout.decide(width, this.font.getStringWidth(trimmed));
-                this.font.drawString(trimmed, left, offset + i * (this.font.FONT_HEIGHT + 1) + 1, this.color.colorHex, this.hasShadow);
+                this.font.drawString(trimmed, left, offset + i * (this.font.FONT_HEIGHT + 1) + 1, this.getColor().colorHex, this.hasShadow);
                 i++;
             }
         }

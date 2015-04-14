@@ -20,6 +20,27 @@ public class AbsoluteSGLayoutManager extends SGLayoutManager {
             throw new IllegalArgumentException("Cannot lay out null!");
         }
 
+        for (Map.Entry<SGComponent, Region> entry : this.locations.entrySet()) {
+            Region region = entry.getValue();
+            SGComponent comp = entry.getKey();
+            if (region != null) {
+                int width = region.getWidth();
+                int height = region.getHeight();
+                int borders = (comp.getBorderWidth() + comp.getOutlineWidth()) * 2;
+                if (width <= 0) {
+                    width = comp.getPreferredWidth() + borders;
+                }
+                if (height <= 0) {
+                    height = comp.getPreferredHeight() + borders;
+                }
+                this.limitComponent(comp, width, height);
+                this.positionComponent(comp, region.getLeft(), region.getTop(), width, height);
+            } else {
+                this.limitComponent(comp, 0, 0);
+                this.positionComponent(comp, 0, 0, 0, 0);
+            }
+        }
+        /*
         Region region = locations.get(component);
         if (region != null) {
             int width = region.width;
@@ -37,6 +58,7 @@ public class AbsoluteSGLayoutManager extends SGLayoutManager {
             this.limitComponent(component, 0, 0);
             this.positionComponent(component, 0, 0, 0, 0);
         }
+        */
     }
 
     @Override
@@ -82,11 +104,11 @@ public class AbsoluteSGLayoutManager extends SGLayoutManager {
             Region predicted = current.predictSize();
             Region stored = this.locations.get(current);
             if (stored != null) {
-                width = MathHelper.max(width, stored.left + stored.width);
-                height = MathHelper.max(height, stored.top + stored.height);
+                width = MathHelper.max(width, stored.getLeft() + stored.getWidth());
+                height = MathHelper.max(height, stored.getTop() + stored.getHeight());
             } else if (predicted != null) {
-                width = MathHelper.max(width, predicted.left + predicted.width);
-                height = MathHelper.max(height, predicted.top + predicted.height);
+                width = MathHelper.max(width, predicted.getLeft() + predicted.getWidth());
+                height = MathHelper.max(height, predicted.getTop() + predicted.getHeight());
             }
         }
         return new Region(0, 0, MathHelper.min(width, limitWidth), MathHelper.min(height, limitHeight));

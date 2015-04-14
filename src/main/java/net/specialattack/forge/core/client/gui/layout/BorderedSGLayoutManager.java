@@ -39,7 +39,7 @@ public class BorderedSGLayoutManager extends SGLayoutManager {
             if (predicted == null) {
                 height = this.components[0].getPreferredHeight();
             } else {
-                height = MathHelper.max(this.components[0].getPreferredHeight(), predicted.height);
+                height = MathHelper.max(this.components[0].getPreferredHeight(), predicted.getHeight());
             }
 
             if (height > 0) {
@@ -58,7 +58,7 @@ public class BorderedSGLayoutManager extends SGLayoutManager {
             if (predicted == null) {
                 height = this.components[1].getPreferredHeight();
             } else {
-                height = MathHelper.max(this.components[1].getPreferredHeight(), predicted.height);
+                height = MathHelper.max(this.components[1].getPreferredHeight(), predicted.getHeight());
             }
 
             if (height > 0) {
@@ -77,7 +77,7 @@ public class BorderedSGLayoutManager extends SGLayoutManager {
             if (predicted == null) {
                 width = this.components[2].getPreferredWidth();
             } else {
-                width = MathHelper.max(this.components[2].getPreferredWidth(), predicted.width);
+                width = MathHelper.max(this.components[2].getPreferredWidth(), predicted.getWidth());
             }
 
             if (width > 0) {
@@ -96,7 +96,7 @@ public class BorderedSGLayoutManager extends SGLayoutManager {
             if (predicted == null) {
                 width = this.components[3].getPreferredWidth();
             } else {
-                width = MathHelper.max(this.components[3].getPreferredWidth(), predicted.width);
+                width = MathHelper.max(this.components[3].getPreferredWidth(), predicted.getWidth());
             }
 
             if (width > 0) {
@@ -120,7 +120,7 @@ public class BorderedSGLayoutManager extends SGLayoutManager {
 
                     if (height <= 0) {
                         Region predicted = this.components[4].predictSize();
-                        height = predicted.height;
+                        height = predicted.getHeight();
                     }
 
                     if (height > 0) {
@@ -141,7 +141,7 @@ public class BorderedSGLayoutManager extends SGLayoutManager {
 
                     if (width <= 0) {
                         Region predicted = this.components[4].predictSize();
-                        width = predicted.width;
+                        width = predicted.getWidth();
                     }
 
                     if (width > 0) {
@@ -222,14 +222,14 @@ public class BorderedSGLayoutManager extends SGLayoutManager {
                     if (predicted == null) {
                         height += current.getPreferredHeight();
                     } else {
-                        height += MathHelper.max(current.getPreferredHeight(), predicted.height);
+                        height += MathHelper.max(current.getPreferredHeight(), predicted.getHeight());
                     }
                 }
                 if (border == Border.LEFT || border == Border.RIGHT || border == Border.CENTER) {
                     if (predicted == null) {
                         width += current.getPreferredWidth();
                     } else {
-                        width += MathHelper.max(current.getPreferredWidth(), predicted.width);
+                        width += MathHelper.max(current.getPreferredWidth(), predicted.getWidth());
                     }
                 }
             }

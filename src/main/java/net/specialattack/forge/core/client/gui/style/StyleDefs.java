@@ -47,9 +47,22 @@ public class StyleDefs {
     public static final Color COLOR_PROGRESS_BAR_ERROR = new Color(0xFFFF8080);
     public static final Color COLOR_PROGRESS_BAR_CONTINUOUS = new Color(0xFF80FF80);
     public static final IBackground BACKGROUND_PROGRESS_BAR = new SolidBackground(COLOR_PROGRESS_BAR_BACKGROUND);
-    // Scrollbar stylesstyles
+    // Scrollbar styles
     public static final Color COLOR_SCROLLBAR_BACKGROUND = new Color(0xFF404040);
     public static final Color COLOR_SCROLLBAR_FOREGROUND = new Color(0xFFBBBBBB);
     public static final Color COLOR_SCROLLBAR_FOREGROUND_HOVER = new Color(0xFFEEEEEE);
+    // Combo box styles
+    public static final Color COLOR_COMBO_OPTION_NORMAL = new Color(0xFF000000);
+    public static final Color COLOR_COMBO_OPTION_HOVER = new Color(0xFF333333);
+    public static final Color COLOR_COMBO_OPTION_DISABLED = new Color(0xFF888888);
+    public static final Color COLOR_COMBO_OPTION_SELECTED = new Color(0xFF333333);
+    public static final Color COLOR_COMBO_OPTION_BACKGROUND_NORMAL = new Color(0xFFCCCCCC);
+    public static final Color COLOR_COMBO_OPTION_BACKGROUND_HOVER = new Color(0xFFEEEEEE);
+    public static final Color COLOR_COMBO_OPTION_BACKGROUND_DISABLED = new Color(0xFFCCCCCC);
+    public static final Color COLOR_COMBO_OPTION_BACKGROUND_SELECTED = new Color(0xFFFFFFC1);
+    public static final IBackground BACKGROUND_COMBO_OPTION_NORMAL = new SolidBackground(COLOR_COMBO_OPTION_BACKGROUND_NORMAL);
+    public static final IBackground BACKGROUND_COMBO_OPTION_HOVER = new SolidBackground(COLOR_COMBO_OPTION_BACKGROUND_HOVER);
+    public static final IBackground BACKGROUND_COMBO_OPTION_DISABLED = new SolidBackground(COLOR_COMBO_OPTION_BACKGROUND_DISABLED);
+    public static final IBackground BACKGROUND_COMBO_OPTION_SELECTED = new SolidBackground(COLOR_COMBO_OPTION_BACKGROUND_SELECTED);
 
 }

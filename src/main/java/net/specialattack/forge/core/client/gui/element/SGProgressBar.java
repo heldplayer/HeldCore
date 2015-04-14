@@ -63,7 +63,7 @@ public class SGProgressBar extends SGComponent {
         int totalHeight = this.getHeight(SizeContext.INNER);
         Color color = this.state.getColor();
         Region region = this.state.decideRegion(totalWidth, totalHeight, this.progress, this.direction, this.timer);
-        GuiHelper.drawColoredRect(region.left, region.top, region.width, region.height, color.colorHex, 0.0F);
+        GuiHelper.drawColoredRect(region.getLeft(), region.getTop(), region.getWidth(), region.getHeight(), color.colorHex, 0.0F);
     }
 
     public static enum State {

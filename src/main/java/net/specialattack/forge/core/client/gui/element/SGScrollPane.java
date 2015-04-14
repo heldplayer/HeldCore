@@ -167,7 +167,7 @@ public class SGScrollPane extends SGComponent {
                 int innerHeight = this.getHeight(SizeContext.INNER);
                 int innerOuterHeight = this.innerPanel.getHeight(SizeContext.OUTLINE);
                 Color color = this.getScrollbarForeground();
-                if (hover && mouseX - left >= width && mouseX - left < width + this.scrollbarWidth && mouseY - top >= 0 && mouseY - top < height) {
+                if (this.dragging == 1 || (hover && mouseX - left >= width && mouseX - left < width + this.scrollbarWidth && mouseY - top >= 0 && mouseY - top < height)) {
                     color = this.getScrollbarHoverForeground();
                 }
                 if (innerOuterHeight > innerHeight) {
@@ -183,7 +183,7 @@ public class SGScrollPane extends SGComponent {
                 int innerWidth = this.getWidth(SizeContext.INNER);
                 int innerInnerWidth = this.innerPanel.getWidth(SizeContext.OUTLINE);
                 Color color = this.getScrollbarForeground();
-                if (hover && mouseY - top >= height && mouseY - top < height + this.scrollbarWidth && mouseX - left >= 0 && mouseX - left < width) {
+                if (this.dragging == 2 || (hover && mouseY - top >= height && mouseY - top < height + this.scrollbarWidth && mouseX - left >= 0 && mouseX - left < width)) {
                     color = this.getScrollbarHoverForeground();
                 }
                 if (innerInnerWidth > innerWidth) {
@@ -228,7 +228,7 @@ public class SGScrollPane extends SGComponent {
             if (mouseX - left < 0 || mouseY - top < 0 || mouseX - left > width || mouseY - top > height) {
                 return ImmutablePair.of((SGComponent) this, new Location(mouseX - left, mouseY - top));
             }
-            List<SGComponent> children = this.getChildren();
+            List<SGComponent> children = this.getRawReverseChildren();
             if (children != null) {
                 for (SGComponent component : children) {
                     Pair<SGComponent, Location> over = component.cascadeMouse(mouseX - left + (int) this.scrollLeft, mouseY - top + (int) this.scrollTop);
@@ -392,22 +392,22 @@ public class SGScrollPane extends SGComponent {
         int width, height;
         Region predicted = this.innerPanel.predictSize();
         if (this.vertical) {
-            height = Math.max(this.getHeight(SizeContext.INNER), predicted.height);
+            height = Math.max(this.getHeight(SizeContext.INNER), predicted.getHeight());
         } else {
             height = this.getHeight(SizeContext.INNER);
         }
         if (this.horizontal) {
-            width = Math.max(this.getWidth(SizeContext.INNER), predicted.width);
+            width = Math.max(this.getWidth(SizeContext.INNER), predicted.getWidth());
         } else {
             width = this.getWidth(SizeContext.INNER);
         }
         this.innerPanel.setDimensions(0, 0, width, height);
         //this.innerPanel.setDimensions(this.innerPanel.predictSize().expanded(-horiz, -vert));
-        //if (this.vertical) {
-        //this.scrollTop = MathHelper.clamp_float(this.scrollTop, 0, Math.max(0, this.innerPanel.getHeight(SizeContext.OUTLINE) - this.getHeight(SizeContext.INNER)));
-        //} else if (this.horizontal) {
-        //this.scrollLeft = MathHelper.clamp_float(this.scrollLeft, 0, Math.max(0, this.innerPanel.getWidth(SizeContext.OUTLINE) - this.getWidth(SizeContext.INNER)));
-        //}
+        if (this.vertical) {
+            this.scrollTop = MathHelper.clamp_float(this.scrollTop, 0, Math.max(0, this.innerPanel.getHeight(SizeContext.OUTLINE) - this.getHeight(SizeContext.INNER)));
+        } else if (this.horizontal) {
+            this.scrollLeft = MathHelper.clamp_float(this.scrollLeft, 0, Math.max(0, this.innerPanel.getWidth(SizeContext.OUTLINE) - this.getWidth(SizeContext.INNER)));
+        }
     }
 
     @Override
@@ -416,8 +416,8 @@ public class SGScrollPane extends SGComponent {
         Region predicted = super.predictSize().expanded(borders + (this.vertical ? this.scrollbarWidth : 0), borders + (this.horizontal ? this.scrollbarWidth : 0));
         int preferredWidth = this.getPreferredWidth();
         int preferredHeight = this.getPreferredHeight();
-        int width = preferredWidth <= 0 ? predicted.width : Math.min(preferredWidth, predicted.width);
-        int height = preferredHeight <= 0 ? predicted.height : Math.min(preferredHeight, predicted.height);
+        int width = preferredWidth <= 0 ? predicted.getWidth() : Math.min(preferredWidth, predicted.getWidth());
+        int height = preferredHeight <= 0 ? predicted.getHeight() : Math.min(preferredHeight, predicted.getHeight());
 
         return new Region(0, 0, width, height);
         //return super.predictSize();//.expanded(this.vertical ? this.scrollbarWidth : 0, this.horizontal ? this.scrollbarWidth : 0);
@@ -435,8 +435,8 @@ public class SGScrollPane extends SGComponent {
             int borders = SGScrollPane.this.getBorderWidth() + this.getOutlineWidth();
             Region parentRegion = SGScrollPane.this.getRenderingRegion();
             //return super.getRenderingRegion().offset(parentRegion.left, parentRegion.top);
-            int left = parentRegion.left + borders;
-            int top = parentRegion.top + borders;
+            int left = parentRegion.getLeft() + borders;
+            int top = parentRegion.getTop() + borders;
             int width = SGScrollPane.this.getWidth(SizeContext.INNER);
             int height = SGScrollPane.this.getHeight(SizeContext.INNER);
             return new Region(left, top, width, height);
