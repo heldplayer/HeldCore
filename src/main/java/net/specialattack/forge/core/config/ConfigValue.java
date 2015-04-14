@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.Side;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.config.Property;
 
 /**
@@ -175,7 +176,7 @@ public class ConfigValue<T> implements IConfigElement<T> {
 
     @Override
     public String getComment() {
-        return I18n.format(this.unlocalizedName + ".comment");
+        return StatCollector.translateToLocal(this.unlocalizedName + ".comment");
     }
 
     @SuppressWarnings("rawtypes")

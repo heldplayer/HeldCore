@@ -23,6 +23,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.StatCollector;
 import net.specialattack.forge.core.crafting.CraftingHelper;
 import net.specialattack.forge.core.crafting.FakeShapedSpACoreRecipe;
 import net.specialattack.forge.core.crafting.ShapedSpACoreRecipe;
@@ -32,7 +33,7 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
 
     @Override
     public String getRecipeName() {
-        return I18n.format("spacore:recipe.shaped.modded");
+        return StatCollector.translateToLocal("spacore:recipe.shaped.modded");
     }
 
     @Override
