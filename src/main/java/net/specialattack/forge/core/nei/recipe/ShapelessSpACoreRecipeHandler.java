@@ -11,10 +11,10 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.StatCollector;
 import net.specialattack.forge.core.crafting.CraftingHelper;
 import net.specialattack.forge.core.crafting.FakeShapelessSpACoreRecipe;
 import net.specialattack.forge.core.crafting.ShapelessSpACoreRecipe;
@@ -26,7 +26,7 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
 
     @Override
     public String getRecipeName() {
-        return I18n.format("spacore:recipe.shapeless.modded");
+        return StatCollector.translateToLocal("spacore:recipe.shapeless.modded");
     }
 
     @Override
