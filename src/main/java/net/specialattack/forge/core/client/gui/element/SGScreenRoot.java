@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.specialattack.forge.core.client.gui.GuiStateManager;
+import net.specialattack.forge.core.client.GLState;
 import net.specialattack.forge.core.client.gui.SGUtils;
 import net.specialattack.forge.core.client.gui.layout.BorderedSGLayoutManager;
 import net.specialattack.forge.core.client.gui.layout.Location;
@@ -76,8 +76,7 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         // super.drawScreen(mouseX, mouseY, partialTicks);
-        GuiStateManager.reset();
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GLState.glEnable(GL11.GL_DEPTH_TEST);
         boolean hoverDone = false;
         if (this.reversedPopouts != null) {
             if (this.eventButton == -1) {
@@ -127,9 +126,9 @@ public class SGScreenRoot extends GuiScreen implements IComponentHolder {
             }
         }
         //GuiHelper.drawColoredRect(mouseX, mouseY, mouseX + 1, mouseY + 1, 0xFFFFFFFF, 100);
-        if (this.hover != null) {
-            //this.fontRendererObj.drawStringWithShadow(this.hover.getClass().toString(), 0, 10, 0xFFFFFFFF);
-        }
+        //if (this.hover != null) {
+        //this.fontRendererObj.drawStringWithShadow(this.hover.getClass().toString(), 0, 10, 0xFFFFFFFF);
+        //}
     }
 
     @Override

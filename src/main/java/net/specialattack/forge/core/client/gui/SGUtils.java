@@ -3,6 +3,7 @@ package net.specialattack.forge.core.client.gui;
 import java.util.LinkedList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.specialattack.forge.core.client.GLState;
 import net.specialattack.forge.core.client.MC;
 import net.specialattack.forge.core.client.gui.element.SGComponent;
 import net.specialattack.forge.core.client.gui.layout.Region;
@@ -29,15 +30,15 @@ public final class SGUtils {
         GuiHelper.drawColoredRect(0, 0, width, height, 0xFFFFFFFF, 0.0F); // Fill
         SGUtils.drawBox(0, 0, width, height, 0.0F, 0xFFFF0000);
 
-        GL11.glLineWidth(2.0F);
-        GuiStateManager.disableTextures();
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glBegin(GL11.GL_LINES);
+        GLState.glLineWidth(2.0F);
+        GLState.glDisable(GL11.GL_TEXTURE_2D);
+        GLState.glDisable(GL11.GL_TEXTURE_2D);
+        GLState.glBegin(GL11.GL_LINES);
         GL11.glVertex3f(1.0F, 1.0F, 0.0F);
         GL11.glVertex3f(width - 1.0F, height - 1.0F, 0.0F);
         GL11.glVertex3f(width - 1.0F, 1.0F, 0.0F);
         GL11.glVertex3f(1.0F, height - 1.0F, 0.0F);
-        GL11.glEnd();
+        GLState.glEnd();
 
         GL11.glPopMatrix();
     }
@@ -60,13 +61,13 @@ public final class SGUtils {
         if (height < 0)
             height = 0;
 
-        GL11.glScissor(x, mc.displayHeight - y - height, width, height);
+        GLState.glScissor(x, mc.displayHeight - y - height, width, height);
     }
 
     public static void clipComponent(SGComponent component) {
         Region region = component.getRenderingRegion();
         if (clipRegions.size() == 0) {
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
+            GLState.glEnable(GL11.GL_SCISSOR_TEST);
         }
         clipRegions.add(region);
         clipRegion(region);
@@ -77,14 +78,14 @@ public final class SGUtils {
         if (clipRegions.size() > 0) {
             clipRegion(clipRegions.getLast());
         } else {
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+            GLState.glDisable(GL11.GL_SCISSOR_TEST);
         }
     }
 
     public static void endAllClips() {
         if (clipRegions.size() > 0) {
             clipRegions.clear();
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+            GLState.glDisable(GL11.GL_SCISSOR_TEST);
         }
     }
 

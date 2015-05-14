@@ -58,7 +58,6 @@ public class SGProgressBar extends SGComponent {
     @Override
     public void drawForeground(int mouseX, int mouseY, float partialTicks) {
         GL11.glTranslatef(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
-        super.drawForeground(mouseX, mouseY, partialTicks);
         int totalWidth = this.getWidth(SizeContext.INNER);
         int totalHeight = this.getHeight(SizeContext.INNER);
         Color color = this.state.getColor();
@@ -66,7 +65,7 @@ public class SGProgressBar extends SGComponent {
         GuiHelper.drawColoredRect(region.getLeft(), region.getTop(), region.getWidth(), region.getHeight(), color.colorHex, 0.0F);
     }
 
-    public static enum State {
+    public enum State {
         NORMAL {
             @Override
             public Color getColor() {

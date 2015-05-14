@@ -278,6 +278,10 @@ public class GuiSGTest extends SGScreenRoot {
                 SGProgressBar progressBar = new SGProgressBar(SGProgressBar.State.CONTINUOUS);
                 panel.addChild(progressBar, true);
             }
+            {
+                SGSlider slider = new SGSlider(FlowDirection.HORIZONTAL, 0, 1, false, true);
+                panel.addChild(slider, true);
+            }
         }
         {
             SGPanel panel = new SGPanel();
@@ -370,6 +374,10 @@ public class GuiSGTest extends SGScreenRoot {
                 label.setBorder(new InvisibleBorder(3));
                 panel.addChild(label);
                 label.setColor(new Color(0xFFFF0000));
+            }
+            {
+                SGSlider slider = new SGSlider(FlowDirection.VERTICAL, 0, 1, false, true);
+                panel.addChild(slider, true);
             }
             {
                 final SGScrollPane side = new SGScrollPane() {

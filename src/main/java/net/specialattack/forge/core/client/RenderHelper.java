@@ -43,7 +43,7 @@ public final class RenderHelper {
     public static void renderBezierPlane(Vector[][] points, IIcon icon, int pointCount) {
         Vector[] result = RenderHelper.getBezierPlanePoints(points, pointCount);
 
-        GL11.glBegin(GL11.GL_QUADS);
+        GLState.glBegin(GL11.GL_QUADS);
         for (int i = 0; i < pointCount; i++) {
             for (int j = 0; j < pointCount; j++) {
                 Vector point1 = result[i + j * (pointCount + 1)];
@@ -69,7 +69,7 @@ public final class RenderHelper {
                 GL11.glVertex3d(point2.posX, point2.posY, point2.posZ);
             }
         }
-        GL11.glEnd();
+        GLState.glEnd();
     }
 
     public static Vector[] getBezierPlanePoints(Vector[][] points, int pointCount) {
@@ -103,19 +103,19 @@ public final class RenderHelper {
     }
 
     public static void drawBox(AxisAlignedBB aabb) {
-        GL11.glBegin(GL11.GL_LINE_LOOP);
+        GLState.glBegin(GL11.GL_LINE_LOOP);
         GL11.glVertex3d(aabb.minX, aabb.minY, aabb.minZ);
         GL11.glVertex3d(aabb.maxX, aabb.minY, aabb.minZ);
         GL11.glVertex3d(aabb.maxX, aabb.minY, aabb.maxZ);
         GL11.glVertex3d(aabb.minX, aabb.minY, aabb.maxZ);
-        GL11.glEnd();
-        GL11.glBegin(GL11.GL_LINE_LOOP);
+        GLState.glEnd();
+        GLState.glBegin(GL11.GL_LINE_LOOP);
         GL11.glVertex3d(aabb.minX, aabb.maxY, aabb.minZ);
         GL11.glVertex3d(aabb.maxX, aabb.maxY, aabb.minZ);
         GL11.glVertex3d(aabb.maxX, aabb.maxY, aabb.maxZ);
         GL11.glVertex3d(aabb.minX, aabb.maxY, aabb.maxZ);
-        GL11.glEnd();
-        GL11.glBegin(GL11.GL_LINES);
+        GLState.glEnd();
+        GLState.glBegin(GL11.GL_LINES);
         GL11.glVertex3d(aabb.minX, aabb.minY, aabb.minZ);
         GL11.glVertex3d(aabb.minX, aabb.maxY, aabb.minZ);
         GL11.glVertex3d(aabb.maxX, aabb.minY, aabb.minZ);
@@ -124,7 +124,7 @@ public final class RenderHelper {
         GL11.glVertex3d(aabb.maxX, aabb.maxY, aabb.maxZ);
         GL11.glVertex3d(aabb.minX, aabb.minY, aabb.maxZ);
         GL11.glVertex3d(aabb.minX, aabb.maxY, aabb.maxZ);
-        GL11.glEnd();
+        GLState.glEnd();
     }
 
 }

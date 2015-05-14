@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.specialattack.forge.core.client.GLState;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
@@ -1010,18 +1011,18 @@ public class GuiTextBox extends Gui {
         }
 
         Tessellator tessellator = Tessellator.instance;
-        GL11.glColor4f(0.0F, 0.0F, 255.0F, 255.0F);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_COLOR_LOGIC_OP);
-        GL11.glLogicOp(GL11.GL_OR_REVERSE);
+        GLState.glColor4f(0.0F, 0.0F, 255.0F, 255.0F);
+        GLState.glDisable(GL11.GL_TEXTURE_2D);
+        GLState.glEnable(GL11.GL_COLOR_LOGIC_OP);
+        GLState.glLogicOp(GL11.GL_OR_REVERSE);
         tessellator.startDrawingQuads();
         tessellator.addVertex(startX, height, 0.0D);
         tessellator.addVertex(width, height, 0.0D);
         tessellator.addVertex(width, startY, 0.0D);
         tessellator.addVertex(startX, startY, 0.0D);
         tessellator.draw();
-        GL11.glDisable(GL11.GL_COLOR_LOGIC_OP);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GLState.glDisable(GL11.GL_COLOR_LOGIC_OP);
+        GLState.glEnable(GL11.GL_TEXTURE_2D);
     }
 
     public void setVisible(boolean visible) {

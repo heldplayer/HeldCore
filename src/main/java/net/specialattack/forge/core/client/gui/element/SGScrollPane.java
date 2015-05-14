@@ -3,6 +3,7 @@ package net.specialattack.forge.core.client.gui.element;
 import java.util.List;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.MathHelper;
+import net.specialattack.forge.core.client.GLState;
 import net.specialattack.forge.core.client.gui.Color;
 import net.specialattack.forge.core.client.gui.GuiHelper;
 import net.specialattack.forge.core.client.gui.SGUtils;
@@ -84,7 +85,7 @@ public class SGScrollPane extends SGComponent {
             if (SGComponent.DEBUG) {
                 if (this.isMouseOver() || this.hasFocus()) {
                     int color = (this.hashCode() & 0xFFFFFF) | 0x88000000;
-                    GL11.glDepthMask(false);
+                    GLState.glDepthMask(false);
                     int left = this.getLeft(SizeContext.OUTLINE);
                     int top = this.getTop(SizeContext.OUTLINE);
                     int width = this.getWidth(SizeContext.OUTLINE);
@@ -95,7 +96,7 @@ public class SGScrollPane extends SGComponent {
                     if (this.hasFocus()) {
                         SGUtils.drawBox(left, top, width, height, this.getZLevel(), color);
                     }
-                    GL11.glDepthMask(true);
+                    GLState.glDepthMask(true);
                 }
             }
             SGUtils.clipComponent(this.innerPanel);

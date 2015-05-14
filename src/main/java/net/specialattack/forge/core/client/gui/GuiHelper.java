@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
@@ -15,6 +14,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import net.specialattack.forge.core.client.GLState;
 import net.specialattack.forge.core.client.MC;
 import net.specialattack.forge.core.client.RenderHelper;
 import net.specialattack.forge.core.client.resources.data.TextureMetadataSection;
@@ -61,7 +61,7 @@ public final class GuiHelper {
         float green = (color >> 8 & 0xFF) / 255.0F;
         float blue = (color & 0xFF) / 255.0F;
 
-        GL11.glColor4f(red, green, blue, 1.0F);
+        GLState.glColor4f(red, green, blue, 1.0F);
 
         for (int x = 0; x < width; x += 16) {
             for (int y = 0; y < height; y += 16) {
@@ -105,7 +105,7 @@ public final class GuiHelper {
     }
 
     /**
-     * Scales an int for drawing in a GUI
+     * Scales a float for drawing in a GUI
      *
      * @param scale
      *         The resulting max value
@@ -114,9 +114,32 @@ public final class GuiHelper {
      * @param total
      *         The max amount that can be entered
      *
-     * @return Scaled int
+     * @return Scaled float
      */
     public static float getScaled(float scale, float amount, float total) {
+        if (amount > total) {
+            amount = total;
+        }
+        if (amount < 0.0F) {
+            amount = 0.0F;
+        }
+
+        return amount * scale / total;
+    }
+
+    /**
+     * Scales a double for drawing in a GUI
+     *
+     * @param scale
+     *         The resulting max value
+     * @param amount
+     *         The amount
+     * @param total
+     *         The max amount that can be entered
+     *
+     * @return Scaled double
+     */
+    public static double getScaled(double scale, double amount, double total) {
         if (amount > total) {
             amount = total;
         }
@@ -144,10 +167,10 @@ public final class GuiHelper {
      *         The height of the GUI
      */
     public static void drawTooltip(List<String> strings, FontRenderer fontRenderer, int mouseX, int mouseY, int guiTop, int height) {
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        GLState.glDisable(GL12.GL_RESCALE_NORMAL);
         net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GLState.glDisable(GL11.GL_LIGHTING);
+        GLState.glDisable(GL11.GL_DEPTH_TEST);
 
         if (!strings.isEmpty()) {
             int startY = 0;
@@ -260,23 +283,23 @@ public final class GuiHelper {
         float endRed = (float) (endColor >> 16 & 255) / 255.0F;
         float endGreen = (float) (endColor >> 8 & 255) / 255.0F;
         float endBlue = (float) (endColor & 255) / 255.0F;
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
-        GL11.glColor4f(startRed, startGreen, startBlue, startAlpha);
-        GL11.glBegin(GL11.GL_QUADS);
+        GLState.glDisable(GL11.GL_TEXTURE_2D);
+        GLState.glEnable(GL11.GL_BLEND);
+        GLState.glDisable(GL11.GL_ALPHA_TEST);
+        GLState.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+        GLState.glShadeModel(GL11.GL_SMOOTH);
+        GLState.glColor4f(startRed, startGreen, startBlue, startAlpha);
+        GLState.glBegin(GL11.GL_QUADS);
         GL11.glVertex3f(endX, startY, zLevel);
         GL11.glVertex3f(startX, startY, zLevel);
-        GL11.glColor4f(endRed, endGreen, endBlue, endAlpha);
+        GLState.glColor4f(endRed, endGreen, endBlue, endAlpha);
         GL11.glVertex3f(startX, endY, zLevel);
         GL11.glVertex3f(endX, endY, zLevel);
-        GL11.glEnd();
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GLState.glEnd();
+        GLState.glShadeModel(GL11.GL_FLAT);
+        GLState.glDisable(GL11.GL_BLEND);
+        GLState.glEnable(GL11.GL_ALPHA_TEST);
+        GLState.glEnable(GL11.GL_TEXTURE_2D);
     }
 
     /**
@@ -300,22 +323,22 @@ public final class GuiHelper {
         float startRed = (float) (color >> 16 & 255) / 255.0F;
         float startGreen = (float) (color >> 8 & 255) / 255.0F;
         float startBlue = (float) (color & 255) / 255.0F;
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
-        GL11.glColor4f(startRed, startGreen, startBlue, startAlpha);
-        GL11.glBegin(GL11.GL_QUADS);
+        GLState.glDisable(GL11.GL_TEXTURE_2D);
+        GLState.glEnable(GL11.GL_BLEND);
+        GLState.glDisable(GL11.GL_ALPHA_TEST);
+        GLState.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+        GLState.glShadeModel(GL11.GL_SMOOTH);
+        GLState.glColor4f(startRed, startGreen, startBlue, startAlpha);
+        GLState.glBegin(GL11.GL_QUADS);
         GL11.glVertex3f(endX, startY, zLevel);
         GL11.glVertex3f(startX, startY, zLevel);
         GL11.glVertex3f(startX, endY, zLevel);
         GL11.glVertex3f(endX, endY, zLevel);
-        GL11.glEnd();
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GLState.glEnd();
+        GLState.glShadeModel(GL11.GL_FLAT);
+        GLState.glDisable(GL11.GL_BLEND);
+        GLState.glEnable(GL11.GL_ALPHA_TEST);
+        GLState.glEnable(GL11.GL_TEXTURE_2D);
     }
 
     public static ArrayList<String> getFluidString(IFluidTank tank) {

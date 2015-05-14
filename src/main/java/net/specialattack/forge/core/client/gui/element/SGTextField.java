@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.MathHelper;
+import net.specialattack.forge.core.client.GLState;
 import net.specialattack.forge.core.client.gui.SGUtils;
 import net.specialattack.forge.core.client.gui.SizeContext;
 import net.specialattack.forge.core.client.gui.style.StyleDefs;
@@ -43,7 +44,7 @@ public class SGTextField extends SGInteractable {
         int drawColor = this.getTextColor().colorHex;
         int cursorOffset = this.cursorPosition - this.scrollOffset;
         int selectionOffset = this.selectionPosition - this.scrollOffset;
-        String visibleText = this.font.trimStringToWidth(this.value.substring(this.scrollOffset), (int) this.getWidth(SizeContext.INNER) - 4);
+        String visibleText = this.font.trimStringToWidth(this.value.substring(this.scrollOffset), this.getWidth(SizeContext.INNER) - 4);
         //String visibleText = this.font.trimStringToWidth(this.value.substring(this.scrollOffset), this.getWidth(SizeContext.INNER) - (this.hasBorder() ? 4 : 0));
         boolean cursorVisible = cursorOffset >= 0 && cursorOffset <= visibleText.length();
         boolean drawCursor = this.hasFocus() && this.cursorCounter / 6 % 2 == 0 && cursorVisible;
@@ -64,7 +65,7 @@ public class SGTextField extends SGInteractable {
         int cursorDrawPosition = cursorPosition;
 
         if (!cursorVisible) {
-            cursorDrawPosition = cursorOffset > 0 ? (int) this.getWidth(SizeContext.INNER) : 0;
+            cursorDrawPosition = cursorOffset > 0 ? this.getWidth(SizeContext.INNER) : 0;
         } else if (cursorInbetween) {
             cursorDrawPosition = cursorPosition - 1;
             cursorPosition--;
@@ -115,21 +116,21 @@ public class SGTextField extends SGInteractable {
 
         Tessellator tess = Tessellator.instance;
         if (this.hasFocus()) {
-            GL11.glColor4f(0.0F, 0.0F, 255.0F, 255.0F);
+            GLState.glColor4f(0.0F, 0.0F, 255.0F, 255.0F);
         } else {
-            GL11.glColor4f(255.0F, 0.0F, 255.0F, 255.0F);
+            GLState.glColor4f(255.0F, 0.0F, 255.0F, 255.0F);
         }
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_COLOR_LOGIC_OP);
-        GL11.glLogicOp(GL11.GL_OR_REVERSE);
+        GLState.glDisable(GL11.GL_TEXTURE_2D);
+        GLState.glEnable(GL11.GL_COLOR_LOGIC_OP);
+        GLState.glLogicOp(GL11.GL_OR_REVERSE);
         tess.startDrawingQuads();
         tess.addVertex(startX, endY, 0.0D);
         tess.addVertex(endX, endY, 0.0D);
         tess.addVertex(endX, startY, 0.0D);
         tess.addVertex(startX, startY, 0.0D);
         tess.draw();
-        GL11.glDisable(GL11.GL_COLOR_LOGIC_OP);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GLState.glDisable(GL11.GL_COLOR_LOGIC_OP);
+        GLState.glEnable(GL11.GL_TEXTURE_2D);
     }
 
     public void setValue(String value) {

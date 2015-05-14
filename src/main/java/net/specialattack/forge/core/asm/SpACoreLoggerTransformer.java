@@ -7,6 +7,9 @@ public class SpACoreLoggerTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] original) {
+        if (!SpACorePlugin.loggerTransformer) {
+            return original;
+        }
         if (original == null) {
             return null;
         }
@@ -33,13 +36,26 @@ public class SpACoreLoggerTransformer implements IClassTransformer {
 
                             @Override
                             public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-                                if (checking && itf && owner.equals("org/apache/logging/log4j/Logger") && desc.equals(Type.getMethodDescriptor(Type.VOID_TYPE, Type.getType(String.class), Type.getType(Throwable.class)))) {
+                                if (checking && opcode == Opcodes.INVOKEINTERFACE && owner.equals("org/apache/logging/log4j/Logger") && desc.equals(Type.getMethodDescriptor(Type.VOID_TYPE, Type.getType(String.class), Type.getType(Throwable.class)))) {
                                     super.visitInsn(Opcodes.POP);
                                     desc = Type.getMethodDescriptor(Type.VOID_TYPE, Type.getType(String.class));
                                     checking = false;
-                                    System.out.println("Removed stacktraces from missing textures.");
+                                    SpACorePlugin.LOG.debug("Removed stacktraces from missing textures.");
                                 }
                                 super.visitMethodInsn(opcode, owner, name, desc, itf);
+                            }
+
+
+                            @Override
+                            @SuppressWarnings("deprecation")
+                            public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+                                if (checking && opcode == Opcodes.INVOKEINTERFACE && owner.equals("org/apache/logging/log4j/Logger") && desc.equals(Type.getMethodDescriptor(Type.VOID_TYPE, Type.getType(String.class), Type.getType(Throwable.class)))) {
+                                    super.visitInsn(Opcodes.POP);
+                                    desc = Type.getMethodDescriptor(Type.VOID_TYPE, Type.getType(String.class));
+                                    checking = false;
+                                    SpACorePlugin.LOG.debug("Removed stacktraces from missing textures.");
+                                }
+                                super.visitMethodInsn(opcode, owner, name, desc);
                             }
                         };
                     }

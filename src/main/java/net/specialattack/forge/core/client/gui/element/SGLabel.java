@@ -3,8 +3,8 @@ package net.specialattack.forge.core.client.gui.element;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import net.specialattack.forge.core.client.GLState;
 import net.specialattack.forge.core.client.gui.Color;
-import net.specialattack.forge.core.client.gui.GuiStateManager;
 import net.specialattack.forge.core.client.gui.SizeContext;
 import net.specialattack.forge.core.client.gui.layout.FlowLayout;
 import net.specialattack.forge.core.client.gui.layout.Region;
@@ -36,6 +36,10 @@ public class SGLabel extends SGComponent {
         this.updatePreferredSize();
     }
 
+    public String getText() {
+        return this.text;
+    }
+
     public void setShouldSplit(boolean value) {
         this.shouldSplit = value;
         this.updatePreferredSize();
@@ -54,12 +58,12 @@ public class SGLabel extends SGComponent {
         if (this.defaultSize) {
             if (this.shouldSplit) {
                 int preferredWidth = this.getPreferredWidth();
-                int height = this.font.listFormattedStringToWidth(this.text, preferredWidth).size() * (this.font.FONT_HEIGHT + 1);
+                int height = this.font.listFormattedStringToWidth(this.getText(), preferredWidth).size() * (this.font.FONT_HEIGHT + 1);
                 super.setPreferredInnerSize(preferredWidth + 2, height);
             } else {
                 int width = 0;
                 int height = 0;
-                for (String str : this.text.split("\n")) {
+                for (String str : this.getText().split("\n")) {
                     width = MathHelper.max(width, this.font.getStringWidth(str));
                     height += this.font.FONT_HEIGHT + 1;
                 }
@@ -89,14 +93,14 @@ public class SGLabel extends SGComponent {
     @Override
     public void drawForeground(int mouseX, int mouseY, float partialTicks) {
         GL11.glTranslatef(this.getLeft(SizeContext.INNER) + 1, this.getTop(SizeContext.INNER), this.getZLevel());
-        if (this.text != null) {
-            GuiStateManager.enableTextures();
+        if (this.getText() != null) {
+            GLState.glEnable(GL11.GL_TEXTURE_2D);
             List<String> strings;
             int width = this.getWidth(SizeContext.INNER);
             if (this.shouldSplit) {
-                strings = (List<String>) this.font.listFormattedStringToWidth(this.text, width);
+                strings = (List<String>) this.font.listFormattedStringToWidth(this.getText(), width);
             } else {
-                strings = Arrays.asList(this.text.split("\n"));
+                strings = Arrays.asList(this.getText().split("\n"));
             }
             int height = this.getHeight(SizeContext.INNER);
             int i = 0;
@@ -144,5 +148,4 @@ public class SGLabel extends SGComponent {
     public void setLayoutManager(SGLayoutManager layoutManager) {
         // We don't need no layout manager
     }
-
 }
