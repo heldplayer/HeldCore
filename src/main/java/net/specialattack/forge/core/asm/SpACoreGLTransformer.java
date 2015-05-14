@@ -1,6 +1,9 @@
 package net.specialattack.forge.core.asm;
 
 import com.google.common.collect.Lists;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.lwjgl.opengl.GL11;
@@ -8,10 +11,19 @@ import org.objectweb.asm.*;
 
 public class SpACoreGLTransformer implements IClassTransformer {
 
+    private File saveFolder;
+
     private static boolean changed = false;
     private static final String STATE_MANAGER = "net/specialattack/forge/core/client/GLState";
 
     private static final List<Replacement> replacements = Lists.newArrayList();
+
+    public SpACoreGLTransformer() {
+        this.saveFolder = new File("." + File.separator + "asm" + File.separator + "spacore_statemanager");
+        if (!this.saveFolder.exists()) {
+            this.saveFolder.mkdir();
+        }
+    }
 
     static {
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glBegin", "glBegin"));
@@ -37,6 +49,7 @@ public class SpACoreGLTransformer implements IClassTransformer {
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glScissor", "glScissor"));
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glClearColor", "glClearColor"));
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glClearDepth", "glClearDepth"));
+        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glDepthFunc", "glDepthFunc"));
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glCullFace", "glCullFace"));
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glLogicOp", "glLogicOp"));
     }
@@ -188,7 +201,36 @@ public class SpACoreGLTransformer implements IClassTransformer {
             reader.accept(visitor, 0);
             if (SpACoreGLTransformer.changed) {
                 SpACorePlugin.LOG.debug("Inserted GLState calls to " + transformedName);
-                return writer.toByteArray();
+                byte[] result = writer.toByteArray();
+
+                if (SpACorePlugin.stateManagerDebug) {
+                    if (name.indexOf('.') != -1) {
+                        String folderName = name.substring(0, name.lastIndexOf('.')).replace('.', File.separatorChar);
+                        File folder = new File(this.saveFolder, folderName);
+                        if (!folder.exists()) {
+                            folder.mkdirs();
+                        }
+                    }
+
+                    File output = new File(this.saveFolder, name.replace('.', File.separatorChar) + ".class");
+
+                    FileOutputStream out = null;
+                    try {
+                        out = new FileOutputStream(output);
+                        out.write(result);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (out != null) {
+                            try {
+                                out.close();
+                            } catch (IOException e) {
+                            }
+                        }
+                    }
+                }
+
+                return result;
             }
         }
         return original;

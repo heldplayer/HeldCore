@@ -17,7 +17,7 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
     protected static boolean debug = false;
     public static final Logger LOG = LogManager.getLogger("SpACore-ASM");
 
-    public static boolean stateManager;
+    public static boolean stateManager, stateManagerDebug;
     public static boolean loggerTransformer;
     public static boolean debugScreen;
 
@@ -55,6 +55,8 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
         config.setCategoryComment("client", "Client specific ASM injections");
         Property stateManager = config.get("client", "GLStateManager", true, "Set to true to enable handling of the render state to increase performance.");
         SpACorePlugin.stateManager = stateManager.getBoolean();
+        Property stateManagerDebug = config.get("client", "GLStateManagerOutput", false, "Set to true to enable outputting of transformed classes after having the state manager injected");
+        SpACorePlugin.stateManagerDebug = stateManagerDebug.getBoolean();
         Property loggerTransformer = config.get("client", "TextureLoggerTransformer", true, "Set to true to enable surpressing long stacktraces in the log when there are missing textures.");
         SpACorePlugin.loggerTransformer = loggerTransformer.getBoolean();
         Property debugScreen = config.get("client", "DebugScreen", true, "Set to true to change the debug screen (F3) to look more like the 1.8 debug screen.");

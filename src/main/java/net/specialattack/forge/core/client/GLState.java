@@ -408,9 +408,9 @@ public class GLState {
             GL11.glColor3ub(red, green, blue);
             return;
         }
-        float fRed = (float) ((int) red + 128) / 255.0F;
-        float fGreen = (float) ((int) green + 128) / 255.0F;
-        float fBlue = (float) ((int) blue + 128) / 255.0F;
+        float fRed = (float) (red & 0xFF) / 255.0F;
+        float fGreen = (float) (green & 0xFF) / 255.0F;
+        float fBlue = (float) (blue & 0xFF) / 255.0F;
         GLState.glColor4f(fRed, fGreen, fBlue, 1.0F);
     }
 
@@ -449,10 +449,10 @@ public class GLState {
             GL11.glColor4ub(red, green, blue, alpha);
             return;
         }
-        float fRed = (float) ((int) red + 128) / 255.0F;
-        float fGreen = (float) ((int) green + 128) / 255.0F;
-        float fBlue = (float) ((int) blue + 128) / 255.0F;
-        float fAlpha = (float) ((int) alpha + 128) / 255.0F;
+        float fRed = (float) (red & 0xFF) / 255.0F;
+        float fGreen = (float) (green & 0xFF) / 255.0F;
+        float fBlue = (float) (blue & 0xFF) / 255.0F;
+        float fAlpha = (float) (alpha & 0xFF) / 255.0F;
         GLState.glColor4f(fRed, fGreen, fBlue, fAlpha);
     }
 
