@@ -1,5 +1,6 @@
 package net.specialattack.forge.core.asm;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.IFMLCallHook;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import java.io.File;

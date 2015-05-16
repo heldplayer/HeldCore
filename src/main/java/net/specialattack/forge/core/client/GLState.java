@@ -651,7 +651,7 @@ public class GLState {
         public int logicOp = GL11.GL_BACK;
 
         public void logicOp(int opcode) {
-            if (opcode >= GL11.GL_CLEAR && opcode == GL11.GL_SET) {
+            if (opcode >= GL11.GL_CLEAR && opcode <= GL11.GL_SET) {
                 if (this.logicOp != opcode) {
                     GL11.glLogicOp(opcode);
                     GLState.checkError();
