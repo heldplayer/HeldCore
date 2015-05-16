@@ -62,7 +62,7 @@ public class SpACore extends SpACoreMod {
         this.config.addCategory(category);
         category.addValue(SpACore.refreshRate);
         category.addValue(SpACore.textureMapId);
-        category.addValue(SpACore.showReportBugs);
+        //category.addValue(SpACore.showReportBugs);
         category.addValue(SpACore.replaceModOptions);
 
         super.preInit(event);
