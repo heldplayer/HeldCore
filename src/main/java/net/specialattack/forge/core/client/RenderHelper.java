@@ -51,22 +51,22 @@ public final class RenderHelper {
                 Vector point3 = result[i + 1 + j * (pointCount + 1)];
                 Vector point4 = result[i + 1 + (j + 1) * (pointCount + 1)];
                 GL11.glTexCoord2d(icon.getInterpolatedU((double) i / (double) pointCount * 16.0D), icon.getInterpolatedV((double) (j + 1) / (double) pointCount * 16.0D));
-                GL11.glVertex3d(point2.posX, point2.posY, point2.posZ);
+                GLState.glVertex3d(point2.posX, point2.posY, point2.posZ);
                 GL11.glTexCoord2d(icon.getInterpolatedU((double) (i + 1) / (double) pointCount * 16.0D), icon.getInterpolatedV((double) (j + 1) / (double) pointCount * 16.0D));
-                GL11.glVertex3d(point4.posX, point4.posY, point4.posZ);
+                GLState.glVertex3d(point4.posX, point4.posY, point4.posZ);
                 GL11.glTexCoord2d(icon.getInterpolatedU((double) (i + 1) / (double) pointCount * 16.0D), icon.getInterpolatedV((double) j / (double) pointCount * 16.0D));
-                GL11.glVertex3d(point3.posX, point3.posY, point3.posZ);
+                GLState.glVertex3d(point3.posX, point3.posY, point3.posZ);
                 GL11.glTexCoord2d(icon.getInterpolatedU((double) i / (double) pointCount * 16.0D), icon.getInterpolatedV((double) j / (double) pointCount * 16.0D));
-                GL11.glVertex3d(point1.posX, point1.posY, point1.posZ);
+                GLState.glVertex3d(point1.posX, point1.posY, point1.posZ);
 
                 GL11.glTexCoord2d(icon.getInterpolatedU((double) i / (double) pointCount * 16.0D), icon.getInterpolatedV((double) j / (double) pointCount * 16.0D));
-                GL11.glVertex3d(point1.posX, point1.posY, point1.posZ);
+                GLState.glVertex3d(point1.posX, point1.posY, point1.posZ);
                 GL11.glTexCoord2d(icon.getInterpolatedU((double) (i + 1) / (double) pointCount * 16.0D), icon.getInterpolatedV((double) j / (double) pointCount * 16.0D));
-                GL11.glVertex3d(point3.posX, point3.posY, point3.posZ);
+                GLState.glVertex3d(point3.posX, point3.posY, point3.posZ);
                 GL11.glTexCoord2d(icon.getInterpolatedU((double) (i + 1) / (double) pointCount * 16.0D), icon.getInterpolatedV((double) (j + 1) / (double) pointCount * 16.0D));
-                GL11.glVertex3d(point4.posX, point4.posY, point4.posZ);
+                GLState.glVertex3d(point4.posX, point4.posY, point4.posZ);
                 GL11.glTexCoord2d(icon.getInterpolatedU((double) i / (double) pointCount * 16.0D), icon.getInterpolatedV((double) (j + 1) / (double) pointCount * 16.0D));
-                GL11.glVertex3d(point2.posX, point2.posY, point2.posZ);
+                GLState.glVertex3d(point2.posX, point2.posY, point2.posZ);
             }
         }
         GLState.glEnd();
@@ -104,26 +104,26 @@ public final class RenderHelper {
 
     public static void drawBox(AxisAlignedBB aabb) {
         GLState.glBegin(GL11.GL_LINE_LOOP);
-        GL11.glVertex3d(aabb.minX, aabb.minY, aabb.minZ);
-        GL11.glVertex3d(aabb.maxX, aabb.minY, aabb.minZ);
-        GL11.glVertex3d(aabb.maxX, aabb.minY, aabb.maxZ);
-        GL11.glVertex3d(aabb.minX, aabb.minY, aabb.maxZ);
+        GLState.glVertex3d(aabb.minX, aabb.minY, aabb.minZ);
+        GLState.glVertex3d(aabb.maxX, aabb.minY, aabb.minZ);
+        GLState.glVertex3d(aabb.maxX, aabb.minY, aabb.maxZ);
+        GLState.glVertex3d(aabb.minX, aabb.minY, aabb.maxZ);
         GLState.glEnd();
         GLState.glBegin(GL11.GL_LINE_LOOP);
-        GL11.glVertex3d(aabb.minX, aabb.maxY, aabb.minZ);
-        GL11.glVertex3d(aabb.maxX, aabb.maxY, aabb.minZ);
-        GL11.glVertex3d(aabb.maxX, aabb.maxY, aabb.maxZ);
-        GL11.glVertex3d(aabb.minX, aabb.maxY, aabb.maxZ);
+        GLState.glVertex3d(aabb.minX, aabb.maxY, aabb.minZ);
+        GLState.glVertex3d(aabb.maxX, aabb.maxY, aabb.minZ);
+        GLState.glVertex3d(aabb.maxX, aabb.maxY, aabb.maxZ);
+        GLState.glVertex3d(aabb.minX, aabb.maxY, aabb.maxZ);
         GLState.glEnd();
         GLState.glBegin(GL11.GL_LINES);
-        GL11.glVertex3d(aabb.minX, aabb.minY, aabb.minZ);
-        GL11.glVertex3d(aabb.minX, aabb.maxY, aabb.minZ);
-        GL11.glVertex3d(aabb.maxX, aabb.minY, aabb.minZ);
-        GL11.glVertex3d(aabb.maxX, aabb.maxY, aabb.minZ);
-        GL11.glVertex3d(aabb.maxX, aabb.minY, aabb.maxZ);
-        GL11.glVertex3d(aabb.maxX, aabb.maxY, aabb.maxZ);
-        GL11.glVertex3d(aabb.minX, aabb.minY, aabb.maxZ);
-        GL11.glVertex3d(aabb.minX, aabb.maxY, aabb.maxZ);
+        GLState.glVertex3d(aabb.minX, aabb.minY, aabb.minZ);
+        GLState.glVertex3d(aabb.minX, aabb.maxY, aabb.minZ);
+        GLState.glVertex3d(aabb.maxX, aabb.minY, aabb.minZ);
+        GLState.glVertex3d(aabb.maxX, aabb.maxY, aabb.minZ);
+        GLState.glVertex3d(aabb.maxX, aabb.minY, aabb.maxZ);
+        GLState.glVertex3d(aabb.maxX, aabb.maxY, aabb.maxZ);
+        GLState.glVertex3d(aabb.minX, aabb.minY, aabb.maxZ);
+        GLState.glVertex3d(aabb.minX, aabb.maxY, aabb.maxZ);
         GLState.glEnd();
     }
 

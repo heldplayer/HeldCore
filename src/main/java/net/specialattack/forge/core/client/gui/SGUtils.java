@@ -22,7 +22,7 @@ public final class SGUtils {
     }
 
     public static void drawErrorBox(SGComponent component) {
-        GL11.glPushMatrix();
+        GLState.glPushMatrix();
         GL11.glTranslatef(component.getLeft(SizeContext.OUTLINE), component.getTop(SizeContext.OUTLINE), component.getZLevel());
         int width = component.getWidth(SizeContext.OUTLINE);
         int height = component.getHeight(SizeContext.OUTLINE);
@@ -34,13 +34,13 @@ public final class SGUtils {
         GLState.glDisable(GL11.GL_TEXTURE_2D);
         GLState.glDisable(GL11.GL_TEXTURE_2D);
         GLState.glBegin(GL11.GL_LINES);
-        GL11.glVertex3f(1.0F, 1.0F, 0.0F);
-        GL11.glVertex3f(width - 1.0F, height - 1.0F, 0.0F);
-        GL11.glVertex3f(width - 1.0F, 1.0F, 0.0F);
-        GL11.glVertex3f(1.0F, height - 1.0F, 0.0F);
+        GLState.glVertex3f(1.0F, 1.0F, 0.0F);
+        GLState.glVertex3f(width - 1.0F, height - 1.0F, 0.0F);
+        GLState.glVertex3f(width - 1.0F, 1.0F, 0.0F);
+        GLState.glVertex3f(1.0F, height - 1.0F, 0.0F);
         GLState.glEnd();
 
-        GL11.glPopMatrix();
+        GLState.glPopMatrix();
     }
 
     private static LinkedList<Region> clipRegions = new LinkedList<Region>();

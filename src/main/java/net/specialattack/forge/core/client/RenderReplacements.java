@@ -30,7 +30,7 @@ public class RenderReplacements extends Gui {
         Minecraft mc = MC.getMinecraft();
         if (mc.gameSettings.showDebugInfo) {
             // Render the new crosshair
-            GL11.glPushMatrix();
+            GLState.glPushMatrix();
             try {
                 Entity entity = mc.renderViewEntity;
                 GLState.glEnable(GL11.GL_BLEND);
@@ -44,16 +44,16 @@ public class RenderReplacements extends Gui {
                 GLState.glBegin(GL11.GL_LINES);
                 // X
                 GLState.glColor4f(1.0F, 0.0F, 0.0F, 1.0F);
-                GL11.glVertex3f(0.0F, 0.0F, 0.0F);
-                GL11.glVertex3f(-12.5F, 0.0F, 0.0F);
+                GLState.glVertex3f(0.0F, 0.0F, 0.0F);
+                GLState.glVertex3f(-12.5F, 0.0F, 0.0F);
                 // Z
                 GLState.glColor4f(0.0F, 0.0F, 1.0F, 1.0F);
-                GL11.glVertex3f(0.0F, 0.0F, 0.0F);
-                GL11.glVertex3f(0.0F, 0.0F, -12.5F);
+                GLState.glVertex3f(0.0F, 0.0F, 0.0F);
+                GLState.glVertex3f(0.0F, 0.0F, -12.5F);
                 // Y
                 GLState.glColor4f(0.0F, 1.0F, 0.0F, 1.0F);
-                GL11.glVertex3f(0.0F, 0.0F, 0.0F);
-                GL11.glVertex3f(0.0F, -8.25F, 0.0F);
+                GLState.glVertex3f(0.0F, 0.0F, 0.0F);
+                GLState.glVertex3f(0.0F, -8.25F, 0.0F);
                 GLState.glEnd();
                 GLState.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 GLState.glDepthMask(true);
@@ -62,7 +62,7 @@ public class RenderReplacements extends Gui {
             } catch (RuntimeException e) {
                 e.printStackTrace();
             }
-            GL11.glPopMatrix();
+            GLState.glPopMatrix();
         } else {
             // Try the default crosshair
             if (MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(eventParent, RenderGameOverlayEvent.ElementType.CROSSHAIRS)))

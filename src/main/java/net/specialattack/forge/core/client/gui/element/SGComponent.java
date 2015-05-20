@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.FontRenderer;
+import net.specialattack.forge.core.client.GLState;
 import net.specialattack.forge.core.client.MC;
 import net.specialattack.forge.core.client.gui.GuiHelper;
 import net.specialattack.forge.core.client.gui.MouseHandler;
@@ -354,12 +355,12 @@ public class SGComponent implements IComponentHolder {
         //SGUtils.clipComponent(this);
         try {
             stack++;
-            GL11.glPushMatrix();
+            GLState.glPushMatrix();
             stack++;
-            GL11.glPushMatrix();
+            GLState.glPushMatrix();
             this.drawBackground(mouseX, mouseY, partialTicks);
             this.drawForeground(mouseX, mouseY, partialTicks);
-            GL11.glPopMatrix();
+            GLState.glPopMatrix();
             stack--;
             if (SGComponent.DEBUG) {
                 if (this.mouseOver || this.focus) {
@@ -385,13 +386,13 @@ public class SGComponent implements IComponentHolder {
                     component.draw(mouseX - left, mouseY - top, partialTicks);
                 }
             }
-            GL11.glPopMatrix();
+            GLState.glPopMatrix();
             stack--;
         } catch (Exception e) {
             e.printStackTrace();
             this.setErrored();
             while (stack > 0) {
-                GL11.glPopMatrix();
+                GLState.glPopMatrix();
                 stack--;
             }
         }

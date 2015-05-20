@@ -73,14 +73,14 @@ public class SGScrollPane extends SGComponent {
         int stack = 0;
         try {
             stack++;
-            GL11.glPushMatrix();
+            GLState.glPushMatrix();
             stack++;
-            GL11.glPushMatrix();
+            GLState.glPushMatrix();
             this.drawBackground(mouseX, mouseY, partialTicks);
             this.drawForeground(mouseX, mouseY, partialTicks);
             //GL11.glTranslatef(this.getLeft(SizeContext.INNER) - (int) this.scrollLeft, this.getTop(SizeContext.INNER) - (int) this.scrollTop, 0.0F);
             //SGUtils.drawErrorBox(this.innerPanel);
-            GL11.glPopMatrix();
+            GLState.glPopMatrix();
             stack--;
             if (SGComponent.DEBUG) {
                 if (this.isMouseOver() || this.hasFocus()) {
@@ -113,13 +113,13 @@ public class SGScrollPane extends SGComponent {
                     }
                 }
             }
-            GL11.glPopMatrix();
+            GLState.glPopMatrix();
             stack--;
         } catch (Exception e) {
             e.printStackTrace();
             this.setErrored();
             while (stack > 0) {
-                GL11.glPopMatrix();
+                GLState.glPopMatrix();
                 stack--;
             }
         } finally {
@@ -136,7 +136,7 @@ public class SGScrollPane extends SGComponent {
     public void drawBackground(int mouseX, int mouseY, float partialTicks) {
         super.drawBackground(mouseX, mouseY, partialTicks);
         if (this.horizontal || this.vertical) {
-            GL11.glPushMatrix();
+            GLState.glPushMatrix();
             GL11.glTranslatef(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
             if (this.vertical) {
                 int superWidth = super.getWidth(SizeContext.INNER);
@@ -148,7 +148,7 @@ public class SGScrollPane extends SGComponent {
                 // Here we don't do super width to prevent overlap               vv
                 GuiHelper.drawColoredRect(0, superHeight - this.scrollbarWidth, this.getWidth(SizeContext.INNER), superHeight, this.getScrollbarBackground().colorHex, 0.0F);
             }
-            GL11.glPopMatrix();
+            GLState.glPopMatrix();
         }
     }
 
@@ -156,7 +156,7 @@ public class SGScrollPane extends SGComponent {
     public void drawForeground(int mouseX, int mouseY, float partialTicks) {
         super.drawForeground(mouseX, mouseY, partialTicks);
         if (this.horizontal || this.vertical) {
-            GL11.glPushMatrix();
+            GLState.glPushMatrix();
             GL11.glTranslatef(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
             int width = this.getWidth(SizeContext.INNER);
             int height = this.getHeight(SizeContext.INNER);
@@ -195,7 +195,7 @@ public class SGScrollPane extends SGComponent {
                     GuiHelper.drawColoredRect(0, superHeight - this.scrollbarWidth, innerWidth, superHeight, color.colorHex, 0.0F);
                 }
             }
-            GL11.glPopMatrix();
+            GLState.glPopMatrix();
         }
     }
 

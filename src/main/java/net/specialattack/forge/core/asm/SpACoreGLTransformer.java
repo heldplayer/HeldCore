@@ -30,6 +30,17 @@ public class SpACoreGLTransformer implements IClassTransformer {
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glEnd", "glEnd"));
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glEnable", "glEnable"));
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glDisable", "glDisable"));
+        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glPushMatrix", "glPushMatrix"));
+        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glPopMatrix", "glPopMatrix"));
+        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex2i", "glVertex2i"));
+        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex2f", "glVertex2f"));
+        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex2d", "glVertex2d"));
+        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex3i", "glVertex3i"));
+        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex3f", "glVertex3f"));
+        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex3d", "glVertex3d"));
+        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex4i", "glVertex4i"));
+        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex4f", "glVertex4f"));
+        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex4d", "glVertex4d"));
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glAlphaFunc", "glAlphaFunc"));
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glBlendFunc", "glBlendFunc"));
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3be", "glColor3be"));

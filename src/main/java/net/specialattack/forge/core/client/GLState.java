@@ -15,42 +15,44 @@ import org.lwjgl.util.glu.GLU;
 @SideOnly(Side.CLIENT)
 public class GLState {
 
-    private static GLState.BooleanState LIGHTING_STATE = new GLState.BooleanState(GL11.GL_LIGHTING);
-    private static GLState.BooleanState[] LIGHT_STATES = new GLState.BooleanState[8];
-    private static GLState.BooleanState NORMALIZE_STATE = new GLState.BooleanState(GL11.GL_NORMALIZE);
-    private static GLState.BooleanState RESCALE_NORMAL_STATE = new GLState.BooleanState(GL12.GL_RESCALE_NORMAL);
-    private static GLState.ColorState COLOR_STATE = new GLState.ColorState();
-    private static GLState.ColorLogicState COLOR_LOGIC_STATE = new GLState.ColorLogicState();
-    private static GLState.AlphaState ALPHA_STATE = new GLState.AlphaState();
-    private static GLState.BlendState BLEND_STATE = new GLState.BlendState();
-    private static GLState.CullState CULL_STATE = new GLState.CullState();
-    private static GLState.ClearState CLEAR_STATE = new GLState.ClearState();
-    private static GLState.DepthState DEPTH_STATE = new GLState.DepthState();
-    private static GLState.FogState FOG_STATE = new GLState.FogState();
-    private static GLState.ViewportState VIEWPORT_STATE = new GLState.ViewportState();
-    private static GLState.ScissorState SCISSOR_STATE = new GLState.ScissorState();
-    private static GLState.TextureState[] TEXTURE_STATES = new GLState.TextureState[8];
+    private static GLState state = new GLState();
+    private static final int MAXIMUM_TEXTURE_COUNT = 32;
+
+    private GLState.BooleanState LIGHTING_STATE = new GLState.BooleanState(GL11.GL_LIGHTING);
+    private GLState.BooleanState[] LIGHT_STATES = new GLState.BooleanState[8];
+    private GLState.BooleanState NORMALIZE_STATE = new GLState.BooleanState(GL11.GL_NORMALIZE);
+    private GLState.BooleanState RESCALE_NORMAL_STATE = new GLState.BooleanState(GL12.GL_RESCALE_NORMAL);
+    private GLState.ColorState COLOR_STATE = new GLState.ColorState();
+    private GLState.ColorLogicState COLOR_LOGIC_STATE = new GLState.ColorLogicState();
+    private GLState.AlphaState ALPHA_STATE = new GLState.AlphaState();
+    private GLState.BlendState BLEND_STATE = new GLState.BlendState();
+    private GLState.CullState CULL_STATE = new GLState.CullState();
+    private GLState.ClearState CLEAR_STATE = new GLState.ClearState();
+    private GLState.DepthState DEPTH_STATE = new GLState.DepthState();
+    private GLState.FogState FOG_STATE = new GLState.FogState();
+    private GLState.ViewportState VIEWPORT_STATE = new GLState.ViewportState();
+    private GLState.ScissorState SCISSOR_STATE = new GLState.ScissorState();
+    private GLState.TextureState[] TEXTURE_STATES = new GLState.TextureState[GLState.MAXIMUM_TEXTURE_COUNT];
     private static int activeTexture = 0;
-    private static int shadeModel = GL11.GL_SMOOTH;
+    private int shadeModel = GL11.GL_SMOOTH;
     private static float lineWidth = 1.0F;
     private static boolean drawing;
 
-    static {
+    private GLState() {
         for (int i = 0; i < 8; i++) {
-            GLState.LIGHT_STATES[i] = new GLState.BooleanState(GL11.GL_LIGHT0 + i);
-            GLState.TEXTURE_STATES[i] = new GLState.TextureState();
+            this.LIGHT_STATES[i] = new GLState.BooleanState(GL11.GL_LIGHT0 + i);
+            this.TEXTURE_STATES[i] = new GLState.TextureState();
         }
     }
 
-    private GLState() {
-    }
-
     private static void throwError(String error) {
-        throw new RuntimeException("Illegal attempt to change the GL state detected" + (error == null ? "" : ": " + error));
+        String message = "Illegal attempt to change the GL state detected" + (error == null ? "" : ": " + error);
+        System.out.println(message);
+        //throw new RuntimeException(message);
     }
 
     public static void checkError() {
-        if (!GLState.drawing) {
+        if (!GLState.drawing && SpACorePlugin.stateManager) {
             int error = GL11.glGetError();
             if (error != 0) {
                 GLState.throwError(GLU.gluErrorString(error));
@@ -65,6 +67,7 @@ public class GLState {
             return;
         }
         if (!GLState.drawing) {
+            GLState.checkError();
             GL11.glBegin(mode);
             GLState.drawing = true;
         } else {
@@ -75,11 +78,13 @@ public class GLState {
     public static void glEnd() {
         if (!SpACorePlugin.stateManager) {
             GL11.glEnd();
+            GLState.drawing = false; // We set the state to false here but never set it back to true
             return;
         }
         if (GLState.drawing) {
             GL11.glEnd();
             GLState.drawing = false;
+            GLState.checkError();
         } else {
             GLState.throwError("Not drawing!");
         }
@@ -91,44 +96,45 @@ public class GLState {
             return;
         }
         if (code >= GL11.GL_LIGHT0 && code <= GL11.GL_LIGHT7) {
-            GLState.LIGHT_STATES[code - GL11.GL_LIGHT0].setEnabled();
+            GLState.state.LIGHT_STATES[code - GL11.GL_LIGHT0].setEnabled();
         } else {
             switch (code) {
                 case GL11.GL_LIGHTING:
-                    GLState.LIGHTING_STATE.setEnabled();
+                    GLState.state.LIGHTING_STATE.setEnabled();
                     break;
                 case GL11.GL_NORMALIZE:
-                    GLState.NORMALIZE_STATE.setEnabled();
+                    GLState.state.NORMALIZE_STATE.setEnabled();
                     break;
                 case GL12.GL_RESCALE_NORMAL:
-                    GLState.RESCALE_NORMAL_STATE.setEnabled();
+                    GLState.state.RESCALE_NORMAL_STATE.setEnabled();
                     break;
                 case GL11.GL_ALPHA_TEST:
-                    GLState.ALPHA_STATE.ALPHA_TEST.setEnabled();
+                    GLState.state.ALPHA_STATE.ALPHA_TEST.setEnabled();
                     break;
                 case GL11.GL_BLEND:
-                    GLState.BLEND_STATE.BLEND.setEnabled();
+                    GLState.state.BLEND_STATE.BLEND.setEnabled();
                     break;
                 case GL11.GL_DEPTH_TEST:
-                    GLState.DEPTH_STATE.DEPTH_TEST.setEnabled();
+                    GLState.state.DEPTH_STATE.DEPTH_TEST.setEnabled();
                     break;
                 case GL11.GL_TEXTURE_2D:
-                    GLState.TEXTURE_STATES[GLState.activeTexture].TEXTURE_2D.setEnabled();
+                    GLState.state.TEXTURE_STATES[GLState.activeTexture].TEXTURE_2D.setEnabled();
                     break;
                 case GL11.GL_FOG:
-                    GLState.FOG_STATE.FOG.setEnabled();
+                    GLState.state.FOG_STATE.FOG.setEnabled();
                     break;
                 case GL11.GL_CULL_FACE:
-                    GLState.CULL_STATE.CULL_FACE.setEnabled();
+                    GLState.state.CULL_STATE.CULL_FACE.setEnabled();
                     break;
                 case GL11.GL_SCISSOR_TEST:
-                    GLState.SCISSOR_STATE.SCISSOR_TEST.setEnabled();
+                    GLState.state.SCISSOR_STATE.SCISSOR_TEST.setEnabled();
                     break;
                 case GL11.GL_COLOR_LOGIC_OP:
-                    GLState.COLOR_LOGIC_STATE.COLOR_LOGIC_OP.setEnabled();
+                    GLState.state.COLOR_LOGIC_STATE.COLOR_LOGIC_OP.setEnabled();
                     break;
                 default:
                     GL11.glEnable(code);
+                    GLState.checkError();
                     break;
             }
         }
@@ -140,46 +146,137 @@ public class GLState {
             return;
         }
         if (code >= GL11.GL_LIGHT0 && code <= GL11.GL_LIGHT7) {
-            GLState.LIGHT_STATES[code - GL11.GL_LIGHT0].setDisabled();
+            GLState.state.LIGHT_STATES[code - GL11.GL_LIGHT0].setDisabled();
         } else {
             switch (code) {
                 case GL11.GL_LIGHTING:
-                    GLState.LIGHTING_STATE.setDisabled();
+                    GLState.state.LIGHTING_STATE.setDisabled();
                     break;
                 case GL11.GL_NORMALIZE:
-                    GLState.NORMALIZE_STATE.setDisabled();
+                    GLState.state.NORMALIZE_STATE.setDisabled();
                     break;
                 case GL12.GL_RESCALE_NORMAL:
-                    GLState.RESCALE_NORMAL_STATE.setDisabled();
+                    GLState.state.RESCALE_NORMAL_STATE.setDisabled();
                     break;
                 case GL11.GL_ALPHA_TEST:
-                    GLState.ALPHA_STATE.ALPHA_TEST.setDisabled();
+                    GLState.state.ALPHA_STATE.ALPHA_TEST.setDisabled();
                     break;
                 case GL11.GL_BLEND:
-                    GLState.BLEND_STATE.BLEND.setDisabled();
+                    GLState.state.BLEND_STATE.BLEND.setDisabled();
                     break;
                 case GL11.GL_DEPTH_TEST:
-                    GLState.DEPTH_STATE.DEPTH_TEST.setDisabled();
+                    GLState.state.DEPTH_STATE.DEPTH_TEST.setDisabled();
                     break;
                 case GL11.GL_TEXTURE_2D:
-                    GLState.TEXTURE_STATES[GLState.activeTexture].TEXTURE_2D.setDisabled();
+                    GLState.state.TEXTURE_STATES[GLState.activeTexture].TEXTURE_2D.setDisabled();
                     break;
                 case GL11.GL_FOG:
-                    GLState.FOG_STATE.FOG.setDisabled();
+                    GLState.state.FOG_STATE.FOG.setDisabled();
                     break;
                 case GL11.GL_CULL_FACE:
-                    GLState.CULL_STATE.CULL_FACE.setDisabled();
+                    GLState.state.CULL_STATE.CULL_FACE.setDisabled();
                     break;
                 case GL11.GL_SCISSOR_TEST:
-                    GLState.SCISSOR_STATE.SCISSOR_TEST.setDisabled();
+                    GLState.state.SCISSOR_STATE.SCISSOR_TEST.setDisabled();
                     break;
                 case GL11.GL_COLOR_LOGIC_OP:
-                    GLState.COLOR_LOGIC_STATE.COLOR_LOGIC_OP.setDisabled();
+                    GLState.state.COLOR_LOGIC_STATE.COLOR_LOGIC_OP.setDisabled();
                     break;
                 default:
                     GL11.glDisable(code);
+                    GLState.checkError();
                     break;
             }
+        }
+    }
+
+    public static void glPushMatrix() {
+        if (!SpACorePlugin.stateManager) {
+            GL11.glPushMatrix();
+            return;
+        }
+        GL11.glPushMatrix();
+        GLState.checkError();
+    }
+
+    public static void glPopMatrix() {
+        if (!SpACorePlugin.stateManager) {
+            GL11.glPopMatrix();
+            return;
+        }
+        GL11.glPopMatrix();
+        GLState.checkError();
+    }
+
+    public static void glVertex2i(int x, int y) {
+        if (!SpACorePlugin.stateManager || GLState.drawing) {
+            GL11.glVertex2i(x, y);
+        } else {
+            GLState.throwError("Not drawing!");
+        }
+    }
+
+    public static void glVertex2f(float x, float y) {
+        if (!SpACorePlugin.stateManager || GLState.drawing) {
+            GL11.glVertex2f(x, y);
+        } else {
+            GLState.throwError("Not drawing!");
+        }
+    }
+
+    public static void glVertex2d(double x, double y) {
+        if (!SpACorePlugin.stateManager || GLState.drawing) {
+            GL11.glVertex2d(x, y);
+        } else {
+            GLState.throwError("Not drawing!");
+        }
+    }
+
+    public static void glVertex3i(int x, int y, int z) {
+        if (!SpACorePlugin.stateManager || GLState.drawing) {
+            GL11.glVertex3i(x, y, z);
+        } else {
+            GLState.throwError("Not drawing!");
+        }
+    }
+
+    public static void glVertex3f(float x, float y, float z) {
+        if (!SpACorePlugin.stateManager || GLState.drawing) {
+            GL11.glVertex3f(x, y, z);
+        } else {
+            GLState.throwError("Not drawing!");
+        }
+    }
+
+    public static void glVertex3d(double x, double y, double z) {
+        if (!SpACorePlugin.stateManager || GLState.drawing) {
+            GL11.glVertex3d(x, y, z);
+        } else {
+            GLState.throwError("Not drawing!");
+        }
+    }
+
+    public static void glVertex4i(int x, int y, int z, int w) {
+        if (!SpACorePlugin.stateManager || GLState.drawing) {
+            GL11.glVertex4i(x, y, z, w);
+        } else {
+            GLState.throwError("Not drawing!");
+        }
+    }
+
+    public static void glVertex4f(float x, float y, float z, float w) {
+        if (!SpACorePlugin.stateManager || GLState.drawing) {
+            GL11.glVertex4f(x, y, z, w);
+        } else {
+            GLState.throwError("Not drawing!");
+        }
+    }
+
+    public static void glVertex4d(double x, double y, double z, double w) {
+        if (!SpACorePlugin.stateManager || GLState.drawing) {
+            GL11.glVertex4d(x, y, z, w);
+        } else {
+            GLState.throwError("Not drawing!");
         }
     }
 
@@ -188,7 +285,7 @@ public class GLState {
             GL11.glAlphaFunc(func, ref);
             return;
         }
-        GLState.ALPHA_STATE.alphaFunc(func, ref);
+        GLState.state.ALPHA_STATE.alphaFunc(func, ref);
     }
 
     public static void glShadeModel(int mode) {
@@ -199,10 +296,10 @@ public class GLState {
         if (mode != GL11.GL_SMOOTH && mode != GL11.GL_FLAT) {
             GLState.throwError(String.format("Invalid shade model: %H", mode));
         }
-        if (GLState.shadeModel != mode) {
+        if (GLState.state.shadeModel != mode) {
             GL11.glShadeModel(mode);
             GLState.checkError();
-            GLState.shadeModel = mode;
+            GLState.state.shadeModel = mode;
         }
     }
 
@@ -226,15 +323,23 @@ public class GLState {
             GL11.glBlendFunc(src, dest);
             return;
         }
-        GLState.BLEND_STATE.blendFunc(src, dest);
+        GLState.state.BLEND_STATE.blendFunc(src, dest);
     }
 
     public static void glBlendFunc(int srcRGB, int destRGB, int srcAlpha, int destAlpha) {
         if (!SpACorePlugin.stateManager) {
-            OpenGlHelper.glBlendFunc(srcRGB, destRGB, srcAlpha, destAlpha);
+            if (OpenGlHelper.openGL14) { // glBlendSepperate supported?
+                if (OpenGlHelper.field_153211_u) { // Use extension or GL14?
+                    EXTBlendFuncSeparate.glBlendFuncSeparateEXT(srcRGB, destRGB, srcAlpha, destAlpha);
+                } else {
+                    GL14.glBlendFuncSeparate(srcRGB, destRGB, srcAlpha, destAlpha);
+                }
+            } else {
+                GL11.glBlendFunc(srcRGB, destRGB);
+            }
             return;
         }
-        GLState.BLEND_STATE.blendFunc(srcRGB, destRGB, srcAlpha, destAlpha);
+        GLState.state.BLEND_STATE.blendFunc(srcRGB, destRGB, srcAlpha, destAlpha);
     }
 
     public static void glCullFace(int mode) {
@@ -242,7 +347,7 @@ public class GLState {
             GL11.glCullFace(mode);
             return;
         }
-        GLState.CULL_STATE.cullFace(mode);
+        GLState.state.CULL_STATE.cullFace(mode);
     }
 
     public static void glLogicOp(int opcode) {
@@ -250,7 +355,7 @@ public class GLState {
             GL11.glLogicOp(opcode);
             return;
         }
-        GLState.COLOR_LOGIC_STATE.logicOp(opcode);
+        GLState.state.COLOR_LOGIC_STATE.logicOp(opcode);
     }
 
     public static void glClearDepth(double depth) {
@@ -258,7 +363,7 @@ public class GLState {
             GL11.glClearDepth(depth);
             return;
         }
-        GLState.CLEAR_STATE.clearDepth(depth);
+        GLState.state.CLEAR_STATE.clearDepth(depth);
     }
 
     public static void glClearColor(float red, float green, float blue, float alpha) {
@@ -266,7 +371,7 @@ public class GLState {
             GL11.glClearColor(red, green, blue, alpha);
             return;
         }
-        GLState.CLEAR_STATE.clearColor(red, green, blue, alpha);
+        GLState.state.CLEAR_STATE.clearColor(red, green, blue, alpha);
     }
 
     public static void glDepthFunc(int func) {
@@ -274,7 +379,7 @@ public class GLState {
             GL11.glDepthFunc(func);
             return;
         }
-        GLState.DEPTH_STATE.depthFunc(func);
+        GLState.state.DEPTH_STATE.depthFunc(func);
     }
 
     public static void glDepthMask(boolean flag) {
@@ -282,7 +387,7 @@ public class GLState {
             GL11.glDepthMask(flag);
             return;
         }
-        GLState.DEPTH_STATE.depthMask(flag);
+        GLState.state.DEPTH_STATE.depthMask(flag);
     }
 
     public static void glActiveTexture(int texture) {
@@ -298,7 +403,7 @@ public class GLState {
             GL11.glViewport(x, y, width, height);
             return;
         }
-        GLState.VIEWPORT_STATE.glViewport(x, y, width, height);
+        GLState.state.VIEWPORT_STATE.glViewport(x, y, width, height);
     }
 
     public static void glScissor(int x, int y, int width, int height) {
@@ -306,7 +411,7 @@ public class GLState {
             GL11.glScissor(x, y, width, height);
             return;
         }
-        GLState.SCISSOR_STATE.glScissor(x, y, width, height);
+        GLState.state.SCISSOR_STATE.glScissor(x, y, width, height);
     }
 
     public static void glFogf(int pname, float param) {
@@ -316,13 +421,13 @@ public class GLState {
         }
         switch (pname) {
             case GL11.GL_FOG_DENSITY:
-                GLState.FOG_STATE.fogDensity(param);
+                GLState.state.FOG_STATE.fogDensity(param);
                 break;
             case GL11.GL_FOG_START:
-                GLState.FOG_STATE.fogStart(param);
+                GLState.state.FOG_STATE.fogStart(param);
                 break;
             case GL11.GL_FOG_END:
-                GLState.FOG_STATE.fogEnd(param);
+                GLState.state.FOG_STATE.fogEnd(param);
                 break;
             default:
                 GL11.glFogf(pname, param);
@@ -337,10 +442,10 @@ public class GLState {
         }
         switch (pname) {
             case GL11.GL_FOG_MODE:
-                GLState.FOG_STATE.fogMode(param);
+                GLState.state.FOG_STATE.fogMode(param);
                 break;
             case NVFogDistance.GL_FOG_DISTANCE_MODE_NV:
-                GLState.FOG_STATE.fogDistanceModeNv(param);
+                GLState.state.FOG_STATE.fogDistanceModeNv(param);
                 break;
             default:
                 GL11.glFogi(pname, param);
@@ -355,16 +460,16 @@ public class GLState {
         }
         switch (pname) {
             case GL11.GL_FOG_DENSITY:
-                GLState.FOG_STATE.fogDensity(params.get(0));
+                GLState.state.FOG_STATE.fogDensity(params.get(0));
                 break;
             case GL11.GL_FOG_START:
-                GLState.FOG_STATE.fogStart(params.get(0));
+                GLState.state.FOG_STATE.fogStart(params.get(0));
                 break;
             case GL11.GL_FOG_END:
-                GLState.FOG_STATE.fogEnd(params.get(0));
+                GLState.state.FOG_STATE.fogEnd(params.get(0));
                 break;
             case GL11.GL_FOG_COLOR:
-                GLState.FOG_STATE.fogColor(params.get(0), params.get(1), params.get(2), params.get(3));
+                GLState.state.FOG_STATE.fogColor(params.get(0), params.get(1), params.get(2), params.get(3));
                 break;
             default:
                 GL11.glFog(pname, params);
@@ -379,10 +484,10 @@ public class GLState {
         }
         switch (pname) {
             case GL11.GL_FOG_MODE:
-                GLState.FOG_STATE.fogMode(params.get(0));
+                GLState.state.FOG_STATE.fogMode(params.get(0));
                 break;
             case NVFogDistance.GL_FOG_DISTANCE_MODE_NV:
-                GLState.FOG_STATE.fogDistanceModeNv(params.get(0));
+                GLState.state.FOG_STATE.fogDistanceModeNv(params.get(0));
                 break;
             default:
                 GL11.glFog(pname, params);
@@ -469,7 +574,7 @@ public class GLState {
             GL11.glColor4f(red, green, blue, alpha);
             return;
         }
-        GLState.COLOR_STATE.glColor(red, green, blue, alpha);
+        GLState.state.COLOR_STATE.glColor(red, green, blue, alpha);
     }
 
     // END DELEGATE METHODS
@@ -480,7 +585,7 @@ public class GLState {
             return;
         }
         // Let the state reset the color
-        GLState.COLOR_STATE.resetGlColor();
+        GLState.state.COLOR_STATE.resetGlColor();
     }
 
     /**
@@ -490,7 +595,7 @@ public class GLState {
      *         The texture to activate, from 0 to 7
      */
     public static void setActiveTexture(int index) {
-        if (GLState.activeTexture != index && index >= 0 && index < 8) {
+        if (GLState.activeTexture != index && index >= 0 && index < GLState.MAXIMUM_TEXTURE_COUNT) {
             if (OpenGlHelper.field_153215_z) {
                 ARBMultitexture.glActiveTextureARB(index + ARBMultitexture.GL_TEXTURE0_ARB);
             } else {
