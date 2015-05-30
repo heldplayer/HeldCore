@@ -10,14 +10,15 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.awt.Rectangle;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.data.IMetadataSerializer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -26,7 +27,6 @@ import net.minecraft.util.Timer;
 import net.minecraft.world.ChunkPosition;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.specialattack.forge.core.Assets;
 import net.specialattack.forge.core.CommonProxy;
@@ -36,6 +36,8 @@ import net.specialattack.forge.core.client.gui.GuiSGTest;
 import net.specialattack.forge.core.client.resources.data.*;
 import net.specialattack.forge.core.client.shader.GLUtil;
 import net.specialattack.forge.core.client.shader.ShaderManager;
+import net.specialattack.forge.core.client.texture.IconHolder;
+import net.specialattack.forge.core.client.texture.IconTextureMap;
 import net.specialattack.forge.core.sync.ISyncableObjectOwner;
 import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.packet.Packet1TrackingStatus;
@@ -46,6 +48,7 @@ public class ClientProxy extends CommonProxy {
     public static IIcon iconReportBug;
     public static Timer minecraftTimer;
     public static IMetadataSerializer metadataSerializer;
+    public static Set<IconHolder> iconHolders = new HashSet<IconHolder>();
 
     public static Timer getMinecraftTimer() {
         if (minecraftTimer == null) {
@@ -69,13 +72,14 @@ public class ClientProxy extends CommonProxy {
         super.preInit(event);
 
         GLUtil.initialize();
+        SpACore.registerIconHolder(ClientProxy.iconReportBug = new IconHolder(Assets.DOMAIN + "report-bug"));
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
 
-        MC.getRenderEngine().loadTextureMap(Assets.TEXTURE_MAP, new TextureMap(SpACore.textureMapId.getValue(), "textures/spacore"));
+        MC.getRenderEngine().loadTextureMap(Assets.TEXTURE_MAP, new IconTextureMap(SpACore.textureMapId.getValue(), "textures/spacore"));
 
         metadataSerializer = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, MC.getMinecraft(), "metadataSerializer_", "field_110452_an");
         metadataSerializer.registerMetadataSectionType(new TextureMetadataSectionSerializer(), TextureMetadataSection.class);
@@ -105,10 +109,10 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
-    @SubscribeEvent
-    public void onTextureStitchedPost(TextureStitchEvent.Pre event) {
-        if (event.map.getTextureType() == SpACore.textureMapId.getValue()) {
-            ClientProxy.iconReportBug = event.map.registerIcon(Assets.DOMAIN + "report-bug");
+    @Override
+    public void registerIconHolder(IIcon icon) {
+        if (icon instanceof IconHolder) {
+            ClientProxy.iconHolders.add((IconHolder) icon);
         }
     }
 

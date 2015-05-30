@@ -2,12 +2,12 @@ package net.specialattack.forge.core;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.common.MinecraftForge;
 import net.specialattack.forge.core.sync.SyncHandler;
 
@@ -33,10 +33,6 @@ public class CommonProxy extends SpACoreProxy {
     }
 
     @Override
-    public void preInit(FMLPreInitializationEvent event) {
-    }
-
-    @Override
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -44,6 +40,10 @@ public class CommonProxy extends SpACoreProxy {
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         this.initializeSyncHandler();
+    }
+
+    public void registerIconHolder(IIcon holder) {
+        throw new IllegalStateException("This code is client-side only!");
     }
 
     public Side getSide() {

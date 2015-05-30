@@ -10,9 +10,7 @@
                 "heldplayer",
                 "mbl111"
             ],
-            "url" : "http://dsiwars.specialattack.net/forums/viewtopic.php?t=3",
-            "useDependencyInformation" : true,
-            "requiredMods" : [ "Forge" ]
+            "url" : "http://dsiwars.specialattack.net/forums/viewtopic.php?t=3"
         }
     ]
 }

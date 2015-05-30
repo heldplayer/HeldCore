@@ -10,8 +10,10 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.relauncher.Side;
 import java.io.File;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.common.config.Configuration;
 import net.specialattack.forge.core.client.MC;
+import net.specialattack.forge.core.client.texture.IconHolder;
 import net.specialattack.forge.core.config.Config;
 import net.specialattack.forge.core.config.ConfigCategory;
 import net.specialattack.forge.core.config.ConfigValue;
@@ -94,6 +96,10 @@ public class SpACore extends SpACoreMod {
     @EventHandler
     public void serverStopped(FMLServerStoppedEvent event) {
         SyncHandler.Server.reset();
+    }
+
+    public static void registerIconHolder(IIcon holder) {
+        SpACore.proxy.registerIconHolder(holder);
     }
 
 }
