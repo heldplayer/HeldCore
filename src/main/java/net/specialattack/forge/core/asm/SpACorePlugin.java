@@ -54,7 +54,7 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
     public Void call() {
         Configuration config = new Configuration(new File("config" + File.separator + "spacore-asm.cfg"));
         config.setCategoryComment("client", "Client specific ASM injections");
-        Property stateManager = config.get("client", "GLStateManager", true, "Set to true to enable handling of the render state to increase performance.");
+        Property stateManager = config.get("client", "GLStateManagerExp", false, "EXPERIMENTAL! Set to true to enable handling of the render state to increase performance.");
         SpACorePlugin.stateManager = stateManager.getBoolean();
         Property stateManagerDebug = config.get("client", "GLStateManagerOutput", false, "Set to true to enable outputting of transformed classes after having the state manager injected");
         SpACorePlugin.stateManagerDebug = stateManagerDebug.getBoolean();
@@ -62,7 +62,6 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
         SpACorePlugin.loggerTransformer = loggerTransformer.getBoolean();
         Property debugScreen = config.get("client", "DebugScreen", true, "Set to true to change the debug screen (F3) to look more like the 1.8 debug screen.");
         SpACorePlugin.debugScreen = debugScreen.getBoolean();
-        config.load();
         if (config.hasChanged()) {
             config.save();
         }

@@ -61,6 +61,7 @@ public class SpACoreGLTransformer implements IClassTransformer {
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glClearColor", "glClearColor"));
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glClearDepth", "glClearDepth"));
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glDepthFunc", "glDepthFunc"));
+        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glDepthMask", "glDepthMask"));
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glCullFace", "glCullFace"));
         replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glLogicOp", "glLogicOp"));
     }
