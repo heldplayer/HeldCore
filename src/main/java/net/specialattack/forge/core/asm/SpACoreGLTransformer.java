@@ -68,9 +68,6 @@ public class SpACoreGLTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] original) {
-        if (!SpACorePlugin.stateManager) {
-            return original;
-        }
         if (original == null) {
             return null;
         }
@@ -81,7 +78,7 @@ public class SpACoreGLTransformer implements IClassTransformer {
 
             SpACoreGLTransformer.changed = false;
 
-            if (transformedName.equals("net.minecraft.client.renderer.OpenGlHelper")) {
+            if (SpACorePlugin.stateManager && transformedName.equals("net.minecraft.client.renderer.OpenGlHelper")) {
                 visitor = new ClassVisitor(Opcodes.ASM4, visitor) {
 
                     @Override
@@ -142,10 +139,18 @@ public class SpACoreGLTransformer implements IClassTransformer {
                         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
                             if (opcode == Opcodes.INVOKESTATIC) {
                                 for (Replacement replacement : SpACoreGLTransformer.replacements) {
-                                    if (owner.equals(replacement.owner) && name.equals(replacement.name)) {
-                                        SpACoreGLTransformer.changed = true;
-                                        owner = SpACoreGLTransformer.STATE_MANAGER;
-                                        name = replacement.replacement;
+                                    if (SpACorePlugin.stateManager) {
+                                        if (owner.equals(replacement.owner) && name.equals(replacement.name)) {
+                                            SpACoreGLTransformer.changed = true;
+                                            owner = SpACoreGLTransformer.STATE_MANAGER;
+                                            name = replacement.replacement;
+                                        }
+                                    } else { // If the state manager is disabled, reverse the process to increase speed.
+                                        if (owner.equals(SpACoreGLTransformer.STATE_MANAGER) && name.equals(replacement.replacement)) {
+                                            SpACoreGLTransformer.changed = true;
+                                            owner = replacement.owner;
+                                            name = replacement.name;
+                                        }
                                     }
                                 }
                             }
@@ -157,10 +162,18 @@ public class SpACoreGLTransformer implements IClassTransformer {
                         public void visitMethodInsn(int opcode, String owner, String name, String desc) {
                             if (opcode == Opcodes.INVOKESTATIC) {
                                 for (Replacement replacement : SpACoreGLTransformer.replacements) {
-                                    if (owner.equals(replacement.owner) && name.equals(replacement.name)) {
-                                        SpACoreGLTransformer.changed = true;
-                                        owner = SpACoreGLTransformer.STATE_MANAGER;
-                                        name = replacement.replacement;
+                                    if (SpACorePlugin.stateManager) {
+                                        if (owner.equals(replacement.owner) && name.equals(replacement.name)) {
+                                            SpACoreGLTransformer.changed = true;
+                                            owner = SpACoreGLTransformer.STATE_MANAGER;
+                                            name = replacement.replacement;
+                                        }
+                                    } else { // If the state manager is disabled, reverse the process to increase speed.
+                                        if (owner.equals(SpACoreGLTransformer.STATE_MANAGER) && name.equals(replacement.replacement)) {
+                                            SpACoreGLTransformer.changed = true;
+                                            owner = replacement.owner;
+                                            name = replacement.name;
+                                        }
                                     }
                                 }
                             }
@@ -168,51 +181,57 @@ public class SpACoreGLTransformer implements IClassTransformer {
                         }
                     };
 
-                    // 1.7.10 Specific transformer because call lists make the colour state dirty
-                    visitor = new SequenceMethodVisitor(Opcodes.ASM4, visitor) {
+                    if (SpACorePlugin.stateManager) { // Disabled if the state manager is disabled
+                        // 1.7.10 Specific transformer because call lists make the colour state dirty
+                        visitor = new SequenceMethodVisitor(Opcodes.ASM4, visitor) {
 
-                        @Override
-                        public void visitLdcInsn(Object cst) {
-                            super.visitLdcInsn(cst);
-                            if (cst instanceof Integer) {
-                                if ((Integer) cst == GL11.GL_COLOR_ARRAY) {
-                                    this.flag = true;
+                            @Override
+                            public void visitLdcInsn(Object cst) {
+                                super.visitLdcInsn(cst);
+                                if (cst instanceof Integer) {
+                                    if ((Integer) cst == GL11.GL_COLOR_ARRAY) {
+                                        this.flag = true;
+                                    }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-                            if (this.flag && opcode == Opcodes.INVOKESTATIC && owner.equals("org/lwjgl/opengl/GL11") && name.equals("glDisableClientState")) {
-                                super.visitMethodInsn(opcode, owner, name, desc, false);
-                                super.visitMethodInsn(Opcodes.INVOKESTATIC, STATE_MANAGER, "resetColor", "()V", false);
-                                SpACoreGLTransformer.changed = true;
-                                SpACorePlugin.LOG.debug("Injected a resetColor call");
-                            } else {
-                                super.visitMethodInsn(opcode, owner, name, desc, itf);
+                            @Override
+                            public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
+                                if (this.flag && opcode == Opcodes.INVOKESTATIC && owner.equals("org/lwjgl/opengl/GL11") && name.equals("glDisableClientState")) {
+                                    super.visitMethodInsn(opcode, owner, name, desc, false);
+                                    super.visitMethodInsn(Opcodes.INVOKESTATIC, STATE_MANAGER, "resetColor", "()V", false);
+                                    SpACoreGLTransformer.changed = true;
+                                    SpACorePlugin.LOG.debug("Injected a resetColor call");
+                                } else {
+                                    super.visitMethodInsn(opcode, owner, name, desc, itf);
+                                }
                             }
-                        }
 
-                        @Override // Compatability
-                        @SuppressWarnings("deprecation")
-                        public void visitMethodInsn(int opcode, String owner, String name, String desc) {
-                            if (this.flag && opcode == Opcodes.INVOKESTATIC && owner.equals("org/lwjgl/opengl/GL11") && name.equals("glDisableClientState")) {
-                                super.visitMethodInsn(opcode, owner, name, desc);
-                                super.visitMethodInsn(Opcodes.INVOKESTATIC, STATE_MANAGER, "resetColor", "()V", false);
-                                SpACoreGLTransformer.changed = true;
-                                SpACorePlugin.LOG.debug("Injected a resetColor call");
-                            } else {
-                                super.visitMethodInsn(opcode, owner, name, desc);
+                            @Override // Compatability
+                            @SuppressWarnings("deprecation")
+                            public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+                                if (this.flag && opcode == Opcodes.INVOKESTATIC && owner.equals("org/lwjgl/opengl/GL11") && name.equals("glDisableClientState")) {
+                                    super.visitMethodInsn(opcode, owner, name, desc);
+                                    super.visitMethodInsn(Opcodes.INVOKESTATIC, STATE_MANAGER, "resetColor", "()V", false);
+                                    SpACoreGLTransformer.changed = true;
+                                    SpACorePlugin.LOG.debug("Injected a resetColor call");
+                                } else {
+                                    super.visitMethodInsn(opcode, owner, name, desc);
+                                }
                             }
-                        }
-                    };
+                        };
+                    }
                     return visitor;
                 }
             };
 
             reader.accept(visitor, 0);
             if (SpACoreGLTransformer.changed) {
-                SpACorePlugin.LOG.debug("Inserted GLState calls to " + transformedName);
+                if (SpACorePlugin.stateManager) {
+                    SpACorePlugin.LOG.debug("Inserted GLState calls to " + transformedName);
+                } else {
+                    SpACorePlugin.LOG.debug("Removed GLState calls from " + transformedName);
+                }
                 byte[] result = writer.toByteArray();
 
                 if (SpACorePlugin.stateManagerDebug) {
