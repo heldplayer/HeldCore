@@ -446,6 +446,16 @@ public final class GuiHelper {
         tessellator.draw();
     }
 
+    public static void drawTexturedModalRect(int startX, int startY, IIcon icon, int width, int height) {
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(startX, startY + height, 0.0D, icon.getMinU(), icon.getMaxV());
+        tessellator.addVertexWithUV(startX + width, startY + height, 0.0D, icon.getMaxU(), icon.getMaxV());
+        tessellator.addVertexWithUV(startX + width, startY, 0.0D, icon.getMaxU(), icon.getMinV());
+        tessellator.addVertexWithUV(startX, startY, 0.0D, icon.getMinU(), icon.getMinV());
+        tessellator.draw();
+    }
+
     public static void playButtonClick() {
         MC.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
     }
