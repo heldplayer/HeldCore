@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 public class SpAPacketHandler<P extends SpAPacket<P>> extends SimpleNetworkWrapper {
 
-    public static final boolean debug = Boolean.parseBoolean(System.getProperty("spacore.packet.debug", "true"));
+    public static final boolean debug = Boolean.parseBoolean(System.getProperty("spacore.packet.debug", "false"));
     public static final Logger log = LogManager.getLogger("SpACore:Pckt");
 
     public SpAPacketHandler(String channelName, Class<? extends P>... packetClasses) {

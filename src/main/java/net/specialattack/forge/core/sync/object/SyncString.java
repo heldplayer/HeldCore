@@ -30,7 +30,7 @@ public class SyncString implements ISyncable {
 
     @Override
     public boolean changed() {
-        boolean changed = !this.prevValue.equals(this.value);
+        @SuppressWarnings("StringEquality") boolean changed = (this.prevValue != null && !this.prevValue.equals(this.value)) || (this.prevValue != this.value);
         this.prevValue = this.value;
         return changed;
     }
