@@ -12,7 +12,7 @@ public interface IConfigurable {
      *
      * @return The config value, as a String
      */
-    public abstract String serialize();
+    String serialize();
 
     /**
      * Loads the config value from a serialized String and returns a new
@@ -23,8 +23,8 @@ public interface IConfigurable {
      *
      * @return A new instance of the config value
      */
-    public abstract IConfigurable load(String serialized);
+    IConfigurable load(String serialized);
 
-    public abstract String[] getValidValues();
+    String[] getValidValues();
 
 }

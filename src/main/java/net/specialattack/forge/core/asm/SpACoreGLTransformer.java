@@ -26,44 +26,45 @@ public class SpACoreGLTransformer implements IClassTransformer {
     }
 
     static {
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glBegin", "glBegin"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glEnd", "glEnd"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glEnable", "glEnable"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glDisable", "glDisable"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glPushMatrix", "glPushMatrix"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glPopMatrix", "glPopMatrix"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex2i", "glVertex2i"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex2f", "glVertex2f"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex2d", "glVertex2d"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex3i", "glVertex3i"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex3f", "glVertex3f"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex3d", "glVertex3d"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex4i", "glVertex4i"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex4f", "glVertex4f"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex4d", "glVertex4d"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glAlphaFunc", "glAlphaFunc"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glBlendFunc", "glBlendFunc"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3be", "glColor3be"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3f", "glColor3f"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3d", "glColor3d"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3ub", "glColor3ub"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor4b", "glColor4b"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor4f", "glColor4f"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor4d", "glColor4d"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor4ub", "glColor4ub"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL13", "glActiveTexture", "glActiveTexture"));
-        replacements.add(new Replacement("org/lwjgl/opengl/ARBMultitexture", "glActiveTextureARB", "glActiveTexture"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glFogf", "glFogf"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glFogi", "glFogi"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glFog", "glFog"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glViewport", "glViewport"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glScissor", "glScissor"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glClearColor", "glClearColor"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glClearDepth", "glClearDepth"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glDepthFunc", "glDepthFunc"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glDepthMask", "glDepthMask"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glCullFace", "glCullFace"));
-        replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glLogicOp", "glLogicOp"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glBegin", "glBegin", "(I)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glEnd", "glEnd", "()V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glEnable", "glEnable", "(I)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glDisable", "glDisable", "(I)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glPushMatrix", "glPushMatrix", "()V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glPopMatrix", "glPopMatrix", "()V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex2i", "glVertex2i", "(II)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex2f", "glVertex2f", "(FF)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex2d", "glVertex2d", "(DD)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex3i", "glVertex3i", "(III)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex3f", "glVertex3f", "(FFF)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex3d", "glVertex3d", "(DDD)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex4i", "glVertex4i", "(IIII)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex4f", "glVertex4f", "(FFFF)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex4d", "glVertex4d", "(DDDD)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glAlphaFunc", "glAlphaFunc", "(IF)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glBlendFunc", "glBlendFunc", "(II)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3be", "glColor3b", "(BBB)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3f", "glColor3f", "(FFF)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3d", "glColor3d", "(DDD)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3ub", "glColor3ub", "(BBB)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor4b", "glColor4b", "(BBBB)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor4f", "glColor4f", "(FFFF)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor4d", "glColor4d", "(DDDD)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor4ub", "glColor4ub", "(BBBB)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL13", "glActiveTexture", "glActiveTexture", "(I)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/ARBMultitexture", "glActiveTextureARB", "glActiveTexture", "(I)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glFogf", "glFogf", "(IF)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glFogi", "glFogi", "(II)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glFog", "glFog", "(ILjava/nio/FloatBuffer;)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glFog", "glFog", "(ILjava/nio/IntBuffer;)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glViewport", "glViewport", "(IIII)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glScissor", "glScissor", "(IIII)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glClearColor", "glClearColor", "(FFFF)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glClearDepth", "glClearDepth", "(D)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glDepthFunc", "glDepthFunc", "(I)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glDepthMask", "glDepthMask", "(Z)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glCullFace", "glCullFace", "(I)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glLogicOp", "glLogicOp", "(I)V"));
     }
 
     @Override
@@ -139,17 +140,19 @@ public class SpACoreGLTransformer implements IClassTransformer {
                         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
                             if (opcode == Opcodes.INVOKESTATIC) {
                                 for (Replacement replacement : SpACoreGLTransformer.replacements) {
-                                    if (SpACorePlugin.stateManager) {
-                                        if (owner.equals(replacement.owner) && name.equals(replacement.name)) {
-                                            SpACoreGLTransformer.changed = true;
-                                            owner = SpACoreGLTransformer.STATE_MANAGER;
-                                            name = replacement.replacement;
-                                        }
-                                    } else { // If the state manager is disabled, reverse the process to increase speed.
-                                        if (owner.equals(SpACoreGLTransformer.STATE_MANAGER) && name.equals(replacement.replacement)) {
-                                            SpACoreGLTransformer.changed = true;
-                                            owner = replacement.owner;
-                                            name = replacement.name;
+                                    if (desc.equals(replacement.descriptor)) {
+                                        if (SpACorePlugin.stateManager) {
+                                            if (owner.equals(replacement.owner) && name.equals(replacement.name)) {
+                                                SpACoreGLTransformer.changed = true;
+                                                owner = SpACoreGLTransformer.STATE_MANAGER;
+                                                name = replacement.replacement;
+                                            }
+                                        } else { // If the state manager is disabled, reverse the process to increase speed.
+                                            if (owner.equals(SpACoreGLTransformer.STATE_MANAGER) && name.equals(replacement.replacement)) {
+                                                SpACoreGLTransformer.changed = true;
+                                                owner = replacement.owner;
+                                                name = replacement.name;
+                                            }
                                         }
                                     }
                                 }
@@ -162,17 +165,19 @@ public class SpACoreGLTransformer implements IClassTransformer {
                         public void visitMethodInsn(int opcode, String owner, String name, String desc) {
                             if (opcode == Opcodes.INVOKESTATIC) {
                                 for (Replacement replacement : SpACoreGLTransformer.replacements) {
-                                    if (SpACorePlugin.stateManager) {
-                                        if (owner.equals(replacement.owner) && name.equals(replacement.name)) {
-                                            SpACoreGLTransformer.changed = true;
-                                            owner = SpACoreGLTransformer.STATE_MANAGER;
-                                            name = replacement.replacement;
-                                        }
-                                    } else { // If the state manager is disabled, reverse the process to increase speed.
-                                        if (owner.equals(SpACoreGLTransformer.STATE_MANAGER) && name.equals(replacement.replacement)) {
-                                            SpACoreGLTransformer.changed = true;
-                                            owner = replacement.owner;
-                                            name = replacement.name;
+                                    if (desc.equals(replacement.descriptor)) {
+                                        if (SpACorePlugin.stateManager) {
+                                            if (owner.equals(replacement.owner) && name.equals(replacement.name)) {
+                                                SpACoreGLTransformer.changed = true;
+                                                owner = SpACoreGLTransformer.STATE_MANAGER;
+                                                name = replacement.replacement;
+                                            }
+                                        } else { // If the state manager is disabled, reverse the process to increase speed.
+                                            if (owner.equals(SpACoreGLTransformer.STATE_MANAGER) && name.equals(replacement.replacement)) {
+                                                SpACoreGLTransformer.changed = true;
+                                                owner = replacement.owner;
+                                                name = replacement.name;
+                                            }
                                         }
                                     }
                                 }
@@ -199,7 +204,7 @@ public class SpACoreGLTransformer implements IClassTransformer {
                             public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
                                 if (this.flag && opcode == Opcodes.INVOKESTATIC && owner.equals("org/lwjgl/opengl/GL11") && name.equals("glDisableClientState")) {
                                     super.visitMethodInsn(opcode, owner, name, desc, false);
-                                    super.visitMethodInsn(Opcodes.INVOKESTATIC, STATE_MANAGER, "resetColor", "()V", false);
+                                    super.visitMethodInsn(Opcodes.INVOKESTATIC, SpACoreGLTransformer.STATE_MANAGER, "resetColor", "()V", false);
                                     SpACoreGLTransformer.changed = true;
                                     SpACorePlugin.LOG.debug("Injected a resetColor call");
                                 } else {
@@ -212,7 +217,7 @@ public class SpACoreGLTransformer implements IClassTransformer {
                             public void visitMethodInsn(int opcode, String owner, String name, String desc) {
                                 if (this.flag && opcode == Opcodes.INVOKESTATIC && owner.equals("org/lwjgl/opengl/GL11") && name.equals("glDisableClientState")) {
                                     super.visitMethodInsn(opcode, owner, name, desc);
-                                    super.visitMethodInsn(Opcodes.INVOKESTATIC, STATE_MANAGER, "resetColor", "()V", false);
+                                    super.visitMethodInsn(Opcodes.INVOKESTATIC, SpACoreGLTransformer.STATE_MANAGER, "resetColor", "()V", false);
                                     SpACoreGLTransformer.changed = true;
                                     SpACorePlugin.LOG.debug("Injected a resetColor call");
                                 } else {
@@ -269,12 +274,13 @@ public class SpACoreGLTransformer implements IClassTransformer {
 
     private static class Replacement {
 
-        public String owner, name, replacement;
+        public String owner, name, replacement, descriptor;
 
-        public Replacement(String owner, String name, String replacement) {
+        public Replacement(String owner, String name, String replacement, String descriptor) {
             this.owner = owner;
             this.name = name;
             this.replacement = replacement;
+            this.descriptor = descriptor;
         }
     }
 }

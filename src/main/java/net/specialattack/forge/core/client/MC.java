@@ -20,10 +20,10 @@ public final class MC {
     private static Minecraft mc;
 
     public static EffectRenderer getEffectRenderer() {
-        return MC.getMinecraft().effectRenderer;
+        return MC.getMc().effectRenderer;
     }
 
-    public static Minecraft getMinecraft() {
+    public static Minecraft getMc() {
         if (MC.mc == null) {
             MC.mc = Minecraft.getMinecraft();
         }
@@ -31,39 +31,39 @@ public final class MC {
     }
 
     public static EntityRenderer getEntityRenderer() {
-        return MC.getMinecraft().entityRenderer;
+        return MC.getMc().entityRenderer;
     }
 
     public static FontRenderer getFontRenderer() {
-        return MC.getMinecraft().fontRenderer;
+        return MC.getMc().fontRenderer;
     }
 
     public static GameSettings getGameSettings() {
-        return MC.getMinecraft().gameSettings;
+        return MC.getMc().gameSettings;
     }
 
-    public static TextureManager getRenderEngine() {
-        return MC.getMinecraft().renderEngine;
+    public static TextureManager getTextureManager() {
+        return MC.getMc().renderEngine;
     }
 
     public static RenderGlobal getRenderGlobal() {
-        return MC.getMinecraft().renderGlobal;
+        return MC.getMc().renderGlobal;
     }
 
     public static EntityClientPlayerMP getPlayer() {
-        return MC.getMinecraft().thePlayer;
+        return MC.getMc().thePlayer;
     }
 
     public static WorldClient getWorld() {
-        return MC.getMinecraft().theWorld;
+        return MC.getMc().theWorld;
     }
 
     public static IReloadableResourceManager getResourceManager() {
-        return (IReloadableResourceManager) MC.getMinecraft().getResourceManager();
+        return (IReloadableResourceManager) MC.getMc().getResourceManager();
     }
 
     public static SoundHandler getSoundHandler() {
-        return MC.getMinecraft().getSoundHandler();
+        return MC.getMc().getSoundHandler();
     }
 
 }

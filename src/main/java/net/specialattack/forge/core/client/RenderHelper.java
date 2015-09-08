@@ -23,9 +23,9 @@ public final class RenderHelper {
     public static IIcon getIconSafe(IIcon icon, boolean block) {
         if (icon == null) {
             if (block) {
-                icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
+                icon = ((TextureMap) MC.getMc().getTextureManager().getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
             } else {
-                icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.locationItemsTexture)).getAtlasSprite("missingno");
+                icon = ((TextureMap) MC.getMc().getTextureManager().getTexture(TextureMap.locationItemsTexture)).getAtlasSprite("missingno");
             }
         }
 
@@ -33,7 +33,7 @@ public final class RenderHelper {
     }
 
     public static void bindTexture(ResourceLocation location) {
-        TextureManager texturemanager = MC.getRenderEngine();
+        TextureManager texturemanager = MC.getTextureManager();
 
         if (texturemanager != null) {
             texturemanager.bindTexture(location);

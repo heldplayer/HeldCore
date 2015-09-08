@@ -1,7 +1,6 @@
 package net.specialattack.forge.core.client;
 
 import cpw.mods.fml.client.GuiModList;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -19,6 +18,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.data.IMetadataSerializer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -38,9 +38,10 @@ import net.specialattack.forge.core.client.shader.GLUtil;
 import net.specialattack.forge.core.client.shader.ShaderManager;
 import net.specialattack.forge.core.client.texture.IconHolder;
 import net.specialattack.forge.core.client.texture.IconTextureMap;
-import net.specialattack.forge.core.sync.ISyncableObjectOwner;
+import net.specialattack.forge.core.sync.SyncClientDebug;
 import net.specialattack.forge.core.sync.SyncHandler;
-import net.specialattack.forge.core.sync.packet.Packet1TrackingStatus;
+import net.specialattack.forge.core.sync.SyncHandlerClient;
+import net.specialattack.forge.core.sync.SyncTileEntity;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
@@ -49,22 +50,18 @@ public class ClientProxy extends CommonProxy {
     public static Timer minecraftTimer;
     public static IMetadataSerializer metadataSerializer;
     public static Set<IconHolder> iconHolders = new HashSet<IconHolder>();
+    public static SyncHandlerClient syncClientInstance;
 
     public static Timer getMinecraftTimer() {
-        if (minecraftTimer == null) {
-            minecraftTimer = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "timer", "field_71428_T");
+        if (ClientProxy.minecraftTimer == null) {
+            ClientProxy.minecraftTimer = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "timer", "field_71428_T");
         }
-        return minecraftTimer;
+        return ClientProxy.minecraftTimer;
     }
 
     @Override
     public EntityPlayer getClientPlayer() {
         return MC.getPlayer();
-    }
-
-    @Override
-    protected void initializeSyncHandler() {
-        SyncHandler.initializeClient();
     }
 
     @Override
@@ -79,21 +76,29 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent event) {
         super.init(event);
 
-        MC.getRenderEngine().loadTextureMap(Assets.TEXTURE_MAP, new IconTextureMap(SpACore.textureMapId.getValue(), "textures/spacore"));
+        MC.getTextureManager().loadTextureMap(Assets.TEXTURE_MAP, new IconTextureMap(SpACore.textureMapId.getValue(), "textures/spacore"));
 
-        metadataSerializer = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, MC.getMinecraft(), "metadataSerializer_", "field_110452_an");
-        metadataSerializer.registerMetadataSectionType(new TextureMetadataSectionSerializer(), TextureMetadataSection.class);
-        metadataSerializer.registerMetadataSectionType(new ShaderMetadataSectionSerializer(), ShaderMetadataSection.class);
-
-        FMLCommonHandler.instance().bus().register(this);
+        ClientProxy.metadataSerializer = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, MC.getMc(), "metadataSerializer_", "field_110452_an");
+        ClientProxy.metadataSerializer.registerMetadataSectionType(new TextureMetadataSectionSerializer(), TextureMetadataSection.class);
+        ClientProxy.metadataSerializer.registerMetadataSectionType(new ShaderMetadataSectionSerializer(), ShaderMetadataSection.class);
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
 
+        ClientProxy.syncClientInstance = SyncHandlerClient.initialize();
+
+        if (SyncHandler.debug) {
+            new SyncClientDebug();
+        }
+
         MC.getResourceManager().registerReloadListener(new AdvancedTexturesManager());
         MC.getResourceManager().registerReloadListener(new ShaderManager());
+    }
+
+    public static void clientLoadWorld(WorldClient world) {
+        ClientProxy.syncClientInstance.worldChanged(world);
     }
 
     @SubscribeEvent
@@ -102,8 +107,8 @@ public class ClientProxy extends CommonProxy {
             @SuppressWarnings("unchecked") Map<ChunkPosition, TileEntity> tiles = event.getChunk().chunkTileEntityMap;
 
             for (TileEntity tile : tiles.values()) {
-                if (tile instanceof ISyncableObjectOwner) {
-                    SpACore.syncPacketHandler.sendPacketToServer(new Packet1TrackingStatus((ISyncableObjectOwner) tile, false));
+                if (tile instanceof SyncTileEntity) {
+                    SyncHandlerClient.requestStopTracking((SyncTileEntity) tile);
                 }
             }
         }
@@ -121,33 +126,33 @@ public class ClientProxy extends CommonProxy {
     public void onInitGuiPost(InitGuiEvent.Post event) {
         if (SpACore.showReportBugs.getValue()) {
             if (event.gui != null && event.gui instanceof GuiMainMenu) {
-                int guiPosX = event.gui.width / 2;
-                int guiPosY = event.gui.height / 4;
+                int centerX = event.gui.width / 2;
+                int fourthY = event.gui.height / 4;
                 int buttonWidth = 20;
                 int buttonHeight = 20;
 
                 GuiButton button = new GuiButtonIcon(-123, 0, 0, buttonWidth, buttonHeight, null, ClientProxy.iconReportBug, Assets.TEXTURE_MAP);
                 //button.enabled = false;
 
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX - 124, guiPosY + 96, buttonWidth, buttonHeight), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX - 124, fourthY + 96, buttonWidth, buttonHeight), button)) {
                     return;
                 }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX + 104, guiPosY + 96, buttonWidth, buttonHeight), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX + 104, fourthY + 96, buttonWidth, buttonHeight), button)) {
                     return;
                 }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX + 104, guiPosY + 132, buttonWidth, buttonHeight), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX + 104, fourthY + 132, buttonWidth, buttonHeight), button)) {
                     return;
                 }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX - 124, guiPosY + 72, buttonWidth, buttonHeight), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX - 124, fourthY + 72, buttonWidth, buttonHeight), button)) {
                     return;
                 }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX + 104, guiPosY + 72, buttonWidth, buttonHeight), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX + 104, fourthY + 72, buttonWidth, buttonHeight), button)) {
                     return;
                 }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX - 124, guiPosY + 48, buttonWidth, buttonHeight), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX - 124, fourthY + 48, buttonWidth, buttonHeight), button)) {
                     return;
                 }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(guiPosX + 104, guiPosY + 48, buttonWidth, buttonHeight), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX + 104, fourthY + 48, buttonWidth, buttonHeight), button)) {
                     return;
                 }
             }
@@ -185,18 +190,22 @@ public class ClientProxy extends CommonProxy {
     public void onActionPerformedPost(ActionPerformedEvent.Pre event) {
         if (SpACore.showReportBugs.getValue()) {
             if (event.button != null && event.button.id == -123 && event.gui != null && event.gui instanceof GuiMainMenu) {
-                MC.getMinecraft().displayGuiScreen(new GuiSGTest());
+                MC.getMc().displayGuiScreen(new GuiSGTest());
                 event.setCanceled(true);
                 event.button.func_146113_a(MC.getSoundHandler());
             }
         }
         if (SpACore.replaceModOptions.getValue()) {
             if (event.button != null && event.button.id == 12 && event.gui != null && event.gui instanceof GuiIngameMenu) {
-                MC.getMinecraft().displayGuiScreen(new GuiModList(event.gui));
+                MC.getMc().displayGuiScreen(new GuiModList(event.gui));
                 event.setCanceled(true);
                 event.button.func_146113_a(MC.getSoundHandler());
             }
         }
     }
 
+    @Override
+    public Side getSide() {
+        return Side.CLIENT;
+    }
 }

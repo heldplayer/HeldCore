@@ -1,7 +1,10 @@
 package net.specialattack.forge.core;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,8 +13,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.MinecraftForge;
 import net.specialattack.forge.core.sync.SyncHandler;
+import net.specialattack.forge.core.sync.SyncServerAPI;
+import net.specialattack.forge.core.sync.TileEntitySyncObjectProvider;
+import net.specialattack.util.Scheduler;
 
 public class CommonProxy extends SpACoreProxy {
+
+    public static TileEntitySyncObjectProvider tileEntityProvider = new TileEntitySyncObjectProvider();
+    public static Scheduler serverScheduler;
 
     public EntityPlayer getClientPlayer() {
         throw new IllegalStateException("This code is client-side only!");
@@ -28,18 +37,26 @@ public class CommonProxy extends SpACoreProxy {
         return null;
     }
 
-    protected void initializeSyncHandler() {
-        SyncHandler.initialize();
-    }
-
     @Override
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
+        FMLCommonHandler.instance().bus().register(this);
+        SyncServerAPI.registerProvider(CommonProxy.tileEntityProvider);
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
-        this.initializeSyncHandler();
+        SyncHandler.initialize();
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
+            if (event.type == TickEvent.Type.SERVER) {
+                SyncHandler.serverTick();
+            }
+            Scheduler.tick(event.type);
+        }
     }
 
     public void registerIconHolder(IIcon holder) {

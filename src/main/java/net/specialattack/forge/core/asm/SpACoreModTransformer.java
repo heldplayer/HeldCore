@@ -22,25 +22,25 @@ public class SpACoreModTransformer implements IClassTransformer {
         }
         ClassReader reader = new ClassReader(original);
 
-        if (reader.getSuperName().equals(type)) {
+        if (reader.getSuperName().equals(SpACoreModTransformer.type)) {
             ClassNode node = new ClassNode();
             reader.accept(node, 0);
 
-            boolean[] methodsPresent = new boolean[methods.length];
+            boolean[] methodsPresent = new boolean[SpACoreModTransformer.methods.length];
 
             for (MethodNode method : node.methods) {
-                for (int i = 0; i < methods.length; i++) {
-                    if (method.name.equals(methods[i])) {
+                for (int i = 0; i < SpACoreModTransformer.methods.length; i++) {
+                    if (method.name.equals(SpACoreModTransformer.methods[i])) {
                         methodsPresent[i] = true;
                     }
                 }
             }
 
             boolean changed = false;
-            for (int i = 0; i < methods.length; i++) {
+            for (int i = 0; i < SpACoreModTransformer.methods.length; i++) {
                 if (!methodsPresent[i]) {
                     changed = true;
-                    Type methodType = methodTypes[i];
+                    Type methodType = SpACoreModTransformer.methodTypes[i];
                     String descriptor = Type.getMethodDescriptor(Type.VOID_TYPE, methodType);
                     /*
                      * Add
@@ -49,7 +49,7 @@ public class SpACoreModTransformer implements IClassTransformer {
                      *     super.[pre|post|]init(event);
                      * }
                      */
-                    MethodNode method = new MethodNode(Opcodes.ASM4, Opcodes.ACC_PUBLIC, methods[i], descriptor, null, null);
+                    MethodNode method = new MethodNode(Opcodes.ASM4, Opcodes.ACC_PUBLIC, SpACoreModTransformer.methods[i], descriptor, null, null);
                     AnnotationVisitor annotation = method.visitAnnotation("Lcpw/mods/fml/common/Mod$EventHandler;", true);
                     annotation.visitEnd();
                     method.visitCode();
@@ -57,7 +57,7 @@ public class SpACoreModTransformer implements IClassTransformer {
                     method.visitLabel(l0);
                     method.visitVarInsn(Opcodes.ALOAD, 0);
                     method.visitVarInsn(Opcodes.ALOAD, 1);
-                    method.visitMethodInsn(Opcodes.INVOKESPECIAL, "net/specialattack/forge/core/SpACoreMod", methods[i], descriptor, false);
+                    method.visitMethodInsn(Opcodes.INVOKESPECIAL, "net/specialattack/forge/core/SpACoreMod", SpACoreModTransformer.methods[i], descriptor, false);
                     method.visitInsn(Opcodes.RETURN);
                     Label l2 = new Label();
                     method.visitLabel(l2);

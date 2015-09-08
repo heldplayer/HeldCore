@@ -27,7 +27,7 @@ import org.lwjgl.opengl.GL11;
 public class RenderReplacements extends Gui {
 
     public static void renderCrosshairs(RenderGameOverlayEvent eventParent, int width, int height) {
-        Minecraft mc = MC.getMinecraft();
+        Minecraft mc = MC.getMc();
         if (mc.gameSettings.showDebugInfo) {
             // Render the new crosshair
             GLState.glPushMatrix();
@@ -67,7 +67,7 @@ public class RenderReplacements extends Gui {
             // Try the default crosshair
             if (MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(eventParent, RenderGameOverlayEvent.ElementType.CROSSHAIRS)))
                 return;
-            MC.getRenderEngine().bindTexture(Gui.icons);
+            MC.getTextureManager().bindTexture(Gui.icons);
             GLState.glEnable(GL11.GL_BLEND);
             GLState.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
             GuiHelper.drawTexturedModalRect(width / 2 - 7, height / 2 - 7, 0, 0, 16, 16);
@@ -78,7 +78,7 @@ public class RenderReplacements extends Gui {
     }
 
     public static void renderHUDText(RenderGameOverlayEvent eventParent, int width, int height) {
-        Minecraft mc = MC.getMinecraft();
+        Minecraft mc = MC.getMc();
         mc.mcProfiler.startSection("forgeHudText");
         GLState.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
         ArrayList<String> left = new ArrayList<String>();
@@ -155,8 +155,8 @@ public class RenderReplacements extends Gui {
             long freeMemory = Runtime.getRuntime().freeMemory();
             long usedMemory = totalMemory - freeMemory;
             right.add(String.format("Java: %s %dbit", System.getProperty("java.version"), mc.isJava64bit() ? 64 : 32));
-            right.add(String.format("Mem: %3d%% %03d/%03dMB", usedMemory * 100L / maxMemory, bytesToMb(usedMemory), bytesToMb(maxMemory)));
-            right.add(String.format("Allocated: %3d%% %03dMB", totalMemory * 100L / maxMemory, bytesToMb(totalMemory)));
+            right.add(String.format("Mem: %3d%% %03d/%03dMB", usedMemory * 100L / maxMemory, RenderReplacements.bytesToMb(usedMemory), RenderReplacements.bytesToMb(maxMemory)));
+            right.add(String.format("Allocated: %3d%% %03dMB", totalMemory * 100L / maxMemory, RenderReplacements.bytesToMb(totalMemory)));
             right.add(null);
             // Display and OpenGL information
             right.add(String.format("Display: %dx%d (%s)", Display.getWidth(), Display.getHeight(), GL11.glGetString(GL11.GL_VENDOR)));

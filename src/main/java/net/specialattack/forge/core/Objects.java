@@ -1,5 +1,6 @@
 package net.specialattack.forge.core;
 
+import cpw.mods.fml.common.eventhandler.EventBus;
 import org.apache.logging.log4j.Logger;
 
 public final class Objects {
@@ -11,5 +12,8 @@ public final class Objects {
     public static final String SERVER_PROXY = "net.specialattack.forge.core.CommonProxy";
     public static final String GUI_FACTORY = "net.specialattack.forge.core.client.gui.GuiFactory";
     public static Logger log;
+
+    public static final EventBus MAIN_EVENT_BUS = new EventBus();
+    public static final EventBus SYNC_EVENT_BUS = new EventBus();
 
 }

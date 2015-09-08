@@ -35,4 +35,10 @@ public class ModInfo {
         }
     }
 
+    public ModInfo(String modId, String modName, String modVersion) {
+        this.modId = modId;
+        this.modName = modName;
+        this.modVersion = modVersion;
+    }
+
 }

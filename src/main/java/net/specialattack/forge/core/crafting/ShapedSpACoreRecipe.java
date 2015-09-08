@@ -1,9 +1,6 @@
 package net.specialattack.forge.core.crafting;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -73,11 +70,11 @@ public class ShapedSpACoreRecipe implements ISpACoreRecipe {
             Object in = ingredients[idx + 1];
 
             if (in instanceof ItemStack) {
-                itemMap.put(chr, Arrays.asList(((ItemStack) in).copy()));
+                itemMap.put(chr, Collections.singletonList(((ItemStack) in).copy()));
             } else if (in instanceof Item) {
-                itemMap.put(chr, Arrays.asList(new ItemStack((Item) in)));
+                itemMap.put(chr, Collections.singletonList(new ItemStack((Item) in)));
             } else if (in instanceof Block) {
-                itemMap.put(chr, Arrays.asList(new ItemStack((Block) in, 1, OreDictionary.WILDCARD_VALUE)));
+                itemMap.put(chr, Collections.singletonList(new ItemStack((Block) in, 1, OreDictionary.WILDCARD_VALUE)));
             } else if (in instanceof String) {
                 itemMap.put(chr, OreDictionary.getOres((String) in));
             } else {

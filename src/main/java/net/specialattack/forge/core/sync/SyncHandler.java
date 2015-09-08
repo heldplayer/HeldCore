@@ -1,620 +1,209 @@
 package net.specialattack.forge.core.sync;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.network.FMLNetworkEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.*;
-import java.util.concurrent.Callable;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.network.play.INetHandlerPlayServer;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
+import net.specialattack.forge.core.CommonProxy;
+import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.SpACore;
-import net.specialattack.forge.core.client.MC;
 import net.specialattack.forge.core.event.SyncEvent;
-import net.specialattack.forge.core.sync.packet.*;
+import net.specialattack.forge.core.sync.packet.S01Connection;
+import net.specialattack.forge.core.world.storage.SpACoreWorldData;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * The server side handler for Syncing, also contains some data about the instance that can be used on the client
+ */
 public final class SyncHandler {
 
-    public static final boolean debug = Boolean.parseBoolean(System.getProperty("spacore.sync.debug", "false"));
+    public static final int MAX_REQUESTS_PER_PACKET = 128;
+
     private static boolean initialized = false;
+    private static HashMap<String, SyncObjectProvider> providers = new HashMap<String, SyncObjectProvider>();
+
+    public static final boolean debug = Boolean.parseBoolean(System.getProperty("spacore.sync.debug", "false")); // FIXME: set to false for release
+    public static final Logger log = LogManager.getLogger("SpACore:SyncS");
+
+    public static UUID serverUUID;
+    public static Map<UUID, ConnectionInfo> players = new TreeMap<UUID, ConnectionInfo>();
+    public static Map<UUID, SyncTrackingStorage> syncStorages = Collections.synchronizedMap(new TreeMap<UUID, SyncTrackingStorage>());
+    public static SyncTrackingStorage globalStorage;
 
     public static void initialize() {
         if (!SyncHandler.initialized) {
+            new SyncHandler();
             SyncHandler.initialized = true;
-            new SyncHandler.Server();
-            Thread playersOnlineChecker = new Thread(new PlayersOnlineChecker(), "Players Online Checker Thread");
-            playersOnlineChecker.setDaemon(true);
-            playersOnlineChecker.start();
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public static void initializeClient() {
-        if (!SyncHandler.initialized) {
-            SyncHandler.initialize();
-            new SyncHandler.Client();
+    public static void debug(String message, Object... args) {
+        if (SyncHandler.debug) {
+            SyncHandler.log.log(Level.INFO, "[Sync/Server] " + String.format(message, args));
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public static final class Client {
-
-        private static final Set<ISyncable> syncables = new HashSet<ISyncable>();
-        private static int initializationCounter = 0;
-
-        public static final Logger log = LogManager.getLogger("SpACore:SyncC");
-
-        public static void reset() {
-            synchronized (syncables) {
-                if (SyncHandler.debug) {
-                    SyncHandler.Client.log.log(Level.INFO, "SyncHandler.Client reset");
-                }
-
-                SyncHandler.Client.initializationCounter = 20;
-                SyncHandler.Client.syncables.clear();
-            }
+    protected static void registerProvider(SyncObjectProvider provider) {
+        if (SyncHandler.initialized) {
+            throw new IllegalStateException("Can't register new providers after init!");
         }
-
-        public static void sendUpdateInterval() {
-            if (SyncHandler.Client.initializationCounter == 0) {
-                if (SyncHandler.debug) {
-                    SyncHandler.Client.log.log(Level.INFO, "Sending update interval configuration");
-                }
-
-                SpACore.syncPacketHandler.sendPacketToServer(new Packet6SetInterval(SpACore.refreshRate.getValue()));
-            }
-        }
-
-        public static void startTracking(Collection<ISyncable> syncables) {
-            synchronized (SyncHandler.Client.syncables) {
-                if (SyncHandler.debug) {
-                    for (ISyncable syncable : syncables) {
-                        SyncHandler.Client.log.log(Level.INFO, String.format("Starting tracking %s", syncable));
-                        SyncHandler.Client.syncables.add(syncable);
-                    }
-                } else {
-                    SyncHandler.Client.syncables.addAll(syncables);
-                }
-            }
-        }
-
-        public static ISyncable getSyncable(int id) {
-            synchronized (SyncHandler.Client.syncables) {
-                for (ISyncable syncable : SyncHandler.Client.syncables) {
-                    if (syncable.getId() == id) {
-                        return syncable;
-                    }
-                }
-                return null;
-            }
-        }
-
-        public static void removeSyncable(int id) {
-            synchronized (SyncHandler.Client.syncables) {
-                Iterator<ISyncable> i = SyncHandler.Client.syncables.iterator();
-                while (i.hasNext()) {
-                    ISyncable syncable = i.next();
-                    if (syncable.getId() == id) {
-                        SyncHandler.Client.log.log(Level.INFO, String.format("Untracking %s", syncable));
-                        i.remove();
-                    }
-                }
-            }
-        }
-
-        private Client() {
-            FMLCommonHandler.instance().bus().register(this);
-            MinecraftForge.EVENT_BUS.register(this);
-        }
-
-        @SubscribeEvent
-        public void onWorldLoad(WorldEvent.Load event) {
-            if (event.world.isRemote) {
-                if (SyncHandler.debug) {
-                    SyncHandler.Client.log.log(Level.INFO, "Reinitializing SyncHandler because of world change");
-                }
-
-                SyncHandler.Client.reset();
-            }
-        }
-
-        @SubscribeEvent
-        public void onWorldUnload(WorldEvent.Unload event) {
-            if (event.world.isRemote) {
-                if (SyncHandler.debug) {
-                    SyncHandler.Client.log.log(Level.INFO, "Resetting SyncHandler because of world unload");
-                }
-
-                SyncHandler.Client.reset();
-            }
-        }
-
-        @SubscribeEvent
-        public void onClientTick(TickEvent.ClientTickEvent event) {
-            if (SyncHandler.Client.initializationCounter > 0 && MC.getWorld() != null) {
-                SyncHandler.Client.initializationCounter--;
-
-                if (SyncHandler.Client.initializationCounter == 0) {
-                    if (SyncHandler.debug) {
-                        SyncHandler.Client.log.log(Level.INFO, "Done waiting for initiallization");
-                    }
-
-                    SpACore.syncPacketHandler.sendPacketToServer(new Packet6SetInterval(SpACore.refreshRate.getValue()));
-
-                    SyncEvent.ClientStartSyncing clientEvent = new SyncEvent.ClientStartSyncing();
-                    MinecraftForge.EVENT_BUS.post(clientEvent);
-                }
-            }
-        }
-
-        @SubscribeEvent
-        public void onClientConnectedToServer(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-            if (SyncHandler.debug) {
-                SyncHandler.Client.log.log(Level.INFO, "Connected to server!");
-            }
-            SyncHandler.Client.reset();
-        }
-
-        @SubscribeEvent
-        public void onClientDisconnectionFromServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
-            if (SyncHandler.debug) {
-                SyncHandler.Client.log.log(Level.INFO, "Disconnected from server!");
-            }
-            SyncHandler.Client.reset();
-        }
-
+        SyncHandler.providers.put(provider.id, provider);
     }
 
-    public static final class Server {
+    @SuppressWarnings("unchecked")
+    protected static <T extends ISyncableOwner> SyncObjectProvider<T> getProvider(String name) {
+        return (SyncObjectProvider<T>) SyncHandler.providers.get(name);
+    }
 
-        private static final Set<PlayerTracker> players = new HashSet<PlayerTracker>();
-        public static final Set<PlayerTracker> playerSet = Collections.unmodifiableSet(players);
-        private static final Set<ISyncableObjectOwner> globalObjects = new HashSet<ISyncableObjectOwner>();
-        private static final Queue<Callable<Void>> delayedTasks = new LinkedList<Callable<Void>>();
-        private static int lastSyncId = 0;
-        private static boolean terminated = false;
+    protected static Set<String> getAvailableProviderNames() {
+        return SyncHandler.providers.keySet();
+    }
 
-        public static final Logger log = LogManager.getLogger("SpACore:SyncS");
-
-        public static void reset() {
-            synchronized (SyncHandler.Server.globalObjects) {
-                SyncHandler.Server.globalObjects.clear();
-                SyncHandler.Server.lastSyncId = 0;
-            }
-
-            if (SyncHandler.debug) {
-                SyncHandler.Server.log.log(Level.INFO, "Removed all server syncables");
-            }
-
-            synchronized (players) {
-                if (SyncHandler.Server.players.isEmpty()) {
-                    return;
-                }
-
-                for (PlayerTracker tracker : SyncHandler.Server.players) {
-                    if (SyncHandler.debug) {
-                        SyncHandler.Server.log.log(Level.INFO, String.format("Removing %s", tracker));
-                    }
-                    tracker.syncables.clear();
-                    tracker.syncableOwners.clear();
-                    tracker.syncables = null;
-                    tracker.syncableOwners = null;
-                }
-
-                SyncHandler.Server.players.clear();
-            }
+    protected static ConnectionInfo getConnectionInfo(UUID uuid, boolean create) {
+        ConnectionInfo result = SyncHandler.players.get(uuid);
+        if (result == null && create) {
+            result = new ConnectionInfo(uuid, Side.SERVER);
+            SyncHandler.players.put(uuid, result);
+            Objects.SYNC_EVENT_BUS.post(new SyncEvent.ServerConnectionSetup(result));
         }
-
-        public static int getNextFreeId() {
-            return lastSyncId++;
-        }
-
-        public static void addDelayedTask(Callable<Void> task) {
-            if (terminated) {
-                return;
-            }
-            synchronized (SyncHandler.Server.delayedTasks) {
-                SyncHandler.Server.delayedTasks.add(task);
-            }
-        }
-
-        public static void terminateSynchronization() {
-            if (SyncHandler.debug) {
-                SyncHandler.Server.log.log(Level.INFO, "Synchronization has been terminated!");
-            }
-            terminated = true;
-            reset();
-        }
-
-        public static void startTracking(INetHandlerPlayServer manager) {
-            if (terminated) {
-                return;
-            }
-            PlayerTracker tracker = new PlayerTracker(manager, SpACore.refreshRate.getValue());
-
-            SyncEvent.StartTracking event = new SyncEvent.StartTracking(tracker);
-            MinecraftForge.EVENT_BUS.post(event);
-
-            synchronized (SyncHandler.Server.players) {
-                SyncHandler.Server.players.add(tracker);
-            }
-            synchronized (SyncHandler.Server.globalObjects) {
-                tracker.syncableOwners.addAll(SyncHandler.Server.globalObjects);
-                for (ISyncableObjectOwner object : SyncHandler.Server.globalObjects) {
-                    if (SyncHandler.debug) {
-                        SyncHandler.Server.log.log(Level.INFO, String.format("Starting to track global %s", object));
-                    }
-                    tracker.syncables.addAll(object.getSyncables());
-                    SpACore.syncPacketHandler.sendPacketToPlayer(new Packet2TrackingBegin(object), tracker.getPlayer());
-                }
-            }
-        }
-
-        public static void startTracking(EntityPlayerMP player) {
-            if (terminated) {
-                return;
-            }
-            if (player.playerNetServerHandler == null) {
-                if (SyncHandler.debug) {
-                    SyncHandler.Server.log.log(Level.INFO, String.format("Null playerNetServerHandler for %s", player));
-                }
-                return;
-            }
-            SyncHandler.Server.startTracking(player.playerNetServerHandler);
-        }
-
-        public static void stopTracking(EntityPlayerMP player) {
-            if (terminated) {
-                return;
-            }
-            if (player != null) {
-                SyncHandler.Server.stopTracking(player.getUniqueID());
-            }
-        }
-
-        public static void stopTracking(UUID uuid) {
-            if (terminated) {
-                return;
-            }
-            synchronized (SyncHandler.Server.players) {
-                if (SyncHandler.Server.players.isEmpty()) {
-                    if (SyncHandler.debug) {
-                        SyncHandler.Server.log.log(Level.INFO, "No players?!");
-                    }
-                    return;
-                }
-
-                Iterator<PlayerTracker> i = SyncHandler.Server.players.iterator();
-
-                while (i.hasNext()) {
-                    PlayerTracker tracker = i.next();
-                    if (tracker.uuid.equals(uuid)) {
-                        SyncEvent.StopTracking event = new SyncEvent.StopTracking(tracker);
-                        MinecraftForge.EVENT_BUS.post(event);
-
-                        tracker.syncables.clear();
-                        tracker.syncableOwners.clear();
-                        tracker.syncables = null;
-                        tracker.syncableOwners = null;
-                        i.remove();
-                    }
-                }
-            }
-        }
-
-        public static void startTracking(ISyncableObjectOwner object, EntityPlayerMP player) {
-            if (terminated) {
-                return;
-            }
-            synchronized (SyncHandler.Server.players) {
-                if (SyncHandler.Server.players.isEmpty()) {
-                    if (SyncHandler.debug) {
-                        SyncHandler.Server.log.log(Level.INFO, "No players?!");
-                    }
-                    return;
-                }
-
-                for (PlayerTracker tracker : SyncHandler.Server.players) {
-                    if (tracker.getPlayer() == player) {
-                        if (SyncHandler.debug) {
-                            SyncHandler.Server.log.log(Level.INFO, String.format("Starting to track %s", object));
-                        }
-                        tracker.syncables.addAll(object.getSyncables());
-                        tracker.syncableOwners.add(object);
-                        SpACore.syncPacketHandler.sendPacketToPlayer(new Packet2TrackingBegin(object), tracker.getPlayer());
-                    }
-                }
-            }
-        }
-
-        public static void stopTracking(ISyncableObjectOwner object, EntityPlayerMP player) {
-            if (terminated) {
-                return;
-            }
-            synchronized (SyncHandler.Server.players) {
-                if (SyncHandler.Server.players.isEmpty()) {
-                    if (SyncHandler.debug) {
-                        SyncHandler.Server.log.log(Level.INFO, "No players?!");
-                    }
-                    return;
-                }
-
-                for (PlayerTracker tracker : SyncHandler.Server.players) {
-                    if (tracker.getPlayer() == player) {
-                        List<ISyncable> syncables = object.getSyncables();
-                        for (ISyncable syncable : syncables) {
-                            SpACore.syncPacketHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
-
-                            if (tracker.syncables.remove(syncable)) {
-                                if (SyncHandler.debug) {
-                                    SyncHandler.Server.log.log(Level.INFO, String.format("Untracked %s by request", syncable));
-                                }
-                            }
-                        }
-                        SpACore.syncPacketHandler.sendPacketToPlayer(new Packet7TrackingStop(object), tracker.getPlayer());
-                        tracker.syncableOwners.remove(object);
-                    }
-                }
-            }
-        }
-
-        public static void startTracking(ISyncableObjectOwner object, ISyncable syncable) {
-            if (terminated) {
-                return;
-            }
-            synchronized (SyncHandler.Server.players) {
-                if (SyncHandler.Server.players.isEmpty()) {
-                    return;
-                }
-
-                for (PlayerTracker tracker : SyncHandler.Server.players) {
-                    if (tracker.syncableOwners.isEmpty()) {
-                        continue;
-                    }
-
-                    if (tracker.syncableOwners.contains(object)) {
-                        if (SyncHandler.debug) {
-                            SyncHandler.Server.log.log(Level.INFO, String.format("Dynamically tracking %s", syncable));
-                        }
-                        tracker.syncables.add(syncable);
-                    }
-                }
-            }
-        }
-
-        public static void stopTracking(ISyncableObjectOwner object, ISyncable syncable) {
-            if (terminated) {
-                return;
-            }
-            synchronized (SyncHandler.Server.players) {
-                if (SyncHandler.Server.players.isEmpty()) {
-                    return;
-                }
-
-                List<ISyncable> syncables = object.getSyncables();
-                if (syncables.contains(syncable)) {
-                    for (PlayerTracker tracker : SyncHandler.Server.players) {
-                        tracker.syncables.remove(syncable);
-                        SpACore.syncPacketHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
-                        if (SyncHandler.debug) {
-                            SyncHandler.Server.log.log(Level.INFO, String.format("Dynamically untracked %s", syncable));
-                        }
-                    }
-                }
-            }
-        }
-
-        public static void startTracking(ISyncableObjectOwner object) {
-            if (terminated) {
-                return;
-            }
-            synchronized (globalObjects) {
-                if (globalObjects.contains(object)) {
-                    if (SyncHandler.debug) {
-                        SyncHandler.Server.log.log(Level.INFO, String.format("Trying to track %s globally but already tracking it!", object));
-                    }
-                    return;
-                }
-                globalObjects.add(object);
-            }
-
-            synchronized (SyncHandler.Server.players) {
-                if (SyncHandler.Server.players.isEmpty()) {
-                    return;
-                }
-
-                Iterator<PlayerTracker> i = SyncHandler.Server.players.iterator();
-
-                if (SyncHandler.debug) {
-                    SyncHandler.Server.log.log(Level.INFO, String.format("Starting to track %s for everybody", object));
-                }
-                while (i.hasNext()) {
-                    PlayerTracker tracker = i.next();
-                    tracker.syncables.addAll(object.getSyncables());
-                    tracker.syncableOwners.add(object);
-                    SpACore.syncPacketHandler.sendPacketToPlayer(new Packet2TrackingBegin(object), tracker.getPlayer());
-                }
-            }
-        }
-
-        public static void stopTracking(ISyncableObjectOwner object) {
-            if (terminated) {
-                return;
-            }
-            synchronized (globalObjects) {
-                globalObjects.remove(object);
-            }
-
-            synchronized (SyncHandler.Server.players) {
-                if (SyncHandler.Server.players.isEmpty()) {
-                    return;
-                }
-
-                Iterator<PlayerTracker> i = SyncHandler.Server.players.iterator();
-
-                List<ISyncable> syncables = object.getSyncables();
-
-                if (SyncHandler.debug) {
-                    SyncHandler.Server.log.log(Level.INFO, String.format("Untracking %s for everybody", object));
-                }
-
-                while (i.hasNext()) {
-                    PlayerTracker tracker = i.next();
-
-                    for (ISyncable syncable : syncables) {
-                        SpACore.syncPacketHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), tracker.getPlayer());
-
-                        tracker.syncables.remove(syncable);
-                    }
-
-                    SpACore.syncPacketHandler.sendPacketToPlayer(new Packet7TrackingStop(object), tracker.getPlayer());
-
-                    tracker.syncableOwners.remove(object);
-                }
-
-            }
-        }
-
-        public static PlayerTracker getTracker(EntityPlayer player) {
-            synchronized (SyncHandler.Server.players) {
-                for (PlayerTracker tracker : SyncHandler.Server.players) {
-                    if (tracker.uuid.equals(player.getUniqueID())) {
-                        return tracker;
-                    }
-                }
-            }
-            return null;
-        }
-
-        private Server() {
-            FMLCommonHandler.instance().bus().register(this);
-        }
-
-        @SubscribeEvent
-        public void onServerTick(TickEvent.ServerTickEvent event) {
-            if (terminated) {
-                return;
-            }
-            if (event.phase == Phase.END) {
-                if (event.side.isServer()) {
-                    HashSet<ISyncable> allChanged = null;
-
-                    synchronized (SyncHandler.Server.delayedTasks) {
-                        for (Callable<Void> task : SyncHandler.Server.delayedTasks) {
-                            try {
-                                task.call();
-                            } catch (Exception e) {
-                            }
-                        }
-                        SyncHandler.Server.delayedTasks.clear();
-                    }
-
-                    synchronized (SyncHandler.Server.globalObjects) {
-                        HashSet<ISyncableObjectOwner> invalidOwners = null;
-
-                        for (ISyncableObjectOwner owner : SyncHandler.Server.globalObjects) {
-                            if (owner.isNotValid()) {
-                                if (invalidOwners == null) {
-                                    invalidOwners = new HashSet<ISyncableObjectOwner>();
-                                }
-
-                                invalidOwners.add(owner);
-                            }
-                        }
-
-                        if (invalidOwners != null) {
-                            for (ISyncableObjectOwner owner : invalidOwners) {
-                                Server.stopTracking(owner);
-                            }
-                        }
-                    }
-
-                    synchronized (SyncHandler.Server.players) {
-                        if (SyncHandler.Server.players.isEmpty()) {
-                            return;
-                        }
-
-                        for (PlayerTracker player : SyncHandler.Server.players) {
-                            player.ticks++;
-                            boolean updating = player.ticks > player.interval;
-
-                            if (player.syncables.isEmpty()) {
-                                continue;
-                            }
-
-                            for (ISyncable syncable : player.syncables) {
-                                if (syncable.hasChanged()) {
-                                    if (allChanged == null) {
-                                        allChanged = new HashSet<ISyncable>();
-                                    }
-                                    player.updatedSyncables.add(syncable);
-
-                                    allChanged.add(syncable);
-                                }
-                            }
-
-                            if (updating && !player.updatedSyncables.isEmpty()) {
-                                ISyncable[] syncables = player.updatedSyncables.toArray(new ISyncable[player.updatedSyncables.size()]);
-
-                                SpACore.syncPacketHandler.sendPacketToPlayer(new Packet3TrackingUpdate(syncables), player.getPlayer());
-
-                                player.updatedSyncables.clear();
-                                player.ticks = 0;
-                            }
-
-                            Iterator<ISyncableObjectOwner> i2 = player.syncableOwners.iterator();
-
-                            while (i2.hasNext()) {
-                                ISyncableObjectOwner owner = i2.next();
-
-                                if (owner.isNotValid()) {
-                                    if (SyncHandler.debug) {
-                                        SyncHandler.Server.log.log(Level.INFO, String.format("Untracking owner %s for %s", owner, player.uuid));
-                                    }
-                                    SpACore.syncPacketHandler.sendPacketToPlayer(new Packet7TrackingStop(owner), player.getPlayer());
-
-                                    for (ISyncable syncable : owner.getSyncables()) {
-                                        if (SyncHandler.debug) {
-                                            SyncHandler.Server.log.log(Level.INFO, String.format("Untracking child %s", syncable));
-                                        }
-                                        SpACore.syncPacketHandler.sendPacketToPlayer(new Packet5TrackingEnd(syncable), player.getPlayer());
-                                    }
-                                    i2.remove();
-                                }
-                            }
-                        }
-
-                        if (allChanged != null) {
-                            for (ISyncable syncable : allChanged) {
-                                syncable.setChanged(false);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        @SubscribeEvent
-        public void onServerDisconnectionFromClient(FMLNetworkEvent.ServerDisconnectionFromClientEvent event) {
-            if (terminated) {
-                return;
-            }
-            SyncHandler.Server.stopTracking(((NetHandlerPlayServer) event.handler).playerEntity);
-        }
-
+        return result;
     }
 
     private SyncHandler() {
+        FMLCommonHandler.instance().bus().register(this);
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    public static void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+        SyncHandler.serverUUID = UUID.randomUUID();
+        SyncHandler.debug("Server starting, new UUID for the server is %s", SyncHandler.serverUUID);
+        if (!SyncHandler.players.isEmpty() || !SyncHandler.syncStorages.isEmpty() || SyncHandler.globalStorage != null) {
+            SyncHandler.log.warn("Server Sync Handler state is dirty! Cleaning up for server start.");
+            SyncHandler.cleanUp();
+        }
+        SyncHandler.globalStorage = new SyncTrackingStorage("Global Tracker", Side.SERVER, SyncHandler.serverUUID);
+        SyncHandler.globalStorage.setRole(SyncRole.ROLE_GLOBAL);
+        SyncHandler.syncStorages.put(SyncHandler.globalStorage.uuid, SyncHandler.globalStorage);
+
+        Objects.SYNC_EVENT_BUS.post(new SyncEvent.ServerStarted(SyncHandler.globalStorage));
+    }
+
+    public static void onServerStopped(FMLServerStoppedEvent event) {
+        SyncHandler.debug("Server stopped, unsetting UUID and releasing objects");
+        SyncHandler.serverUUID = null;
+        Objects.SYNC_EVENT_BUS.post(new SyncEvent.ServerStopped(SyncHandler.globalStorage));
+        SyncHandler.cleanUp();
+    }
+
+    private static void cleanUp() {
+        if (!SyncHandler.players.isEmpty()) {
+            SyncHandler.debug("Cleaned up %d player trackers", SyncHandler.players.size());
+            SyncHandler.players.clear();
+        }
+        if (!SyncHandler.syncStorages.isEmpty()) {
+            for (SyncTrackingStorage tracker : SyncHandler.syncStorages.values()) {
+                tracker.releaseData();
+            }
+            SyncHandler.debug("Cleaned up %d world storages", SyncHandler.syncStorages.size());
+            SyncHandler.syncStorages.clear();
+        }
+        SyncHandler.globalStorage = null;
+    }
+
+    public static void serverTick() {
+        for (SyncTrackingStorage storage : SyncHandler.syncStorages.values()) {
+            storage.tick();
+        }
+        for (ConnectionInfo connection : SyncHandler.players.values()) {
+            connection.tick();
+        }
+    }
+
+    @SubscribeEvent // FML Event
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        final EntityPlayerMP player = (EntityPlayerMP) event.player;
+
+        // Send a packet to the client to say "hey, you're connected to a new server"
+        Objects.SYNC_EVENT_BUS.post(new SyncEvent.ServerClientConnected(player));
+        CommonProxy.serverScheduler.scheduleTask(new Runnable() {
+            @Override
+            public void run() {
+                SyncHandler.debug("Sending connection data to player %s (%s)", player.getCommandSenderName(), player.getUniqueID());
+                SpACore.syncPacketHandler.sendTo(new S01Connection(SyncHandler.serverUUID, SyncHandler.getAvailableProviderNames()), player);
+            }
+        }, 1L);
+    }
+
+    @SubscribeEvent // FML Event
+    public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        EntityPlayerMP player = (EntityPlayerMP) event.player;
+
+        UUID uuid = player.getUniqueID();
+        ConnectionInfo connection = SyncHandler.getConnectionInfo(uuid, false);
+        for (PlayerTracker tracker : new ArrayList<PlayerTracker>(connection.trackers)) {
+            tracker.storage.stopTrackingPlayer(uuid);
+        }
+        SyncHandler.players.remove(uuid);
+
+        Objects.SYNC_EVENT_BUS.post(new SyncEvent.ServerClientDisconnected(player, connection));
+    }
+
+    @SubscribeEvent // FML Event
+    public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        SyncHandler.log.warn(String.format("Player %s went from %d to %d", event.player.getUniqueID(), event.fromDim, event.toDim));
+    }
+
+    @SubscribeEvent // Forge Event
+    public void onWorldLoad(WorldEvent.Load event) {
+        World world = event.world;
+        if (!world.isRemote && world.provider != null) {
+            SyncHandler.debug("A world got loaded, creating a tracker for the world.");
+
+            UUID syncUUID = SpACoreWorldData.getData(world).getSyncUUID();
+            int dimId = world.provider.dimensionId;
+
+            if (!SyncHandler.syncStorages.containsKey(syncUUID)) {
+                SyncWorldTrackingStorage storage = new SyncWorldTrackingStorage(dimId, world, Side.SERVER, syncUUID);
+
+                Objects.SYNC_EVENT_BUS.post(new SyncEvent.ServerWorldTracked(storage));
+
+                SyncHandler.syncStorages.put(syncUUID, storage);
+                SyncHandler.debug("Created tracker for dimension %d", dimId);
+            } else {
+                SyncHandler.debug("We already know about dimension %d!", dimId);
+            }
+        }
+    }
+
+    @SubscribeEvent // Forge Event
+    public void onWorldUnload(WorldEvent.Unload event) {
+        World world = event.world;
+        if (!world.isRemote && world.provider != null) {
+            SyncHandler.debug("A world got unloaded, releasing tracker.");
+
+            UUID syncUUID = SpACoreWorldData.getData(world).getSyncUUID();
+            int dimId = world.provider.dimensionId;
+
+            if (SyncHandler.syncStorages.containsKey(syncUUID)) {
+                SyncTrackingStorage storage = SyncHandler.syncStorages.remove(syncUUID);
+
+                Objects.SYNC_EVENT_BUS.post(new SyncEvent.ServerWorldUntracked((SyncWorldTrackingStorage) storage));
+
+                storage.releaseData();
+                SyncHandler.debug("Removed tracker for dimension %d", dimId);
+            } else {
+                SyncHandler.debug("We don't know about dimension %d!", dimId);
+            }
+        }
     }
 
 }

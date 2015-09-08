@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.config.Configuration;
 

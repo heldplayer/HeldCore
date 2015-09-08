@@ -6,6 +6,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.MathHelper;
+import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.asm.SpACorePlugin;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
@@ -47,7 +48,7 @@ public class GLState {
 
     private static void throwError(String error) {
         String message = "Illegal attempt to change the GL state detected" + (error == null ? "" : ": " + error);
-        System.out.println(message);
+        Objects.log.error(message);
         //throw new RuntimeException(message);
     }
 
@@ -635,14 +636,14 @@ public class GLState {
         public int destAlpha;
 
         public void blendFunc(int src, int dest) {
-            if (isValid(src) && isValid(dest)) {
+            if (BlendState.isValid(src) && BlendState.isValid(dest)) {
                 GL11.glBlendFunc(src, dest);
                 GLState.checkError();
                 this.srcRGB = src;
                 this.destRGB = dest;
                 this.srcAlpha = src;
                 this.destAlpha = dest;
-            } else if (isValid(src)) {
+            } else if (BlendState.isValid(src)) {
                 GLState.throwError(String.format("Invalid destination blend function: %H", dest));
             } else {
                 GLState.throwError(String.format("Invalid source blend function: %H", src));
@@ -650,7 +651,7 @@ public class GLState {
         }
 
         public void blendFunc(int srcRGB, int destRGB, int srcAlpha, int destAlpha) {
-            if (isValid(srcRGB) && isValid(destRGB) && isValid(srcAlpha) && isValid(destAlpha)) {
+            if (BlendState.isValid(srcRGB) && BlendState.isValid(destRGB) && BlendState.isValid(srcAlpha) && BlendState.isValid(destAlpha)) {
                 if (OpenGlHelper.openGL14) { // glBlendSepperate supported?
                     if (this.srcRGB != srcRGB || this.destRGB != destRGB || this.srcAlpha != srcAlpha || this.destAlpha != destAlpha) {
                         if (OpenGlHelper.field_153211_u) { // Use extension or GL14?
@@ -667,11 +668,11 @@ public class GLState {
                 } else {
                     this.blendFunc(srcRGB, destRGB);
                 }
-            } else if (!isValid(srcRGB)) {
+            } else if (!BlendState.isValid(srcRGB)) {
                 GLState.throwError(String.format("Invalid source RGB blend function: %H", srcRGB));
-            } else if (!isValid(destRGB)) {
+            } else if (!BlendState.isValid(destRGB)) {
                 GLState.throwError(String.format("Invalid destination RGB blend function: %H", destRGB));
-            } else if (!isValid(srcAlpha)) {
+            } else if (!BlendState.isValid(srcAlpha)) {
                 GLState.throwError(String.format("Invalid source alpha blend function: %H", srcAlpha));
             } else {
                 GLState.throwError(String.format("Invalid destination alpha blend function: %H", destAlpha));
