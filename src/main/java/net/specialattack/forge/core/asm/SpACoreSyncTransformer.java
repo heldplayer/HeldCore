@@ -7,7 +7,7 @@ public class SpACoreSyncTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] original) {
-        if (!SpACorePlugin.loggerTransformer) {
+        if (!SpACorePlugin.config.loggerTransformer) {
             return original;
         }
         if (original == null) {

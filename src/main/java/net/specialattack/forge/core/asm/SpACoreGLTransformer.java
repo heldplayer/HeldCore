@@ -79,7 +79,7 @@ public class SpACoreGLTransformer implements IClassTransformer {
 
             SpACoreGLTransformer.changed = false;
 
-            if (SpACorePlugin.stateManager && transformedName.equals("net.minecraft.client.renderer.OpenGlHelper")) {
+            if (SpACorePlugin.config.stateManager && transformedName.equals("net.minecraft.client.renderer.OpenGlHelper")) {
                 visitor = new ClassVisitor(Opcodes.ASM4, visitor) {
 
                     @Override
@@ -141,7 +141,7 @@ public class SpACoreGLTransformer implements IClassTransformer {
                             if (opcode == Opcodes.INVOKESTATIC) {
                                 for (Replacement replacement : SpACoreGLTransformer.replacements) {
                                     if (desc.equals(replacement.descriptor)) {
-                                        if (SpACorePlugin.stateManager) {
+                                        if (SpACorePlugin.config.stateManager) {
                                             if (owner.equals(replacement.owner) && name.equals(replacement.name)) {
                                                 SpACoreGLTransformer.changed = true;
                                                 owner = SpACoreGLTransformer.STATE_MANAGER;
@@ -166,7 +166,7 @@ public class SpACoreGLTransformer implements IClassTransformer {
                             if (opcode == Opcodes.INVOKESTATIC) {
                                 for (Replacement replacement : SpACoreGLTransformer.replacements) {
                                     if (desc.equals(replacement.descriptor)) {
-                                        if (SpACorePlugin.stateManager) {
+                                        if (SpACorePlugin.config.stateManager) {
                                             if (owner.equals(replacement.owner) && name.equals(replacement.name)) {
                                                 SpACoreGLTransformer.changed = true;
                                                 owner = SpACoreGLTransformer.STATE_MANAGER;
@@ -186,7 +186,7 @@ public class SpACoreGLTransformer implements IClassTransformer {
                         }
                     };
 
-                    if (SpACorePlugin.stateManager) { // Disabled if the state manager is disabled
+                    if (SpACorePlugin.config.stateManager) { // Disabled if the state manager is disabled
                         // 1.7.10 Specific transformer because call lists make the colour state dirty
                         visitor = new SequenceMethodVisitor(Opcodes.ASM4, visitor) {
 
@@ -232,14 +232,14 @@ public class SpACoreGLTransformer implements IClassTransformer {
 
             reader.accept(visitor, 0);
             if (SpACoreGLTransformer.changed) {
-                if (SpACorePlugin.stateManager) {
+                if (SpACorePlugin.config.stateManager) {
                     SpACorePlugin.LOG.debug("Inserted GLState calls to " + transformedName);
                 } else {
                     SpACorePlugin.LOG.debug("Removed GLState calls from " + transformedName);
                 }
                 byte[] result = writer.toByteArray();
 
-                if (SpACorePlugin.stateManagerDebug) {
+                if (SpACorePlugin.config.stateManagerDebug) {
                     if (name.indexOf('.') != -1) {
                         String folderName = name.substring(0, name.lastIndexOf('.')).replace('.', File.separatorChar);
                         File folder = new File(this.saveFolder, folderName);

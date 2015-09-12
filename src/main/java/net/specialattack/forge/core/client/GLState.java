@@ -53,7 +53,7 @@ public class GLState {
     }
 
     public static void checkError() {
-        if (!GLState.drawing && SpACorePlugin.stateManager) {
+        if (!GLState.drawing && SpACorePlugin.config.stateManager) {
             int error = GL11.glGetError();
             if (error != 0) {
                 GLState.throwError(GLU.gluErrorString(error));
@@ -63,7 +63,7 @@ public class GLState {
 
     // BEGIN DELEGATE METHODS
     public static void glBegin(int mode) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glBegin(mode);
             return;
         }
@@ -77,7 +77,7 @@ public class GLState {
     }
 
     public static void glEnd() {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glEnd();
             GLState.drawing = false; // We set the state to false here but never set it back to true
             return;
@@ -92,7 +92,7 @@ public class GLState {
     }
 
     public static void glEnable(int code) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glEnable(code);
             return;
         }
@@ -142,7 +142,7 @@ public class GLState {
     }
 
     public static void glDisable(int code) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glDisable(code);
             return;
         }
@@ -192,7 +192,7 @@ public class GLState {
     }
 
     public static void glPushMatrix() {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glPushMatrix();
             return;
         }
@@ -201,7 +201,7 @@ public class GLState {
     }
 
     public static void glPopMatrix() {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glPopMatrix();
             return;
         }
@@ -210,7 +210,7 @@ public class GLState {
     }
 
     public static void glVertex2i(int x, int y) {
-        if (!SpACorePlugin.stateManager || GLState.drawing) {
+        if (!SpACorePlugin.config.stateManager || GLState.drawing) {
             GL11.glVertex2i(x, y);
         } else {
             GLState.throwError("Not drawing!");
@@ -218,7 +218,7 @@ public class GLState {
     }
 
     public static void glVertex2f(float x, float y) {
-        if (!SpACorePlugin.stateManager || GLState.drawing) {
+        if (!SpACorePlugin.config.stateManager || GLState.drawing) {
             GL11.glVertex2f(x, y);
         } else {
             GLState.throwError("Not drawing!");
@@ -226,7 +226,7 @@ public class GLState {
     }
 
     public static void glVertex2d(double x, double y) {
-        if (!SpACorePlugin.stateManager || GLState.drawing) {
+        if (!SpACorePlugin.config.stateManager || GLState.drawing) {
             GL11.glVertex2d(x, y);
         } else {
             GLState.throwError("Not drawing!");
@@ -234,7 +234,7 @@ public class GLState {
     }
 
     public static void glVertex3i(int x, int y, int z) {
-        if (!SpACorePlugin.stateManager || GLState.drawing) {
+        if (!SpACorePlugin.config.stateManager || GLState.drawing) {
             GL11.glVertex3i(x, y, z);
         } else {
             GLState.throwError("Not drawing!");
@@ -242,7 +242,7 @@ public class GLState {
     }
 
     public static void glVertex3f(float x, float y, float z) {
-        if (!SpACorePlugin.stateManager || GLState.drawing) {
+        if (!SpACorePlugin.config.stateManager || GLState.drawing) {
             GL11.glVertex3f(x, y, z);
         } else {
             GLState.throwError("Not drawing!");
@@ -250,7 +250,7 @@ public class GLState {
     }
 
     public static void glVertex3d(double x, double y, double z) {
-        if (!SpACorePlugin.stateManager || GLState.drawing) {
+        if (!SpACorePlugin.config.stateManager || GLState.drawing) {
             GL11.glVertex3d(x, y, z);
         } else {
             GLState.throwError("Not drawing!");
@@ -258,7 +258,7 @@ public class GLState {
     }
 
     public static void glVertex4i(int x, int y, int z, int w) {
-        if (!SpACorePlugin.stateManager || GLState.drawing) {
+        if (!SpACorePlugin.config.stateManager || GLState.drawing) {
             GL11.glVertex4i(x, y, z, w);
         } else {
             GLState.throwError("Not drawing!");
@@ -266,7 +266,7 @@ public class GLState {
     }
 
     public static void glVertex4f(float x, float y, float z, float w) {
-        if (!SpACorePlugin.stateManager || GLState.drawing) {
+        if (!SpACorePlugin.config.stateManager || GLState.drawing) {
             GL11.glVertex4f(x, y, z, w);
         } else {
             GLState.throwError("Not drawing!");
@@ -274,7 +274,7 @@ public class GLState {
     }
 
     public static void glVertex4d(double x, double y, double z, double w) {
-        if (!SpACorePlugin.stateManager || GLState.drawing) {
+        if (!SpACorePlugin.config.stateManager || GLState.drawing) {
             GL11.glVertex4d(x, y, z, w);
         } else {
             GLState.throwError("Not drawing!");
@@ -282,7 +282,7 @@ public class GLState {
     }
 
     public static void glAlphaFunc(int func, float ref) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glAlphaFunc(func, ref);
             return;
         }
@@ -290,7 +290,7 @@ public class GLState {
     }
 
     public static void glShadeModel(int mode) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glShadeModel(mode);
             return;
         }
@@ -305,7 +305,7 @@ public class GLState {
     }
 
     public static void glLineWidth(float width) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glLineWidth(width);
             return;
         }
@@ -320,7 +320,7 @@ public class GLState {
     }
 
     public static void glBlendFunc(int src, int dest) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glBlendFunc(src, dest);
             return;
         }
@@ -328,7 +328,7 @@ public class GLState {
     }
 
     public static void glBlendFunc(int srcRGB, int destRGB, int srcAlpha, int destAlpha) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             if (OpenGlHelper.openGL14) { // glBlendSepperate supported?
                 if (OpenGlHelper.field_153211_u) { // Use extension or GL14?
                     EXTBlendFuncSeparate.glBlendFuncSeparateEXT(srcRGB, destRGB, srcAlpha, destAlpha);
@@ -344,7 +344,7 @@ public class GLState {
     }
 
     public static void glCullFace(int mode) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glCullFace(mode);
             return;
         }
@@ -352,7 +352,7 @@ public class GLState {
     }
 
     public static void glLogicOp(int opcode) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glLogicOp(opcode);
             return;
         }
@@ -360,7 +360,7 @@ public class GLState {
     }
 
     public static void glClearDepth(double depth) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glClearDepth(depth);
             return;
         }
@@ -368,7 +368,7 @@ public class GLState {
     }
 
     public static void glClearColor(float red, float green, float blue, float alpha) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glClearColor(red, green, blue, alpha);
             return;
         }
@@ -376,7 +376,7 @@ public class GLState {
     }
 
     public static void glDepthFunc(int func) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glDepthFunc(func);
             return;
         }
@@ -384,7 +384,7 @@ public class GLState {
     }
 
     public static void glDepthMask(boolean flag) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glDepthMask(flag);
             return;
         }
@@ -392,7 +392,7 @@ public class GLState {
     }
 
     public static void glActiveTexture(int texture) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL13.glActiveTexture(texture);
             return;
         }
@@ -400,7 +400,7 @@ public class GLState {
     }
 
     public static void glViewport(int x, int y, int width, int height) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glViewport(x, y, width, height);
             return;
         }
@@ -408,7 +408,7 @@ public class GLState {
     }
 
     public static void glScissor(int x, int y, int width, int height) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glScissor(x, y, width, height);
             return;
         }
@@ -416,7 +416,7 @@ public class GLState {
     }
 
     public static void glFogf(int pname, float param) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glFogf(pname, param);
             return;
         }
@@ -437,7 +437,7 @@ public class GLState {
     }
 
     public static void glFogi(int pname, int param) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glFogi(pname, param);
             return;
         }
@@ -455,7 +455,7 @@ public class GLState {
     }
 
     public static void glFog(int pname, FloatBuffer params) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glFog(pname, params);
             return;
         }
@@ -479,7 +479,7 @@ public class GLState {
     }
 
     public static void glFog(int pname, IntBuffer params) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glFog(pname, params);
             return;
         }
@@ -498,7 +498,7 @@ public class GLState {
 
     // Whoever uses this function should die in a fire
     public static void glColor3b(byte red, byte green, byte blue) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glColor3b(red, green, blue);
             return;
         }
@@ -510,7 +510,7 @@ public class GLState {
 
     // Whoever uses this function should die in a fire as well
     public static void glColor3ub(byte red, byte green, byte blue) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glColor3ub(red, green, blue);
             return;
         }
@@ -521,7 +521,7 @@ public class GLState {
     }
 
     public static void glColor3d(double red, double green, double blue) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glColor3d(red, green, blue);
             return;
         }
@@ -529,7 +529,7 @@ public class GLState {
     }
 
     public static void glColor3f(float red, float green, float blue) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glColor3f(red, green, blue);
             return;
         }
@@ -538,7 +538,7 @@ public class GLState {
 
     // Die in a fire
     public static void glColor4b(byte red, byte green, byte blue, byte alpha) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glColor4b(red, green, blue, alpha);
             return;
         }
@@ -551,7 +551,7 @@ public class GLState {
 
     // You know the drill
     public static void glColor4ub(byte red, byte green, byte blue, byte alpha) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glColor4ub(red, green, blue, alpha);
             return;
         }
@@ -563,7 +563,7 @@ public class GLState {
     }
 
     public static void glColor4d(double red, double green, double blue, double alpha) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glColor4d(red, green, blue, alpha);
             return;
         }
@@ -571,7 +571,7 @@ public class GLState {
     }
 
     public static void glColor4f(float red, float green, float blue, float alpha) {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             GL11.glColor4f(red, green, blue, alpha);
             return;
         }
@@ -582,7 +582,7 @@ public class GLState {
 
     // 1.7.10 specific method, calls to this get generated automatically
     public static void resetColor() {
-        if (!SpACorePlugin.stateManager) {
+        if (!SpACorePlugin.config.stateManager) {
             return;
         }
         // Let the state reset the color

@@ -5,9 +5,8 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 import net.specialattack.forge.core.config.ConfigManager;
+import net.specialattack.forge.core.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,9 +18,27 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
     protected static boolean debug = false;
     public static final Logger LOG = LogManager.getLogger("SpACore-ASM");
 
-    public static boolean stateManager, stateManagerDebug;
-    public static boolean loggerTransformer;
-    public static boolean debugScreen;
+    public static Config config = new Config();
+
+    @Configuration("spacore-asm.cfg")
+    public static class Config {
+
+        @Configuration.Option(category = "client", side = Configuration.CSide.CLIENT, needsRestart = true)
+        @Configuration.Comment("EXPERIMENTAL! Set to true to enable handling of the render state to increase performance.")
+        public boolean stateManager;
+
+        @Configuration.Option(category = "client", side = Configuration.CSide.CLIENT, needsRestart = true)
+        @Configuration.Comment("Set to true to enable outputting of transformed classes after having the state manager injected.")
+        public boolean stateManagerDebug;
+
+        @Configuration.Option(category = "client", side = Configuration.CSide.CLIENT, needsRestart = true)
+        @Configuration.Comment("Set to true to enable surpressing long stacktraces in the log when there are missing textures.")
+        public boolean loggerTransformer;
+
+        @Configuration.Option(category = "client", side = Configuration.CSide.CLIENT, needsRestart = true)
+        @Configuration.Comment("Set to true to change the debug screen (F3) to look more like the 1.8 debug screen.")
+        public boolean debugScreen;
+    }
 
     @Override
     public String[] getASMTransformerClass() {
@@ -65,19 +82,7 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
     public Void call() {
-        Configuration config = new Configuration(new File("config" + File.separator + "spacore-asm.cfg"));
-        config.setCategoryComment("client", "Client specific ASM injections");
-        Property stateManager = config.get("client", "GLStateManagerExp", false, "EXPERIMENTAL! Set to true to enable handling of the render state to increase performance.");
-        SpACorePlugin.stateManager = stateManager.getBoolean();
-        Property stateManagerDebug = config.get("client", "GLStateManagerOutput", false, "Set to true to enable outputting of transformed classes after having the state manager injected");
-        SpACorePlugin.stateManagerDebug = stateManagerDebug.getBoolean();
-        Property loggerTransformer = config.get("client", "TextureLoggerTransformer", true, "Set to true to enable surpressing long stacktraces in the log when there are missing textures.");
-        SpACorePlugin.loggerTransformer = loggerTransformer.getBoolean();
-        Property debugScreen = config.get("client", "DebugScreen", true, "Set to true to change the debug screen (F3) to look more like the 1.8 debug screen.");
-        SpACorePlugin.debugScreen = debugScreen.getBoolean();
-        if (config.hasChanged()) {
-            config.save();
-        }
+        ConfigManager.registerConfig(SpACorePlugin.config);
         return null;
     }
 

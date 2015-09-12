@@ -2,6 +2,7 @@ package net.specialattack.forge.core.config;
 
 import cpw.mods.fml.client.config.ConfigGuiType;
 import cpw.mods.fml.client.config.IConfigElement;
+import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import java.io.File;
@@ -18,12 +19,18 @@ public class ConfigManager {
 
     public static File configFolder;
     public static boolean debug;
+    private static boolean initialized = false;
     public static Map<String, ConfigManager> configs = new HashMap<String, ConfigManager>();
 
     public static ConfigManager registerConfig(Object object) {
-        ModContainer mod = Loader.instance().activeModContainer();
-        if (mod == null) {
-            throw new IllegalStateException("Failed getting the active mod container. You should not be registering configs at this time!");
+        ModContainer mod;
+        if (ConfigManager.initialized) {
+            mod = Loader.instance().activeModContainer();
+            if (mod == null) {
+                throw new IllegalStateException("Failed getting the active mod container. You should not be registering configs at this time!");
+            }
+        } else {
+            mod = new DummyModContainer("ASM");
         }
         Class<?> clazz = object.getClass();
 
@@ -111,6 +118,11 @@ public class ConfigManager {
                 } catch (IllegalAccessException e) {
                     throw new IllegalStateException(String.format("Mod %s tried loading a config with in inaccessible option %s", mod.getModId(), name), e);
                 }
+
+                Configuration.Comment comment = field.getAnnotation(Configuration.Comment.class);
+                if (comment != null) {
+                    opt.property.comment = comment.value();
+                }
             }
         }
 
@@ -121,6 +133,10 @@ public class ConfigManager {
         ConfigManager.configs.put(manager.name, manager);
 
         return manager;
+    }
+
+    public static void initialized() {
+        ConfigManager.initialized = true;
     }
 
     private String name;

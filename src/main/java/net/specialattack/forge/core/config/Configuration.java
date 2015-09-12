@@ -71,6 +71,21 @@ public @interface Configuration {
     }
 
     /**
+     * Mark an Option with this to set a forced comment, rather than having it loaded through localization.
+     * Useful for loading when localization is not yet available.
+     */
+    @Target(ElementType.FIELD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Comment {
+
+        /**
+         * @return The comment to display.
+         */
+        String value();
+
+    }
+
+    /**
      * Mark an Option with this to prevent it from being enabled outside of dev.
      */
     @Target(ElementType.FIELD)

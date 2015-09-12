@@ -7,7 +7,7 @@ public class SpACoreDebugGuiTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] original) {
-        if (!SpACorePlugin.debugScreen) {
+        if (!SpACorePlugin.config.debugScreen) {
             return original;
         }
         if (original == null) {
