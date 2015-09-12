@@ -5,8 +5,6 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.util.ReportedException;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.specialattack.forge.core.config.ConfigManager;
@@ -51,7 +49,7 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
                 try {
                     ConfigManager.configFolder = new File(((File) data.get("mcLocation")).getCanonicalFile(), "config");
                 } catch (IOException e) {
-                    throw new ReportedException(new CrashReport("Failed getting Minecraft config directory", e));
+                    throw new IllegalStateException("Failed getting Minecraft config directory", e);
                 }
             }
             if (data.containsKey("runtimeDeobfuscationEnabled") && data.get("runtimeDeobfuscationEnabled") == Boolean.FALSE) {
