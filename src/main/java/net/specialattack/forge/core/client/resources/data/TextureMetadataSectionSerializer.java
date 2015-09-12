@@ -26,10 +26,10 @@ public class TextureMetadataSectionSerializer extends BaseMetadataSectionSeriali
             int borderBottom = JsonUtils.getJsonObjectIntegerFieldValueOrDefault(repeat, "border-bottom", -1);
 
             if (borderLeft != -1 || borderTop != -1 || borderRight != -1 || borderBottom != -1) {
-                Validate.inclusiveBetween(0, Integer.MAX_VALUE, borderLeft, "Invalid border left");
-                Validate.inclusiveBetween(0, Integer.MAX_VALUE, borderTop, "Invalid border top");
-                Validate.inclusiveBetween(0, Integer.MAX_VALUE, borderRight, "Invalid border right");
-                Validate.inclusiveBetween(0, Integer.MAX_VALUE, borderBottom, "Invalid border bottom");
+                Validate.inclusiveBetween(0, result.textureWidth, borderLeft, "Invalid border left");
+                Validate.inclusiveBetween(0, result.textureHeight, borderTop, "Invalid border top");
+                Validate.inclusiveBetween(0, result.textureWidth, borderRight, "Invalid border right");
+                Validate.inclusiveBetween(0, result.textureHeight, borderBottom, "Invalid border bottom");
 
                 result.repeat = new TextureMetadataSection.Repeat(borderLeft, borderTop, borderRight, borderBottom);
             } else {

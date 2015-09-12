@@ -103,10 +103,4 @@ public class SpACoreDebugGuiTransformer implements IClassTransformer {
         }
         return original;
     }
-
-
-    private static int fixAccess(int start) {
-        return (start & ~(Opcodes.ACC_PRIVATE | Opcodes.ACC_PROTECTED)) | Opcodes.ACC_PUBLIC;
-    }
-
 }

@@ -76,7 +76,7 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent event) {
         super.init(event);
 
-        MC.getTextureManager().loadTextureMap(Assets.TEXTURE_MAP, new IconTextureMap(SpACore.textureMapId.getValue(), "textures/spacore"));
+        MC.getTextureManager().loadTextureMap(Assets.TEXTURE_MAP, new IconTextureMap(SpACore.config.textureMapId, "textures/spacore"));
 
         ClientProxy.metadataSerializer = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, MC.getMc(), "metadataSerializer_", "field_110452_an");
         ClientProxy.metadataSerializer.registerMetadataSectionType(new TextureMetadataSectionSerializer(), TextureMetadataSection.class);
@@ -124,7 +124,7 @@ public class ClientProxy extends CommonProxy {
     @SuppressWarnings("unchecked")
     @SubscribeEvent
     public void onInitGuiPost(InitGuiEvent.Post event) {
-        if (SpACore.showReportBugs.getValue()) {
+        if (SpACore.config.showReportBugs) {
             if (event.gui != null && event.gui instanceof GuiMainMenu) {
                 int centerX = event.gui.width / 2;
                 int fourthY = event.gui.height / 4;
@@ -157,7 +157,7 @@ public class ClientProxy extends CommonProxy {
                 }
             }
         }
-        if (SpACore.replaceModOptions.getValue()) {
+        if (SpACore.config.replaceModOptions) {
             if (event.gui != null && event.gui instanceof GuiIngameMenu) {
                 for (int i = 0; i < event.gui.buttonList.size(); i++) {
                     Object obj = event.gui.buttonList.get(i);
@@ -188,14 +188,14 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public void onActionPerformedPost(ActionPerformedEvent.Pre event) {
-        if (SpACore.showReportBugs.getValue()) {
+        if (SpACore.config.showReportBugs) {
             if (event.button != null && event.button.id == -123 && event.gui != null && event.gui instanceof GuiMainMenu) {
                 MC.getMc().displayGuiScreen(new GuiSGTest());
                 event.setCanceled(true);
                 event.button.func_146113_a(MC.getSoundHandler());
             }
         }
-        if (SpACore.replaceModOptions.getValue()) {
+        if (SpACore.config.replaceModOptions) {
             if (event.button != null && event.button.id == 12 && event.gui != null && event.gui instanceof GuiIngameMenu) {
                 MC.getMc().displayGuiScreen(new GuiModList(event.gui));
                 event.setCanceled(true);

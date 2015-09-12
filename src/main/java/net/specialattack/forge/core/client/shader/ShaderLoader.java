@@ -33,7 +33,7 @@ public class ShaderLoader {
             }
             return null;
         }
-        return createShader(location, vertex, fragment);
+        return ShaderLoader.createShader(location, vertex, fragment);
     }
 
     /**

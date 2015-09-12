@@ -1,5 +1,6 @@
 package net.specialattack.forge.core;
 
+import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -12,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.MinecraftForge;
+import net.specialattack.forge.core.config.ConfigManager;
 import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.SyncServerAPI;
 import net.specialattack.forge.core.sync.TileEntitySyncObjectProvider;
@@ -58,6 +60,16 @@ public class CommonProxy extends SpACoreProxy {
             Scheduler.tick(event.type);
         }
     }
+
+    @SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        for (ConfigManager manager : ConfigManager.configs.values()) {
+            if (manager.modId.equals(event.modID)) {
+                manager.configuration.save();
+            }
+        }
+    }
+
 
     public void registerIconHolder(IIcon holder) {
         throw new IllegalStateException("This code is client-side only!");

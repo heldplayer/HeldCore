@@ -23,7 +23,7 @@ public class SpACoreModTransformer implements IClassTransformer {
         ClassReader reader = new ClassReader(original);
 
         if (reader.getSuperName().equals(SpACoreModTransformer.type)) {
-            ClassNode node = new ClassNode();
+            ClassNode node = new ClassNode(Opcodes.ASM4);
             reader.accept(node, 0);
 
             boolean[] methodsPresent = new boolean[SpACoreModTransformer.methods.length];

@@ -174,7 +174,7 @@ public final class SyncHandlerClient {
             SyncHandlerClient.server = new ConnectionInfo(uuid, Side.CLIENT);
             SyncHandlerClient.server.setProviders(Lists.newArrayList(CollectionUtils.intersection(availableProviders, availableProviderNames)));
             // Tell the server how many ticks should be between every update of the tracked data, and which providers the client has
-            SpACore.syncPacketHandler.sendToServer(new C01Connection(SpACore.refreshRate.getValue(), availableProviderNames));
+            SpACore.syncPacketHandler.sendToServer(new C01Connection(SpACore.config.refreshRate, availableProviderNames));
 
             Objects.SYNC_EVENT_BUS.post(new SyncEvent.ClientServerInfoReceived(uuid, Collections.unmodifiableSet(availableProviders)));
         }
