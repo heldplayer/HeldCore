@@ -5,6 +5,7 @@ import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.ModMetadata;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -30,7 +31,9 @@ public class ConfigManager {
                 throw new IllegalStateException("Failed getting the active mod container. You should not be registering configs at this time!");
             }
         } else {
-            mod = new DummyModContainer("ASM");
+            ModMetadata md = new ModMetadata();
+            md.modId = "ASM";
+            mod = new DummyModContainer(md);
         }
         Class<?> clazz = object.getClass();
 
@@ -144,6 +147,7 @@ public class ConfigManager {
     public net.minecraftforge.common.config.Configuration configuration;
     private Object obj;
     public Map<String, Category> categories = new HashMap<String, Category>();
+    private Runnable reloadListener;
 
     public ConfigManager(String name, String modId, Object obj) {
         this.name = name;
@@ -152,12 +156,19 @@ public class ConfigManager {
         this.obj = obj;
     }
 
-    private void reload() {
+    public void setReloadListener(Runnable reloadListener) {
+        this.reloadListener = reloadListener;
+    }
+
+    public void reload() {
         try {
             for (Category category : this.categories.values()) {
                 for (Option option : category.options.values()) {
                     option.reload();
                 }
+            }
+            if (this.reloadListener != null) {
+                this.reloadListener.run();
             }
         } catch (IllegalAccessException e) {
             throw new IllegalStateException("Failed updating config object members!", e);

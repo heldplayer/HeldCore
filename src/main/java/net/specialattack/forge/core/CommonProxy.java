@@ -66,6 +66,7 @@ public class CommonProxy extends SpACoreProxy {
         for (ConfigManager manager : ConfigManager.configs.values()) {
             if (manager.modId.equals(event.modID)) {
                 manager.configuration.save();
+                manager.reload();
             }
         }
     }
