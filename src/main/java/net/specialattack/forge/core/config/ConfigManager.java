@@ -142,6 +142,18 @@ public class ConfigManager {
         ConfigManager.initialized = true;
     }
 
+    private static String translate(String key) {
+        if (ConfigManager.initialized) {
+            return ConfigManager.translate_(key);
+        } else {
+            return null;
+        }
+    }
+
+    private static String translate_(String key) {
+        return StatCollector.translateToLocal(key);
+    }
+
     private String name;
     public String modId;
     public net.minecraftforge.common.config.Configuration configuration;
@@ -405,24 +417,24 @@ public class ConfigManager {
             if (!this.array) {
                 int value;
                 if (configuration.hasKey(this.category.name, this.name)) {
-                    this.property = configuration.get(this.category.name, this.name, this.def, StatCollector.translateToLocal(this.languageKey + ".comment"), this.min, this.max);
+                    this.property = configuration.get(this.category.name, this.name, this.def, ConfigManager.translate(this.languageKey + ".comment"), this.min, this.max);
                     value = this.property.getInt();
                 } else if (this.aliasCategory != null && configuration.hasKey(this.aliasCategory, this.alias)) {
                     this.property = configuration.get(this.aliasCategory, this.alias, this.def, null, this.min, this.max);
                     value = this.property.getInt();
                     configuration.getCategory(this.aliasCategory).remove(this.alias);
-                    this.property = configuration.get(this.category.name, this.name, this.def, StatCollector.translateToLocal(this.languageKey + ".comment"), this.min, this.max);
+                    this.property = configuration.get(this.category.name, this.name, this.def, ConfigManager.translate(this.languageKey + ".comment"), this.min, this.max);
                     this.property.set(value);
                 } else {
                     value = this.def;
-                    this.property = configuration.get(this.category.name, this.name, this.def, StatCollector.translateToLocal(this.languageKey + ".comment"), this.min, this.max);
+                    this.property = configuration.get(this.category.name, this.name, this.def, ConfigManager.translate(this.languageKey + ".comment"), this.min, this.max);
                     this.property.set(value);
                 }
                 this.field.setInt(this.manager.obj, value);
             } else {
                 int[] value;
                 if (configuration.hasKey(this.category.name, this.name)) {
-                    this.property = configuration.get(this.category.name, this.name, this.defA, StatCollector.translateToLocal(this.languageKey + ".comment"), this.min, this.max);
+                    this.property = configuration.get(this.category.name, this.name, this.defA, ConfigManager.translate(this.languageKey + ".comment"), this.min, this.max);
                     this.property.setIsListLengthFixed(this.fixedLength);
                     this.property.setMaxListLength(this.maxLength);
                     value = this.property.getIntList();
@@ -432,13 +444,13 @@ public class ConfigManager {
                     this.property.setMaxListLength(this.maxLength);
                     value = this.property.getIntList();
                     configuration.getCategory(this.aliasCategory).remove(this.alias);
-                    this.property = configuration.get(this.category.name, this.name, this.defA, StatCollector.translateToLocal(this.languageKey + ".comment"), this.min, this.max);
+                    this.property = configuration.get(this.category.name, this.name, this.defA, ConfigManager.translate(this.languageKey + ".comment"), this.min, this.max);
                     this.property.setIsListLengthFixed(this.fixedLength);
                     this.property.setMaxListLength(this.maxLength);
                     this.property.set(value);
                 } else {
                     value = this.defA;
-                    this.property = configuration.get(this.category.name, this.name, this.defA, StatCollector.translateToLocal(this.languageKey + ".comment"), this.min, this.max);
+                    this.property = configuration.get(this.category.name, this.name, this.defA, ConfigManager.translate(this.languageKey + ".comment"), this.min, this.max);
                     this.property.setIsListLengthFixed(this.fixedLength);
                     this.property.setMaxListLength(this.maxLength);
                     this.property.set(value);
@@ -564,24 +576,24 @@ public class ConfigManager {
             if (!this.array) {
                 double value;
                 if (configuration.hasKey(this.category.name, this.name)) {
-                    this.property = configuration.get(this.category.name, this.name, this.def, StatCollector.translateToLocal(this.languageKey + ".comment"), this.min, this.max);
+                    this.property = configuration.get(this.category.name, this.name, this.def, ConfigManager.translate(this.languageKey + ".comment"), this.min, this.max);
                     value = this.property.getDouble();
                 } else if (this.aliasCategory != null && configuration.hasKey(this.aliasCategory, this.alias)) {
                     this.property = configuration.get(this.aliasCategory, this.alias, this.def, null, this.min, this.max);
                     value = this.property.getDouble();
                     configuration.getCategory(this.aliasCategory).remove(this.alias);
-                    this.property = configuration.get(this.category.name, this.name, this.def, StatCollector.translateToLocal(this.languageKey + ".comment"), this.min, this.max);
+                    this.property = configuration.get(this.category.name, this.name, this.def, ConfigManager.translate(this.languageKey + ".comment"), this.min, this.max);
                     this.property.set(value);
                 } else {
                     value = this.def;
-                    this.property = configuration.get(this.category.name, this.name, this.def, StatCollector.translateToLocal(this.languageKey + ".comment"), this.min, this.max);
+                    this.property = configuration.get(this.category.name, this.name, this.def, ConfigManager.translate(this.languageKey + ".comment"), this.min, this.max);
                     this.property.set(value);
                 }
                 this.field.setDouble(this.manager.obj, value);
             } else {
                 double[] value;
                 if (configuration.hasKey(this.category.name, this.name)) {
-                    this.property = configuration.get(this.category.name, this.name, this.defA, StatCollector.translateToLocal(this.languageKey + ".comment"), this.min, this.max);
+                    this.property = configuration.get(this.category.name, this.name, this.defA, ConfigManager.translate(this.languageKey + ".comment"), this.min, this.max);
                     this.property.setIsListLengthFixed(this.fixedLength);
                     this.property.setMaxListLength(this.maxLength);
                     value = this.property.getDoubleList();
@@ -591,13 +603,13 @@ public class ConfigManager {
                     this.property.setMaxListLength(this.maxLength);
                     value = this.property.getDoubleList();
                     configuration.getCategory(this.aliasCategory).remove(this.alias);
-                    this.property = configuration.get(this.category.name, this.name, this.defA, StatCollector.translateToLocal(this.languageKey + ".comment"), this.min, this.max);
+                    this.property = configuration.get(this.category.name, this.name, this.defA, ConfigManager.translate(this.languageKey + ".comment"), this.min, this.max);
                     this.property.setIsListLengthFixed(this.fixedLength);
                     this.property.setMaxListLength(this.maxLength);
                     this.property.set(value);
                 } else {
                     value = this.defA;
-                    this.property = configuration.get(this.category.name, this.name, this.defA, StatCollector.translateToLocal(this.languageKey + ".comment"), this.min, this.max);
+                    this.property = configuration.get(this.category.name, this.name, this.defA, ConfigManager.translate(this.languageKey + ".comment"), this.min, this.max);
                     this.property.setIsListLengthFixed(this.fixedLength);
                     this.property.setMaxListLength(this.maxLength);
                     this.property.set(value);
@@ -714,24 +726,24 @@ public class ConfigManager {
             if (!this.array) {
                 boolean value;
                 if (configuration.hasKey(this.category.name, this.name)) {
-                    this.property = configuration.get(this.category.name, this.name, this.def, StatCollector.translateToLocal(this.languageKey + ".comment"));
+                    this.property = configuration.get(this.category.name, this.name, this.def, ConfigManager.translate(this.languageKey + ".comment"));
                     value = this.property.getBoolean();
                 } else if (this.aliasCategory != null && configuration.hasKey(this.aliasCategory, this.alias)) {
                     this.property = configuration.get(this.aliasCategory, this.alias, this.def);
                     value = this.property.getBoolean();
                     configuration.getCategory(this.aliasCategory).remove(this.alias);
-                    this.property = configuration.get(this.category.name, this.name, this.def, StatCollector.translateToLocal(this.languageKey + ".comment"));
+                    this.property = configuration.get(this.category.name, this.name, this.def, ConfigManager.translate(this.languageKey + ".comment"));
                     this.property.set(value);
                 } else {
                     value = this.def;
-                    this.property = configuration.get(this.category.name, this.name, this.def, StatCollector.translateToLocal(this.languageKey + ".comment"));
+                    this.property = configuration.get(this.category.name, this.name, this.def, ConfigManager.translate(this.languageKey + ".comment"));
                     this.property.set(value);
                 }
                 this.field.setBoolean(this.manager.obj, value);
             } else {
                 boolean[] value;
                 if (configuration.hasKey(this.category.name, this.name)) {
-                    this.property = configuration.get(this.category.name, this.name, this.defA, StatCollector.translateToLocal(this.languageKey + ".comment"));
+                    this.property = configuration.get(this.category.name, this.name, this.defA, ConfigManager.translate(this.languageKey + ".comment"));
                     this.property.setIsListLengthFixed(this.fixedLength);
                     this.property.setMaxListLength(this.maxLength);
                     value = this.property.getBooleanList();
@@ -741,13 +753,13 @@ public class ConfigManager {
                     this.property.setMaxListLength(this.maxLength);
                     value = this.property.getBooleanList();
                     configuration.getCategory(this.aliasCategory).remove(this.alias);
-                    this.property = configuration.get(this.category.name, this.name, this.defA, StatCollector.translateToLocal(this.languageKey + ".comment"));
+                    this.property = configuration.get(this.category.name, this.name, this.defA, ConfigManager.translate(this.languageKey + ".comment"));
                     this.property.setIsListLengthFixed(this.fixedLength);
                     this.property.setMaxListLength(this.maxLength);
                     this.property.set(value);
                 } else {
                     value = this.defA;
-                    this.property = configuration.get(this.category.name, this.name, this.defA, StatCollector.translateToLocal(this.languageKey + ".comment"));
+                    this.property = configuration.get(this.category.name, this.name, this.defA, ConfigManager.translate(this.languageKey + ".comment"));
                     this.property.setIsListLengthFixed(this.fixedLength);
                     this.property.setMaxListLength(this.maxLength);
                     this.property.set(value);
@@ -866,7 +878,7 @@ public class ConfigManager {
             if (!this.array) {
                 String value;
                 if (configuration.hasKey(this.category.name, this.name)) {
-                    this.property = configuration.get(this.category.name, this.name, this.def, StatCollector.translateToLocal(this.languageKey + ".comment"));
+                    this.property = configuration.get(this.category.name, this.name, this.def, ConfigManager.translate(this.languageKey + ".comment"));
                     this.property.setValidationPattern(this.pattern);
                     this.property.setValidValues(this.options);
                     value = this.property.getString();
@@ -876,13 +888,13 @@ public class ConfigManager {
                     this.property.setValidValues(this.options);
                     value = this.property.getString();
                     configuration.getCategory(this.aliasCategory).remove(this.alias);
-                    this.property = configuration.get(this.category.name, this.name, this.def, StatCollector.translateToLocal(this.languageKey + ".comment"));
+                    this.property = configuration.get(this.category.name, this.name, this.def, ConfigManager.translate(this.languageKey + ".comment"));
                     this.property.setValidationPattern(this.pattern);
                     this.property.setValidValues(this.options);
                     this.property.set(value);
                 } else {
                     value = this.def;
-                    this.property = configuration.get(this.category.name, this.name, this.def, StatCollector.translateToLocal(this.languageKey + ".comment"));
+                    this.property = configuration.get(this.category.name, this.name, this.def, ConfigManager.translate(this.languageKey + ".comment"));
                     this.property.setValidationPattern(this.pattern);
                     this.property.setValidValues(this.options);
                     this.property.set(value);
@@ -891,7 +903,7 @@ public class ConfigManager {
             } else {
                 String[] value;
                 if (configuration.hasKey(this.category.name, this.name)) {
-                    this.property = configuration.get(this.category.name, this.name, this.defA, StatCollector.translateToLocal(this.languageKey + ".comment"));
+                    this.property = configuration.get(this.category.name, this.name, this.defA, ConfigManager.translate(this.languageKey + ".comment"));
                     this.property.setValidationPattern(this.pattern);
                     this.property.setValidValues(this.options);
                     this.property.setIsListLengthFixed(this.fixedLength);
@@ -905,7 +917,7 @@ public class ConfigManager {
                     this.property.setMaxListLength(this.maxLength);
                     value = this.property.getStringList();
                     configuration.getCategory(this.aliasCategory).remove(this.alias);
-                    this.property = configuration.get(this.category.name, this.name, this.defA, StatCollector.translateToLocal(this.languageKey + ".comment"));
+                    this.property = configuration.get(this.category.name, this.name, this.defA, ConfigManager.translate(this.languageKey + ".comment"));
                     this.property.setValidationPattern(this.pattern);
                     this.property.setValidValues(this.options);
                     this.property.setIsListLengthFixed(this.fixedLength);
@@ -913,7 +925,7 @@ public class ConfigManager {
                     this.property.set(value);
                 } else {
                     value = this.defA;
-                    this.property = configuration.get(this.category.name, this.name, this.defA, StatCollector.translateToLocal(this.languageKey + ".comment"));
+                    this.property = configuration.get(this.category.name, this.name, this.defA, ConfigManager.translate(this.languageKey + ".comment"));
                     this.property.setValidationPattern(this.pattern);
                     this.property.setValidValues(this.options);
                     this.property.setIsListLengthFixed(this.fixedLength);
