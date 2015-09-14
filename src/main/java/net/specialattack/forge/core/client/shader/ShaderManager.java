@@ -67,6 +67,9 @@ public class ShaderManager implements IResourceManagerReloadListener {
                 for (String uniform : metadata.uniforms) {
                     binding.shader.uniforms.put(uniform, new ShaderUniform(binding.shader, uniform));
                 }
+                for (String attribute : metadata.attributes) {
+                    binding.shader.attributes.put(attribute, new ShaderAttribute(binding.shader, attribute));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -93,7 +96,5 @@ public class ShaderManager implements IResourceManagerReloadListener {
         public ShaderProgram getShader() {
             return this.shader;
         }
-
     }
-
 }

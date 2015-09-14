@@ -90,5 +90,4 @@ public class ShaderUniform {
     public void setMatrix4(boolean transpose, FloatBuffer buffer) {
         GLUtil.Uniform.setMatrix4(this.id, transpose, buffer);
     }
-
 }

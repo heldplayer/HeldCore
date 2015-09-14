@@ -128,5 +128,4 @@ public class ShaderLoader {
 
         return new ShaderProgram(programId, new Shader(vertexId, vertexData), new Shader(fragmentId, fragmentData));
     }
-
 }

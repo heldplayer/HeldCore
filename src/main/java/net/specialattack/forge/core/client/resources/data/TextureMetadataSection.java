@@ -18,5 +18,4 @@ public class TextureMetadataSection implements IMetadataSection {
             this.borderBottom = borderBottom;
         }
     }
-
 }

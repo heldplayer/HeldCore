@@ -43,5 +43,4 @@ public class TextureMetadataSectionSerializer extends BaseMetadataSectionSeriali
     public String getSectionName() {
         return "spacore:texture";
     }
-
 }

@@ -17,6 +17,13 @@ public class ShaderMetadataSectionSerializer extends BaseMetadataSectionSerializ
                 result.uniforms.add(element.getAsString());
             }
         }
+        if (object.has("attributes")) {
+            JsonArray attributes = object.getAsJsonArray("attributes");
+
+            for (JsonElement element : attributes) {
+                result.attributes.add(element.getAsString());
+            }
+        }
         return result;
     }
 
@@ -24,5 +31,4 @@ public class ShaderMetadataSectionSerializer extends BaseMetadataSectionSerializ
     public String getSectionName() {
         return "spacore:shader";
     }
-
 }

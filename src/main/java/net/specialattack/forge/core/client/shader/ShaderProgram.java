@@ -11,7 +11,8 @@ public class ShaderProgram {
     public final Shader vertex;
     public final Shader fragment;
     private List<ShaderCallback> callbacks = new ArrayList<ShaderCallback>();
-    protected Map<String, ShaderUniform> uniforms = new HashMap<String, ShaderUniform>();
+    protected Map<String, ShaderUniform> uniforms = new HashMap<String, ShaderUniform>(); // Must not change during rendering
+    protected Map<String, ShaderAttribute> attributes = new HashMap<String, ShaderAttribute>(); // Can change per vertex
 
     public ShaderProgram(int id, Shader vertex, Shader fragment) {
         this.vertex = vertex;
@@ -50,4 +51,7 @@ public class ShaderProgram {
         return this.uniforms.get(name);
     }
 
+    public ShaderAttribute getAttribute(String name) {
+        return this.attributes.get(name);
+    }
 }

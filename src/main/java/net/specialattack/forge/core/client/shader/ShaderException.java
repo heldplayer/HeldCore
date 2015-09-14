@@ -19,5 +19,4 @@ public class ShaderException extends Exception {
     public ShaderException(Throwable cause) {
         super(cause);
     }
-
 }

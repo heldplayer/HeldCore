@@ -398,4 +398,89 @@ public final class GLUtil {
         }
     }
 
+    public static final class Attribute {
+
+        private Attribute() {
+        }
+
+        public static void set1(int location, float a) {
+            if (GLUtil.SHADERS_SUPPORTED) {
+                if (GLUtil.ARB_SHADING) {
+                    ARBVertexShader.glVertexAttrib1fARB(location, a);
+                } else {
+                    GL20.glVertexAttrib1f(location, a);
+                }
+            }
+        }
+
+        public static void set1(int location, double a) {
+            if (GLUtil.SHADERS_SUPPORTED) {
+                if (GLUtil.ARB_SHADING) {
+                    ARBVertexShader.glVertexAttrib1dARB(location, a);
+                } else {
+                    GL20.glVertexAttrib1d(location, a);
+                }
+            }
+        }
+
+        public static void set2(int location, float a, float b) {
+            if (GLUtil.SHADERS_SUPPORTED) {
+                if (GLUtil.ARB_SHADING) {
+                    ARBVertexShader.glVertexAttrib2fARB(location, a, b);
+                } else {
+                    GL20.glVertexAttrib2f(location, a, b);
+                }
+            }
+        }
+
+        public static void set2(int location, double a, double b) {
+            if (GLUtil.SHADERS_SUPPORTED) {
+                if (GLUtil.ARB_SHADING) {
+                    ARBVertexShader.glVertexAttrib2dARB(location, a, b);
+                } else {
+                    GL20.glVertexAttrib2d(location, a, b);
+                }
+            }
+        }
+
+        public static void set3(int location, float a, float b, float c) {
+            if (GLUtil.SHADERS_SUPPORTED) {
+                if (GLUtil.ARB_SHADING) {
+                    ARBVertexShader.glVertexAttrib3fARB(location, a, b, c);
+                } else {
+                    GL20.glVertexAttrib3f(location, a, b, c);
+                }
+            }
+        }
+
+        public static void set3(int location, double a, double b, double c) {
+            if (GLUtil.SHADERS_SUPPORTED) {
+                if (GLUtil.ARB_SHADING) {
+                    ARBVertexShader.glVertexAttrib3dARB(location, a, b, c);
+                } else {
+                    GL20.glVertexAttrib3d(location, a, b, c);
+                }
+            }
+        }
+
+        public static void set4(int location, float a, float b, float c, float d) {
+            if (GLUtil.SHADERS_SUPPORTED) {
+                if (GLUtil.ARB_SHADING) {
+                    ARBVertexShader.glVertexAttrib4fARB(location, a, b, c, d);
+                } else {
+                    GL20.glVertexAttrib4f(location, a, b, c, d);
+                }
+            }
+        }
+
+        public static void set4(int location, double a, double b, double c, double d) {
+            if (GLUtil.SHADERS_SUPPORTED) {
+                if (GLUtil.ARB_SHADING) {
+                    ARBVertexShader.glVertexAttrib4dARB(location, a, b, c, d);
+                } else {
+                    GL20.glVertexAttrib4d(location, a, b, c, d);
+                }
+            }
+        }
+    }
 }

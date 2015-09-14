@@ -68,5 +68,4 @@ public class AdvancedTexturesManager implements IResourceManagerReloadListener {
         }
 
     }
-
 }

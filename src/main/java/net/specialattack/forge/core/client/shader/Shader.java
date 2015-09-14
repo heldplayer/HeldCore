@@ -13,5 +13,4 @@ public class Shader {
     public void delete() {
         GLUtil.deleteShader(this.id);
     }
-
 }

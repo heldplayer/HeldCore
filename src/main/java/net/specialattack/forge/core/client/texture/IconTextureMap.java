@@ -16,5 +16,4 @@ public class IconTextureMap extends TextureMap {
             holder.register(this);
         }
     }
-
 }
