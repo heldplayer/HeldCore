@@ -29,7 +29,7 @@ public final class Scheduler {
         }
     }
 
-    private PriorityQueue<Scheduler.Task> queue = new PriorityQueue<Scheduler.Task>(new Comparator<Scheduler.Task>() {
+    private PriorityQueue<Scheduler.Task> queue = new PriorityQueue<Scheduler.Task>(4, new Comparator<Scheduler.Task>() {
         @Override
         public int compare(Task o1, Task o2) {
             return (int) (o1.nextTick - o2.nextTick);
