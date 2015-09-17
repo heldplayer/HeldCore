@@ -139,7 +139,7 @@ public final class SyncHandlerClient {
                     delayedList.add(request);
                     continue;
                 }
-                // TODO: list.appendTag(S03StartSyncing.writeCompound(request.owner, request.track));
+                list.appendTag(C02RequestSync.writeCompound(request.storageId, request.owner, request.track));
                 i++;
                 if (i >= SyncHandler.MAX_REQUESTS_PER_PACKET) {
                     this.sendTrackRequest(list);
@@ -159,7 +159,7 @@ public final class SyncHandlerClient {
 
     private void sendTrackRequest(NBTTagList list) {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setTag("tag", list);
+        tag.setTag("data", list);
         SyncHandlerClient.debug("Sending tracking request for %d objects", list.tagCount());
         SpACore.syncPacketHandler.sendToServer(new C02RequestSync(tag));
     }
@@ -180,12 +180,12 @@ public final class SyncHandlerClient {
         }
     }
 
-    public static void requestStartTracking(ISyncableOwner owner) {
-        SyncHandlerClient.trackingRequests.add(new TrackingRequests(owner, true));
+    public static void requestStartTracking(ISyncableOwner owner, UUID storage) {
+        SyncHandlerClient.trackingRequests.add(new TrackingRequests(owner, storage, true));
     }
 
-    public static void requestStopTracking(ISyncableOwner owner) {
-        SyncHandlerClient.trackingRequests.add(new TrackingRequests(owner, false));
+    public static void requestStopTracking(ISyncableOwner owner, UUID storage) {
+        SyncHandlerClient.trackingRequests.add(new TrackingRequests(owner, storage, false));
     }
 
     public static SyncTrackingStorage getStorage(UUID uuid) {
@@ -195,10 +195,12 @@ public final class SyncHandlerClient {
     private static class TrackingRequests {
 
         public ISyncableOwner owner;
+        public UUID storageId;
         public boolean track;
 
-        public TrackingRequests(ISyncableOwner owner, boolean track) {
+        public TrackingRequests(ISyncableOwner owner, UUID storageId, boolean track) {
             this.owner = owner;
+            this.storageId = storageId;
             this.track = track;
         }
     }

@@ -108,7 +108,8 @@ public class ClientProxy extends CommonProxy {
 
             for (TileEntity tile : tiles.values()) {
                 if (tile instanceof SyncTileEntity) {
-                    SyncHandlerClient.requestStopTracking((SyncTileEntity) tile);
+                    SyncTileEntity syncTile = (SyncTileEntity) tile;
+                    SyncHandlerClient.requestStopTracking(syncTile, (syncTile).tracker.uuid);
                 }
             }
         }

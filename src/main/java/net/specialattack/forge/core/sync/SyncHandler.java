@@ -31,7 +31,7 @@ public final class SyncHandler {
     private static boolean initialized = false;
     private static HashMap<String, SyncObjectProvider> providers = new HashMap<String, SyncObjectProvider>();
 
-    public static final boolean debug = Boolean.parseBoolean(System.getProperty("spacore.sync.debug", "false"));
+    public static boolean debug = Boolean.parseBoolean(System.getProperty("spacore.sync.debug", "false"));
     public static final Logger log = LogManager.getLogger("SpACore:SyncS");
 
     public static UUID serverUUID;

@@ -906,7 +906,7 @@ public class GLState {
                     this.distanceModeNV = distanceModeNV;
                 }
             } else {
-                GLState.throwError(String.format("Invalid fog distance mode: %H", mode));
+                GLState.throwError(String.format("Invalid fog distance mode: %H", this.mode));
             }
         }
     }

@@ -36,14 +36,24 @@ public abstract class SyncTileEntity extends TileEntity implements ISyncableOwne
         if (this.worldObj != null) { // We only work if the world is set
             if (!this.initialized) { // If we're not initialized, initialize
                 if (this.worldObj.isRemote) { // Only on the client will we send a track request packet
-                    SyncHandlerClient.requestStartTracking(this);
-                } else { // Only on the server will we set the UUID
+                    if (this.canStartTracking()) {
+                        SyncHandlerClient.requestStartTracking(this, SyncHandlerClient.worldStorage.uuid);
+                    }
+                } else if (this.uuid == null) { // Only on the server will we set the UUID
                     this.uuid = UUID.randomUUID();
                 }
                 this.initialized = true; // Disable the check either way
             }
 
             this.onTick();
+        }
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        if (this.tracker != null) {
+            SyncHandlerClient.requestStopTracking(this, this.tracker.uuid);
         }
     }
 

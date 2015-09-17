@@ -157,23 +157,27 @@ public class SyncTrackingStorage {
                     // We only need to send this packet, as all the contents of the storage on the client side will get nuked
                     SpACore.syncPacketHandler.sendTo(new S02TrackStorage(this.uuid, this.role, false), player);
                 }
+                i.remove(); // Remove the tracker first
+
                 // Now we look at all the syncables this player was tracking on this storage and see if any other player is tracking them
                 // If they're being tracked by other players we keep them on our local watch list
-                search:
                 for (ISyncableOwner owner : tracker.syncableOwners) {
-                    for (PlayerTracker other : this.playerTrackers) {
-                        if (other.syncableOwners.contains(owner)) {
-                            continue search;
-                        }
-                    }
-                    // We didn't find the owner
-                    this.trackingSyncableOwners.remove(owner);
-                    this.trackingSyncables.removeAll(owner.getSyncables().values());
+                    this.checkStillTracked(owner);
                 }
                 tracker.releaseData();
-                i.remove();
             }
         }
+    }
+
+    public void checkStillTracked(ISyncableOwner owner) {
+        for (PlayerTracker other : this.playerTrackers) {
+            if (other.syncableOwners.contains(owner)) {
+                return;
+            }
+        }
+        // We didn't find the owner
+        this.trackingSyncableOwners.remove(owner);
+        this.trackingSyncables.removeAll(owner.getSyncables().values());
     }
 
     /**

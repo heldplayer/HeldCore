@@ -10,8 +10,11 @@ public abstract class SyncObjectProvider<T extends ISyncableOwner> {
         this.id = id;
     }
 
-    public abstract NBTTagCompound writeDescriptor(T owner);
+    public abstract NBTTagCompound writeDescriptorClient(T owner);
 
-    public abstract T readDescriptor(NBTTagCompound tag);
+    public abstract T readDescriptorClient(NBTTagCompound tag);
 
+    public abstract NBTTagCompound writeDescriptorServer(T owner);
+
+    public abstract T readDescriptorServer(NBTTagCompound tag, SyncTrackingStorage storage);
 }

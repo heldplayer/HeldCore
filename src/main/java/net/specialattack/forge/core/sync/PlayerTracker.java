@@ -39,24 +39,30 @@ public class PlayerTracker {
     }
 
     public boolean attemptTrack(ISyncableOwner owner) {
-        if (!owner.canPlayerTrack(PlayerUtils.getServerPlayer(player.getUuid()))) {
+        if (!owner.canPlayerTrack(PlayerUtils.getServerPlayer(this.player.getUuid()))) {
             return false; // The client isn't allowed to know about this
         }
         if (!this.player.getProviders().contains(owner.getProvider().id)) {
             return false; // The client doesn't know how to handle this
         }
 
-        SyncHandler.debug("Starting to track owner %s (%s) for %s", owner.getDebugDisplay(), owner.getSyncUUID(), this.player.getUuid());
-        SyncHandler.debug("Owner syncables: ", syncables.toString());
+        if (owner.getSyncUUID() == null) {
+            owner.setSyncUUID(UUID.randomUUID());
+        }
 
-        this.player.trackingUpdates.add(S03StartSyncing.writeCompound(storage, owner, true));
+        SyncHandler.debug("Starting to track owner %s (%s) for %s", owner.getDebugDisplay(), owner.getSyncUUID(), this.player.getUuid());
+        SyncHandler.debug("Owner syncables: ", this.syncables.toString());
+
+        this.player.trackingUpdates.add(S03StartSyncing.writeCompound(this.storage, owner, true));
         this.syncableOwners.add(owner);
         this.syncables.addAll(owner.getSyncables().values());
+        this.storage.trackingSyncableOwners.add(owner);
+        this.storage.trackingSyncables.addAll(owner.getSyncables().values());
         return true;
     }
 
     public void untrack(ISyncableOwner owner) {
-        this.player.trackingUpdates.add(S03StartSyncing.writeCompound(storage, owner, false));
+        this.player.trackingUpdates.add(S03StartSyncing.writeCompound(this.storage, owner, false));
 
         UUID uuid = owner.getSyncUUID();
 
@@ -76,6 +82,35 @@ public class PlayerTracker {
                 it2.remove();
                 SyncHandler.debug("Untracked syncable %s (owned by %s) for %s", syncable.getDebugDisplay(), uuid, this.player.getUuid());
             }
+        }
+
+        this.storage.checkStillTracked(owner);
+    }
+
+    public void untrack(UUID uuid) {
+        ISyncableOwner last = null;
+        Iterator<ISyncableOwner> it = this.syncableOwners.iterator();
+        while (it.hasNext()) {
+            ISyncableOwner obj = it.next();
+            if (obj.getSyncUUID().equals(uuid)) {
+                last = obj;
+                it.remove();
+                SyncHandler.debug("Untracked owner %s (%s) for %s", obj.getDebugDisplay(), uuid, this.player.getUuid());
+            }
+        }
+
+        Iterator<ISyncable> it2 = this.syncables.iterator();
+        while (it2.hasNext()) {
+            ISyncable syncable = it2.next();
+            if (syncable.getOwner().getSyncUUID().equals(uuid)) {
+                it2.remove();
+                SyncHandler.debug("Untracked syncable %s (owned by %s) for %s", syncable.getDebugDisplay(), uuid, this.player.getUuid());
+            }
+        }
+
+        if (last != null) {
+            this.player.trackingUpdates.add(S03StartSyncing.writeCompound(this.storage, last, false));
+            this.storage.checkStillTracked(last);
         }
     }
 }

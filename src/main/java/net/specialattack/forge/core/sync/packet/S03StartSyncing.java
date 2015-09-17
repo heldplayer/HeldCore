@@ -87,7 +87,7 @@ public class S03StartSyncing extends SyncPacket {
 
         boolean track = tag.getBoolean("track");
         if (track) {
-            ISyncableOwner owner = provider.readDescriptor(tag.getCompoundTag("descriptor"));
+            ISyncableOwner owner = provider.readDescriptorClient(tag.getCompoundTag("descriptor"));
             if (owner == null) {
                 SyncHandlerClient.log.log(Level.WARN, String.format("Problematic Sync request, could not find owner %s", uuid));
                 return;
@@ -142,7 +142,7 @@ public class S03StartSyncing extends SyncPacket {
         tag.setString("uuid", owner.getSyncUUID().toString());
         tag.setBoolean("track", track);
         if (track) {
-            tag.setTag("descriptor", provider.writeDescriptor(owner));
+            tag.setTag("descriptor", provider.writeDescriptorClient(owner));
 
             NBTTagCompound data = new NBTTagCompound();
             for (Map.Entry<String, ISyncable> entry : owner.getSyncables().entrySet()) {
