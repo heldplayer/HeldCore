@@ -149,12 +149,14 @@ public final class SyncHandler {
 
         UUID uuid = player.getUniqueID();
         ConnectionInfo connection = SyncHandler.getConnectionInfo(uuid, false);
-        for (PlayerTracker tracker : new ArrayList<PlayerTracker>(connection.trackers)) {
-            tracker.storage.stopTrackingPlayer(uuid);
-        }
-        SyncHandler.players.remove(uuid);
+        if (connection != null) {
+            for (PlayerTracker tracker : new ArrayList<PlayerTracker>(connection.trackers)) {
+                tracker.storage.stopTrackingPlayer(uuid);
+            }
+            SyncHandler.players.remove(uuid);
 
-        Objects.SYNC_EVENT_BUS.post(new SyncEvent.ServerClientDisconnected(player, connection));
+            Objects.SYNC_EVENT_BUS.post(new SyncEvent.ServerClientDisconnected(player, connection));
+        }
     }
 
     @SubscribeEvent // FML Event
