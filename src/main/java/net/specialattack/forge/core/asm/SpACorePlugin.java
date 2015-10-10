@@ -25,19 +25,15 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
         @Configuration.Option(category = "client", side = Configuration.CSide.CLIENT, needsRestart = true)
         @Configuration.Comment("EXPERIMENTAL! Set to true to enable handling of the render state to increase performance.")
-        public boolean stateManager;
+        public boolean stateManager = false;
 
         @Configuration.Option(category = "client", side = Configuration.CSide.CLIENT, needsRestart = true)
         @Configuration.Comment("Set to true to enable outputting of transformed classes after having the state manager injected.")
-        public boolean stateManagerDebug;
-
-        @Configuration.Option(category = "client", side = Configuration.CSide.CLIENT, needsRestart = true)
-        @Configuration.Comment("Set to true to enable surpressing long stacktraces in the log when there are missing textures.")
-        public boolean loggerTransformer;
+        public boolean stateManagerDebug = false;
 
         @Configuration.Option(category = "client", side = Configuration.CSide.CLIENT, needsRestart = true)
         @Configuration.Comment("Set to true to change the debug screen (F3) to look more like the 1.8 debug screen.")
-        public boolean debugScreen;
+        public boolean debugScreen = true;
     }
 
     @Override

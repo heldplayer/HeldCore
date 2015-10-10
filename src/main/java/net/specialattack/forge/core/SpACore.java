@@ -66,7 +66,6 @@ public class SpACore extends SpACoreMod {
             public String call() throws Exception {
                 String result = "\n\t\tGLStateManager: " + SpACorePlugin.config.stateManager;
                 result += "\n\t\tGLStateManager debug output: " + SpACorePlugin.config.stateManagerDebug;
-                result += "\n\t\tTexture exception muter: " + SpACorePlugin.config.loggerTransformer;
                 result += "\n\t\tDebug screen replacer: " + SpACorePlugin.config.debugScreen;
                 return result;
             }
