@@ -45,7 +45,7 @@ public class ConfigManager {
         ConfigManager manager = new ConfigManager(ann.value(), mod.getModId(), object);
 
         // Resolving options
-        for (Field field : clazz.getDeclaredFields()) {
+        for (Field field : clazz.getFields()) {
             Configuration.Option option = field.getAnnotation(Configuration.Option.class);
             if (option != null) {
                 String name = field.getName();

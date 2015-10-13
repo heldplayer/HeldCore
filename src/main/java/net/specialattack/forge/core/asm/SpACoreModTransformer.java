@@ -70,7 +70,7 @@ public class SpACoreModTransformer implements IClassTransformer {
             }
 
             if (changed) {
-                ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+                ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
                 node.accept(writer);
                 return writer.toByteArray();
             }
