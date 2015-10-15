@@ -39,8 +39,8 @@ public class SpACore extends SpACoreMod {
         @Configuration.Option(category = "sync")
         @Configuration.Alias(category = "general", name = "refreshRate")
         @Configuration.Syncronized(Configuration.CSide.SERVER)
-        @Configuration.IntMinMax(min = 1, max = 40)
-        public int refreshRate = 5; // Max 40 = 2 seconds, you REALLY don't want it to take this long to sync.
+        @Configuration.IntMinMax(min = 1, max = 100)
+        public int refreshRate = 5; // Max 100 = 5 seconds, you REALLY don't want it to take this long to sync, but might be good for high latency connections
 
         @Configuration.Option(category = "client", side = Configuration.CSide.CLIENT, needsRestart = true)
         @Configuration.Alias(category = "general", name = "textureMapId")
