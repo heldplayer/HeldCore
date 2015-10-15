@@ -20,11 +20,9 @@ import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.data.IMetadataSerializer;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Timer;
 import net.minecraft.world.ChunkPosition;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
@@ -36,7 +34,8 @@ import net.specialattack.forge.core.SpACore;
 import net.specialattack.forge.core.client.gui.GuiButtonIcon;
 import net.specialattack.forge.core.client.gui.GuiSGTest;
 import net.specialattack.forge.core.client.resources.data.*;
-import net.specialattack.forge.core.client.shader.*;
+import net.specialattack.forge.core.client.shader.GLUtil;
+import net.specialattack.forge.core.client.shader.ShaderManager;
 import net.specialattack.forge.core.client.texture.IconHolder;
 import net.specialattack.forge.core.client.texture.IconTextureMap;
 import net.specialattack.forge.core.sync.SyncClientDebug;
@@ -52,8 +51,6 @@ public class ClientProxy extends CommonProxy {
     public static IMetadataSerializer metadataSerializer;
     public static Set<IconHolder> iconHolders = new HashSet<IconHolder>();
     public static SyncHandlerClient syncClientInstance;
-
-    public static ShaderManager.ShaderBinding colorBlindShader;
 
     public static Timer getMinecraftTimer() {
         if (ClientProxy.minecraftTimer == null) {
@@ -73,18 +70,6 @@ public class ClientProxy extends CommonProxy {
 
         GLUtil.initialize();
         SpACore.registerIconHolder(ClientProxy.iconReportBug = new IconHolder(Assets.DOMAIN + "report-bug"));
-
-        // Prepare debug settings
-        KeyHandler.registerKeyBind(new KeyHandler.KeyData(new KeyBinding("key.spacore:debug", 0, "key.categories.misc"), false) {
-            @Override
-            public void keyDown(boolean isRepeat) {
-                super.keyDown(isRepeat);
-                if (!isRepeat) {
-                    ClientDebug.setColorMode(ClientDebug.ColorMode.getRandom());
-                }
-            }
-        });
-        ClientDebug.setColorMode(ClientDebug.ColorMode.NORMAL);
     }
 
     @Override
@@ -110,22 +95,6 @@ public class ClientProxy extends CommonProxy {
 
         MC.getResourceManager().registerReloadListener(new AdvancedTexturesManager());
         MC.getResourceManager().registerReloadListener(new ShaderManager());
-
-        ClientProxy.colorBlindShader = ShaderManager.getShader(new ResourceLocation("spacore:shaders/color"));
-        if (ClientProxy.colorBlindShader != null && ClientProxy.colorBlindShader.getShader() != null) {
-            ShaderProgram shader = ClientProxy.colorBlindShader.getShader();
-            shader.addCallback(new ShaderCallback() {
-
-                private float time;
-                private float prevPartial;
-
-                @Override
-                public void call(ShaderProgram program) {
-                    ShaderUniform colorCorrection = program.getUniform("colorCorrection");
-                    colorCorrection.setMatrix3(true, ClientDebug.COLOR_MATRIX);
-                }
-            });
-        }
     }
 
     @SubscribeEvent

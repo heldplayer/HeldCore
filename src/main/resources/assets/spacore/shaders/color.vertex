@@ -1,0 +1,8 @@
+attribute vec4 gl_Vertex;
+attribute vec4 gl_MultiTexCoord0;
+uniform mat3 colorCorrection;
+
+void main() {
+    gl_Position = ftransform();
+    gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;
+}

@@ -17,13 +17,13 @@ public final class ClientHooks {
 
     public static void framebufferRenderPre() {
         if (ClientDebug.colorBlindEnabled && OpenGlHelper.shadersSupported && OpenGlHelper.framebufferSupported) {
-            ClientProxy.colorBlindShader.getShader().bind();
+            ClientDebug.colorBlindShader.getShader().bind();
         }
     }
 
     public static void framebufferRenderPost() {
         if (ClientDebug.colorBlindEnabled && OpenGlHelper.shadersSupported && OpenGlHelper.framebufferSupported) {
-            ClientProxy.colorBlindShader.getShader().unbind();
+            ClientDebug.colorBlindShader.getShader().unbind();
         }
     }
 }

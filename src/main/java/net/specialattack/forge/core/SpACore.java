@@ -25,6 +25,8 @@ public class SpACore extends SpACoreMod {
 
     @SidedProxy(clientSide = Objects.CLIENT_PROXY, serverSide = Objects.SERVER_PROXY)
     public static CommonProxy proxy;
+    @SidedProxy(clientSide = "net.specialattack.forge.core.client.ClientDebug", serverSide = "net.specialattack.forge.core.CommonDebug")
+    public static CommonDebug debugProxy;
 
     public static SpAPacketHandler<SyncPacket> syncPacketHandler;
 

@@ -1,16 +1,26 @@
 package net.specialattack.forge.core.client;
 
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.nio.FloatBuffer;
 import java.util.Random;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.ResourceLocation;
+import net.specialattack.forge.core.CommonDebug;
+import net.specialattack.forge.core.client.shader.ShaderCallback;
+import net.specialattack.forge.core.client.shader.ShaderManager;
+import net.specialattack.forge.core.client.shader.ShaderProgram;
+import net.specialattack.forge.core.client.shader.ShaderUniform;
 import org.lwjgl.BufferUtils;
 
 @SideOnly(Side.CLIENT)
-public class ClientDebug {
+public class ClientDebug extends CommonDebug {
 
     public static final FloatBuffer COLOR_MATRIX = BufferUtils.createFloatBuffer(9);
     public static boolean colorBlindEnabled = true; // TODO: set to false by default
+    public static ShaderManager.ShaderBinding colorBlindShader;
 
     public static void setColorMode(ColorMode mode) {
         ClientDebug.setColorMode(mode.matrix);
@@ -20,6 +30,41 @@ public class ClientDebug {
         ClientDebug.COLOR_MATRIX.clear();
         ClientDebug.COLOR_MATRIX.put(matrix);
         ClientDebug.COLOR_MATRIX.rewind();
+    }
+
+    @Override
+    public void init(FMLInitializationEvent event) {
+        super.init(event);
+        KeyHandler.registerKeyBind(new KeyHandler.KeyData(new KeyBinding("key.spacore:debug", 0, "key.categories.misc"), false) {
+            @Override
+            public void keyDown(boolean isRepeat) {
+                super.keyDown(isRepeat);
+                if (!isRepeat) {
+                    ClientDebug.setColorMode(ClientDebug.ColorMode.getRandom());
+                }
+            }
+        });
+        ClientDebug.setColorMode(ClientDebug.ColorMode.NORMAL);
+    }
+
+    @Override
+    public void postInit(FMLPostInitializationEvent event) {
+        super.postInit(event);
+        ClientDebug.colorBlindShader = ShaderManager.getShader(new ResourceLocation("spacore:shaders/color"));
+        if (ClientDebug.colorBlindShader != null && ClientDebug.colorBlindShader.getShader() != null) {
+            ShaderProgram shader = ClientDebug.colorBlindShader.getShader();
+            shader.addCallback(new ShaderCallback() {
+
+                private float time;
+                private float prevPartial;
+
+                @Override
+                public void call(ShaderProgram program) {
+                    ShaderUniform colorCorrection = program.getUniform("colorCorrection");
+                    colorCorrection.setMatrix3(true, ClientDebug.COLOR_MATRIX);
+                }
+            });
+        }
     }
 
     public enum ColorMode {
