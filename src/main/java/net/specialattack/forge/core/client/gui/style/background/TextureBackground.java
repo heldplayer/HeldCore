@@ -26,7 +26,7 @@ public class TextureBackground implements IBackground {
         GLState.glDisable(GL11.GL_LIGHTING);
         GLState.glDisable(GL11.GL_FOG);
         GLState.glEnable(GL11.GL_BLEND);
-        MC.getRenderEngine().bindTexture(this.texture);
+        MC.getTextureManager().bindTexture(this.texture);
         GLState.glColor3f(1.0F, 1.0F, 1.0F);
         GuiHelper.drawTexturedModalRect(component.getLeft(SizeContext.INNER), component.getTop(SizeContext.INNER), width, height, component.getZLevel(), 0, 0, width / this.textureSize, height / this.textureSize);
     }

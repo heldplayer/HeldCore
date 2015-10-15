@@ -28,7 +28,7 @@ public class AdvancedTextureBackground implements IBackground {
     public void drawBackground(SGComponent component) {
         GLState.glEnable(GL11.GL_TEXTURE_2D);
         GLState.glEnable(GL11.GL_BLEND);
-        MC.getRenderEngine().bindTexture(this.texture.resource);
+        MC.getTextureManager().bindTexture(this.texture.resource);
         if (this.color != null) {
             GLState.glColor3f(this.color.red, this.color.green, this.color.blue);
         } else {

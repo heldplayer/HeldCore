@@ -18,8 +18,8 @@ public class Location {
     @Override
     public String toString() {
         return "Location{" +
-                "left=" + left +
-                ", top=" + top +
+                "left=" + this.left +
+                ", top=" + this.top +
                 '}';
     }
 }

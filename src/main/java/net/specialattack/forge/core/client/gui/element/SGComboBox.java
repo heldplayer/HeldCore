@@ -242,12 +242,12 @@ public class SGComboBox extends SGInteractable {
             }
 
             Value value1 = (Value) o;
-            return value.equals(value1.value);
+            return this.value.equals(value1.value);
         }
 
         @Override
         public int hashCode() {
-            return value.hashCode();
+            return this.value.hashCode();
         }
     }
 

@@ -50,9 +50,9 @@ public final class GuiHelper {
      */
     public static void drawFluid(Fluid fluid, int left, int top, int width, int height, float zLevel) {
         if (fluid.getSpriteNumber() == 0) {
-            MC.getRenderEngine().bindTexture(TextureMap.locationBlocksTexture);
+            MC.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
         } else {
-            MC.getRenderEngine().bindTexture(TextureMap.locationItemsTexture);
+            MC.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
         }
 
         IIcon icon = RenderHelper.getIconSafe(fluid.getIcon(), fluid.getSpriteNumber() == 0);
@@ -249,7 +249,7 @@ public final class GuiHelper {
     public static void drawGradientRect(int startX, int startY, int endX, int endY, int startColor, int endColor, float zLevel) {
         GuiHelper.drawGradientRect((float) startX, (float) startY, (float) endX, (float) endY, startColor, endColor, zLevel);
         if (startColor == endColor) {
-            drawColoredRect((float) startX, (float) startY, (float) endX, (float) endY, startColor, zLevel);
+            GuiHelper.drawColoredRect((float) startX, (float) startY, (float) endX, (float) endY, startColor, zLevel);
         }
     }
 
@@ -273,7 +273,7 @@ public final class GuiHelper {
      */
     public static void drawGradientRect(float startX, float startY, float endX, float endY, int startColor, int endColor, float zLevel) {
         if (startColor == endColor) {
-            drawColoredRect(startX, startY, endX, endY, startColor, zLevel);
+            GuiHelper.drawColoredRect(startX, startY, endX, endY, startColor, zLevel);
         }
         float startAlpha = (float) (startColor >> 24 & 255) / 255.0F;
         float startRed = (float) (startColor >> 16 & 255) / 255.0F;
@@ -480,49 +480,49 @@ public final class GuiHelper {
         int remainingHeight = totalBHeight % fillHeight;
         if (bTop > 0) { // Top
             if (bLeft > 0) { // Top left corner
-                drawPart(left, top, bLeft, bTop, zLevel, 0.0F, 0.0F, bLeft, bTop, texWidth, texHeight);
+                GuiHelper.drawPart(left, top, bLeft, bTop, zLevel, 0.0F, 0.0F, bLeft, bTop, texWidth, texHeight);
             }
             if (bRight > 0) { // Top right corner
-                drawPart(left + width - bRight, top, bRight, bTop, zLevel, texWidth - bRight, 0.0F, texWidth, bTop, texWidth, texHeight);
+                GuiHelper.drawPart(left + width - bRight, top, bRight, bTop, zLevel, texWidth - bRight, 0.0F, texWidth, bTop, texWidth, texHeight);
             }
             for (int i = 0; i <= fullHorizParts; i++) {
                 if (i < fullHorizParts) {
-                    drawPart(left + bLeft + fillWidth * i, top, fillWidth, bTop, zLevel, bLeft, 0.0F, texWidth - bRight, bTop, texWidth, texHeight);
+                    GuiHelper.drawPart(left + bLeft + fillWidth * i, top, fillWidth, bTop, zLevel, bLeft, 0.0F, texWidth - bRight, bTop, texWidth, texHeight);
                 } else {
-                    drawPart(left + bLeft + fillWidth * i, top, remainingWidth, bTop, zLevel, bLeft, 0.0F, bLeft + remainingWidth, bTop, texWidth, texHeight);
+                    GuiHelper.drawPart(left + bLeft + fillWidth * i, top, remainingWidth, bTop, zLevel, bLeft, 0.0F, bLeft + remainingWidth, bTop, texWidth, texHeight);
                 }
             }
         }
         if (bBottom > 0) { // Bottom
             if (bLeft > 0) { // Bottom left corner
-                drawPart(left, top + height - bBottom, bLeft, bBottom, zLevel, 0.0F, texHeight - bBottom, bLeft, texHeight, texWidth, texHeight);
+                GuiHelper.drawPart(left, top + height - bBottom, bLeft, bBottom, zLevel, 0.0F, texHeight - bBottom, bLeft, texHeight, texWidth, texHeight);
             }
             if (bRight > 0) { // Bottom right corner
-                drawPart(left + width - bRight, top + height - bBottom, bRight, bBottom, zLevel, texWidth - bRight, texHeight - bBottom, texWidth, texHeight, texWidth, texHeight);
+                GuiHelper.drawPart(left + width - bRight, top + height - bBottom, bRight, bBottom, zLevel, texWidth - bRight, texHeight - bBottom, texWidth, texHeight, texWidth, texHeight);
             }
             for (int i = 0; i <= fullHorizParts; i++) {
                 if (i < fullHorizParts) {
-                    drawPart(left + bLeft + fillWidth * i, top + height - bBottom, fillWidth, bBottom, zLevel, bLeft, texHeight - bBottom, texWidth - bRight, texHeight, texWidth, texHeight);
+                    GuiHelper.drawPart(left + bLeft + fillWidth * i, top + height - bBottom, fillWidth, bBottom, zLevel, bLeft, texHeight - bBottom, texWidth - bRight, texHeight, texWidth, texHeight);
                 } else {
-                    drawPart(left + bLeft + fillWidth * i, top + height - bBottom, remainingWidth, bBottom, zLevel, bLeft, texHeight - bBottom, bLeft + remainingWidth, texHeight, texWidth, texHeight);
+                    GuiHelper.drawPart(left + bLeft + fillWidth * i, top + height - bBottom, remainingWidth, bBottom, zLevel, bLeft, texHeight - bBottom, bLeft + remainingWidth, texHeight, texWidth, texHeight);
                 }
             }
         }
         if (bLeft > 0) { // Left
             for (int i = 0; i <= fullVertParts; i++) {
                 if (i < fullVertParts) {
-                    drawPart(left, top + bTop + fillWidth * i, bLeft, fillHeight, zLevel, 0.0F, bTop, bLeft, texHeight - bBottom, texWidth, texHeight);
+                    GuiHelper.drawPart(left, top + bTop + fillWidth * i, bLeft, fillHeight, zLevel, 0.0F, bTop, bLeft, texHeight - bBottom, texWidth, texHeight);
                 } else {
-                    drawPart(left, top + bTop + fillWidth * i, bLeft, remainingHeight, zLevel, 0.0F, bTop, bLeft, bTop + remainingHeight, texWidth, texHeight);
+                    GuiHelper.drawPart(left, top + bTop + fillWidth * i, bLeft, remainingHeight, zLevel, 0.0F, bTop, bLeft, bTop + remainingHeight, texWidth, texHeight);
                 }
             }
         }
         if (bRight > 0) { // Right
             for (int i = 0; i <= fullVertParts; i++) {
                 if (i < fullVertParts) {
-                    drawPart(left + width - bRight, top + bTop + fillWidth * i, bRight, fillHeight, zLevel, texWidth - bRight, bTop, texWidth, texHeight - bBottom, texWidth, texHeight);
+                    GuiHelper.drawPart(left + width - bRight, top + bTop + fillWidth * i, bRight, fillHeight, zLevel, texWidth - bRight, bTop, texWidth, texHeight - bBottom, texWidth, texHeight);
                 } else {
-                    drawPart(left + width - bRight, top + bTop + fillWidth * i, bRight, remainingHeight, zLevel, texWidth - bRight, bTop, texWidth, bTop + remainingHeight, texWidth, texHeight);
+                    GuiHelper.drawPart(left + width - bRight, top + bTop + fillWidth * i, bRight, remainingHeight, zLevel, texWidth - bRight, bTop, texWidth, bTop + remainingHeight, texWidth, texHeight);
                 }
             }
         }
@@ -530,7 +530,7 @@ public final class GuiHelper {
             int currentWidth = i < fullHorizParts ? fillWidth : remainingWidth;
             for (int j = 0; j <= fullVertParts; j++) {
                 int currentHeight = j < fullVertParts ? fillHeight : remainingHeight;
-                drawPart(left + bLeft + fillWidth * i, top + bTop + fillWidth * j, currentWidth, currentHeight, zLevel, bLeft, bTop, bLeft + currentWidth, bTop + currentHeight, texWidth, texHeight);
+                GuiHelper.drawPart(left + bLeft + fillWidth * i, top + bTop + fillWidth * j, currentWidth, currentHeight, zLevel, bLeft, bTop, bLeft + currentWidth, bTop + currentHeight, texWidth, texHeight);
             }
         }
     }

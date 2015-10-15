@@ -260,7 +260,7 @@ public class SGComponent implements IComponentHolder {
     }
 
     public IComponentHolder getParent() {
-        return parent;
+        return this.parent;
     }
 
     /**

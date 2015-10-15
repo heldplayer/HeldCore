@@ -29,7 +29,7 @@ public class ColoredTextureBackground implements IBackground {
         GLState.glDisable(GL11.GL_LIGHTING);
         GLState.glDisable(GL11.GL_FOG);
         GLState.glEnable(GL11.GL_BLEND);
-        MC.getRenderEngine().bindTexture(this.texture);
+        MC.getTextureManager().bindTexture(this.texture);
         GLState.glColor3f(this.color.red, this.color.green, this.color.blue);
         GuiHelper.drawTexturedModalRect(component.getLeft(SizeContext.INNER), component.getTop(SizeContext.INNER), width, height, component.getZLevel(), 0, 0, width / this.textureSize, height / this.textureSize);
     }

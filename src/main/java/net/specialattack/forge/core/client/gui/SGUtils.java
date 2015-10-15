@@ -46,7 +46,7 @@ public final class SGUtils {
     private static LinkedList<Region> clipRegions = new LinkedList<Region>();
 
     private static void clipRegion(Region region) {
-        Minecraft mc = MC.getMinecraft();
+        Minecraft mc = MC.getMc();
         ScaledResolution resolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         float scaleW = (float) mc.displayWidth / (float) resolution.getScaledWidth_double();
         float scaleH = (float) mc.displayHeight / (float) resolution.getScaledHeight_double();
@@ -66,25 +66,25 @@ public final class SGUtils {
 
     public static void clipComponent(SGComponent component) {
         Region region = component.getRenderingRegion();
-        if (clipRegions.size() == 0) {
+        if (SGUtils.clipRegions.size() == 0) {
             GLState.glEnable(GL11.GL_SCISSOR_TEST);
         }
-        clipRegions.add(region);
-        clipRegion(region);
+        SGUtils.clipRegions.add(region);
+        SGUtils.clipRegion(region);
     }
 
     public static void endClip() {
-        clipRegions.removeLast();
-        if (clipRegions.size() > 0) {
-            clipRegion(clipRegions.getLast());
+        SGUtils.clipRegions.removeLast();
+        if (SGUtils.clipRegions.size() > 0) {
+            SGUtils.clipRegion(SGUtils.clipRegions.getLast());
         } else {
             GLState.glDisable(GL11.GL_SCISSOR_TEST);
         }
     }
 
     public static void endAllClips() {
-        if (clipRegions.size() > 0) {
-            clipRegions.clear();
+        if (SGUtils.clipRegions.size() > 0) {
+            SGUtils.clipRegions.clear();
             GLState.glDisable(GL11.GL_SCISSOR_TEST);
         }
     }
