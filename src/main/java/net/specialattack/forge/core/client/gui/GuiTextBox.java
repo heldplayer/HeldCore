@@ -1064,5 +1064,4 @@ public class GuiTextBox extends Gui {
     public void setCanLoseFocus(boolean flag) {
         this.canLoseFocus = flag;
     }
-
 }

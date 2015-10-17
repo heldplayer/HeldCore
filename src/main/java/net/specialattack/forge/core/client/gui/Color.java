@@ -32,5 +32,4 @@ public final class Color {
         int iBlue = (int) (blue * 255.0F);
         this.colorHex = (iAlpha << 24) | (iRed << 16) | (iGreen << 8) | iBlue;
     }
-
 }

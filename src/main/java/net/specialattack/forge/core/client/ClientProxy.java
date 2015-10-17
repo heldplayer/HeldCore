@@ -32,7 +32,7 @@ import net.specialattack.forge.core.Assets;
 import net.specialattack.forge.core.CommonProxy;
 import net.specialattack.forge.core.SpACore;
 import net.specialattack.forge.core.client.gui.GuiButtonIcon;
-import net.specialattack.forge.core.client.gui.GuiSGTest;
+import net.specialattack.forge.core.client.gui.deprecated.GuiSGTest;
 import net.specialattack.forge.core.client.resources.data.*;
 import net.specialattack.forge.core.client.shader.GLUtil;
 import net.specialattack.forge.core.client.shader.ShaderManager;

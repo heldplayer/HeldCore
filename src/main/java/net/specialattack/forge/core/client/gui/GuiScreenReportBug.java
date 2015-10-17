@@ -59,5 +59,4 @@ public class GuiScreenReportBug extends GuiScreen {
         this.content = new GuiTextBox(this.fontRendererObj, i - 128, j + 24, 256, 128);
         this.content.setText(text);
     }
-
 }

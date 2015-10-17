@@ -538,5 +538,4 @@ public final class GuiHelper {
     private static void drawPart(int startX, int startY, int width, int height, float zLevel, float startU, float startV, float endU, float endV, float texWidth, float texHeight) {
         GuiHelper.drawTexturedModalRect(startX, startY, width, height, zLevel, startU / texWidth, startV / texHeight, endU / texWidth, endV / texHeight);
     }
-
 }

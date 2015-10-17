@@ -43,5 +43,4 @@ public enum Positioning {
     };
 
     public abstract int position(int pos, int size, int parentSize);
-
 }
