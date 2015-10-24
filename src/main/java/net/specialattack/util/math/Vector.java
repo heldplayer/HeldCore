@@ -1,4 +1,4 @@
-package net.specialattack.util;
+package net.specialattack.util.math;
 
 public class Vector {
 
@@ -33,7 +33,7 @@ public class Vector {
         this.posZ *= factor;
     }
 
-    public void devide(double factor) {
+    public void divide(double factor) {
         this.posX /= factor;
         this.posY /= factor;
         this.posZ /= factor;

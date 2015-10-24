@@ -1,4 +1,4 @@
-package net.specialattack.util;
+package net.specialattack.util.math;
 
 public final class MathHelper {
 

@@ -4,7 +4,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.nio.FloatBuffer;
 import java.util.Random;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
@@ -13,29 +12,57 @@ import net.specialattack.forge.core.client.shader.ShaderCallback;
 import net.specialattack.forge.core.client.shader.ShaderManager;
 import net.specialattack.forge.core.client.shader.ShaderProgram;
 import net.specialattack.forge.core.client.shader.ShaderUniform;
-import org.lwjgl.BufferUtils;
+import org.lwjgl.util.vector.Matrix3f;
 
 @SideOnly(Side.CLIENT)
 public class ClientDebug extends CommonDebug {
 
-    public static final FloatBuffer COLOR_MATRIX = BufferUtils.createFloatBuffer(9);
     public static boolean colorBlindEnabled = true; // TODO: set to false by default
-    public static ShaderManager.ShaderBinding colorBlindShader;
+    private static Matrix3f colorMatrix;
+    private static boolean colorMatrixDirty = true;
+    private static ClientHooks.ScreenColorizer colorBlindColorizer = new ClientHooks.ScreenColorizer() {
+        @Override
+        public Matrix3f apply(Matrix3f original) {
+            if (ClientDebug.colorBlindEnabled && ClientDebug.colorMatrix != null) {
+                if (original == null) {
+                    return ClientDebug.colorMatrix;
+                }
+                return Matrix3f.mul(original, ClientDebug.colorMatrix, new Matrix3f());
+            } else {
+                return original;
+            }
+        }
+
+        @Override
+        public int getPriority() {
+            return Integer.MAX_VALUE;
+        }
+
+        @Override
+        public String getIdentifier() {
+            return "spacore:colorblind";
+        }
+
+        @Override
+        public boolean isDirty() {
+            if (ClientDebug.colorMatrixDirty) {
+                ClientDebug.colorMatrixDirty = false;
+                return true;
+            }
+            return false;
+        }
+    };
 
     public static void setColorMode(ColorMode mode) {
-        ClientDebug.setColorMode(mode.matrix);
-    }
-
-    public static void setColorMode(float[] matrix) {
-        ClientDebug.COLOR_MATRIX.clear();
-        ClientDebug.COLOR_MATRIX.put(matrix);
-        ClientDebug.COLOR_MATRIX.rewind();
+        ClientDebug.colorMatrix = mode.fMatrix;
+        ClientDebug.colorMatrixDirty = true;
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
-        KeyHandler.registerKeyBind(new KeyHandler.KeyData(new KeyBinding("key.spacore:debug", 0, "key.categories.misc"), false) {
+        ClientHooks.addColorizer(ClientDebug.colorBlindColorizer);
+        KeyHandler.registerKeyBind(new KeyHandler.KeyData(new KeyBinding("key.spacore.debug", 0, "key.categories.misc"), false) {
             @Override
             public void keyDown(boolean isRepeat) {
                 super.keyDown(isRepeat);
@@ -44,15 +71,14 @@ public class ClientDebug extends CommonDebug {
                 }
             }
         });
-        ClientDebug.setColorMode(ClientDebug.ColorMode.NORMAL);
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
-        ClientDebug.colorBlindShader = ShaderManager.getShader(new ResourceLocation("spacore:shaders/color"));
-        if (ClientDebug.colorBlindShader != null && ClientDebug.colorBlindShader.getShader() != null) {
-            ShaderProgram shader = ClientDebug.colorBlindShader.getShader();
+        ClientHooks.colorBlindShader = ShaderManager.getShader(new ResourceLocation("spacore:shaders/color"));
+        if (ClientHooks.colorBlindShader != null && ClientHooks.colorBlindShader.getShader() != null) {
+            ShaderProgram shader = ClientHooks.colorBlindShader.getShader();
             shader.addCallback(new ShaderCallback() {
 
                 private float time;
@@ -61,7 +87,7 @@ public class ClientDebug extends CommonDebug {
                 @Override
                 public void call(ShaderProgram program) {
                     ShaderUniform colorCorrection = program.getUniform("colorCorrection");
-                    colorCorrection.setMatrix3(true, ClientDebug.COLOR_MATRIX);
+                    colorCorrection.setMatrix3(true, ClientHooks.COLOR_MATRIX);
                 }
             });
         }
@@ -79,15 +105,19 @@ public class ClientDebug extends CommonDebug {
         ACHROMATOPSIA(new float[][] { new float[] { 29.9F, 58.7F, 11.4F }, new float[] { 29.9F, 58.7F, 11.4F }, new float[] { 29.9F, 58.7F, 11.4F } }),
         ACHROMATOMALY(new float[][] { new float[] { 61.8F, 32.0F, 6.2F }, new float[] { 16.3F, 77.5F, 6.2F }, new float[] { 16.3F, 32.0F, 51.6F } });
 
-        private final float[] matrix;
+        private final Matrix3f fMatrix;
 
         ColorMode(float[][] transformations) {
-            this.matrix = new float[9];
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    this.matrix[i * 3 + j] = transformations[i][j] / 100.0F;
-                }
-            }
+            this.fMatrix = new Matrix3f();
+            this.fMatrix.m00 = transformations[0][0] / 100.0F;
+            this.fMatrix.m10 = transformations[1][0] / 100.0F;
+            this.fMatrix.m20 = transformations[2][0] / 100.0F;
+            this.fMatrix.m01 = transformations[0][1] / 100.0F;
+            this.fMatrix.m11 = transformations[1][1] / 100.0F;
+            this.fMatrix.m21 = transformations[2][1] / 100.0F;
+            this.fMatrix.m02 = transformations[0][2] / 100.0F;
+            this.fMatrix.m12 = transformations[1][2] / 100.0F;
+            this.fMatrix.m22 = transformations[2][2] / 100.0F;
         }
 
         public static ColorMode getRandom() {

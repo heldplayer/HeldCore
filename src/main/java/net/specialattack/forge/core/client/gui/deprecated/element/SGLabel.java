@@ -10,7 +10,7 @@ import net.specialattack.forge.core.client.gui.deprecated.layout.FlowLayout;
 import net.specialattack.forge.core.client.gui.deprecated.layout.Region;
 import net.specialattack.forge.core.client.gui.deprecated.layout.SGLayoutManager;
 import net.specialattack.forge.core.client.gui.deprecated.style.StyleDefs;
-import net.specialattack.util.MathHelper;
+import net.specialattack.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 public class SGLabel extends SGComponent {

@@ -2,7 +2,7 @@ package net.specialattack.forge.core.client.gui.deprecated.layout;
 
 import net.specialattack.forge.core.client.gui.deprecated.SizeContext;
 import net.specialattack.forge.core.client.gui.deprecated.element.SGComponent;
-import net.specialattack.util.MathHelper;
+import net.specialattack.util.math.MathHelper;
 
 /**
  * Allows the use of a layout with 5 positions that can be used.

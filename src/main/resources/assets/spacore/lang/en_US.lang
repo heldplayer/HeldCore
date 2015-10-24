@@ -11,12 +11,19 @@ spacore.cfg:client.textureMapId.comment=The ID of the texture map that SpACore a
 spacore.cfg:client.showReportBugs='Report Bug'?
 spacore.cfg:client.showReportBugs.comment=Should the mod add a 'Report a bug' button to the menu?
 
-spacore.cfg:tweaks=Tweaks
-spacore.cfg:tweaks.comment=Minecraft Tweaks
-spacore.cfg:tweaks.replaceModOptions=Replace 'Mod Options'?
-spacore.cfg:tweaks.replaceModOptions.comment=Should the ingame 'Mod Options' button be replaced with a 'Mods' button that actually works?
+spacore.cfg:common=Common
+spacore.cfg:common.comment=Settings that affect both server and client
+spacore.cfg:common.enableSeasonals=Enable Seasonals
+spacore.cfg:common.enableSeasonals.comment=Enable seasonal easter eggs
 
 spacore.cfg:sync=Sync
 spacore.cfg:sync.comment=Syncing system settings
 spacore.cfg:sync.refreshRate=Update interval
 spacore.cfg:sync.refreshRate.comment=The refresh-rate used for syncing objects between server and client. A higher refresh-rate will decrease bandwidth and CPU usage, but will also cause objects to appear to lag
+
+spacore.cfg:tweaks=Tweaks
+spacore.cfg:tweaks.comment=Minecraft Tweaks
+spacore.cfg:tweaks.replaceModOptions=Replace 'Mod Options'?
+spacore.cfg:tweaks.replaceModOptions.comment=Should the ingame 'Mod Options' button be replaced with a 'Mods' button that actually works?
+
+key.spacore.debug=SpACore Debugger

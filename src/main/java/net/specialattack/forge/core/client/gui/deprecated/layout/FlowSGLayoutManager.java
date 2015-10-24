@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import net.specialattack.forge.core.client.gui.deprecated.SizeContext;
 import net.specialattack.forge.core.client.gui.deprecated.element.SGComponent;
-import net.specialattack.util.MathHelper;
+import net.specialattack.util.math.MathHelper;
 
 public class FlowSGLayoutManager extends SGLayoutManager {
 

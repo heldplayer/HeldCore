@@ -13,6 +13,7 @@ import net.specialattack.forge.core.asm.SpACorePlugin;
 import net.specialattack.forge.core.config.ConfigManager;
 import net.specialattack.forge.core.config.Configuration;
 import net.specialattack.forge.core.packet.SpAPacketHandler;
+import net.specialattack.forge.core.seasonal.CommonSeasonal;
 import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.packet.*;
 import net.specialattack.util.Scheduler;
@@ -23,10 +24,12 @@ public class SpACore extends SpACoreMod {
     @Mod.Instance(value = Objects.MOD_ID)
     public static SpACore instance;
 
-    @SidedProxy(clientSide = Objects.CLIENT_PROXY, serverSide = Objects.SERVER_PROXY)
+    @SidedProxy(clientSide = "net.specialattack.forge.core.client.ClientProxy", serverSide = "net.specialattack.forge.core.CommonProxy")
     public static CommonProxy proxy;
     @SidedProxy(clientSide = "net.specialattack.forge.core.client.ClientDebug", serverSide = "net.specialattack.forge.core.CommonDebug")
     public static CommonDebug debugProxy;
+    @SidedProxy(clientSide = "net.specialattack.forge.core.seasonal.ClientSeasonal", serverSide = "net.specialattack.forge.core.seasonal.CommonSeasonal")
+    public static CommonSeasonal seasonalProxy;
 
     public static SpAPacketHandler<SyncPacket> syncPacketHandler;
 
@@ -54,6 +57,9 @@ public class SpACore extends SpACoreMod {
         @Configuration.Option(category = "tweaks", side = Configuration.CSide.CLIENT)
         @Configuration.Alias(category = "general", name = "replaceModOptions")
         public boolean replaceModOptions = true;
+
+        @Configuration.Option(category = "common")
+        public boolean enableSeasonals = true;
     }
 
     @Mod.EventHandler
@@ -99,8 +105,8 @@ public class SpACore extends SpACoreMod {
     }
 
     @Override
-    public SpACoreProxy getProxy() {
-        return SpACore.proxy;
+    public SpACoreProxy[] getProxies() {
+        return new SpACoreProxy[] { SpACore.proxy, SpACore.seasonalProxy, SpACore.debugProxy };
     }
 
     @Mod.EventHandler
@@ -122,5 +128,4 @@ public class SpACore extends SpACoreMod {
     public static void registerIconHolder(IIcon holder) {
         SpACore.proxy.registerIconHolder(holder);
     }
-
 }

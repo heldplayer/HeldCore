@@ -1,4 +1,4 @@
-package net.specialattack.util;
+package net.specialattack.util.math;
 
 import java.util.LinkedList;
 

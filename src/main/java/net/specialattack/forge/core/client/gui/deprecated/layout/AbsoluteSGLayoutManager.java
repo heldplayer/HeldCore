@@ -3,7 +3,7 @@ package net.specialattack.forge.core.client.gui.deprecated.layout;
 import java.util.HashMap;
 import java.util.Map;
 import net.specialattack.forge.core.client.gui.deprecated.element.SGComponent;
-import net.specialattack.util.MathHelper;
+import net.specialattack.util.math.MathHelper;
 
 /**
  * Allows placing of elements at a fixed position and a fixed size.
