@@ -7,9 +7,9 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-import net.specialattack.util.MathHelper;
-import net.specialattack.util.Vector;
-import net.specialattack.util.VectorPool;
+import net.specialattack.util.math.MathHelper;
+import net.specialattack.util.math.Vector;
+import net.specialattack.util.math.VectorPool;
 import org.lwjgl.opengl.GL11;
 
 /**
