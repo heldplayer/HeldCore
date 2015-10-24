@@ -8,7 +8,18 @@ public abstract class SpACoreMod {
 
     public abstract ModInfo getModInfo();
 
-    public abstract SpACoreProxy getProxy();
+    @Deprecated
+    public SpACoreProxy getProxy() {
+        return null;
+    }
+
+    public SpACoreProxy[] getProxies() {
+        @SuppressWarnings("deprecation") SpACoreProxy proxy = this.getProxy();
+        if (proxy == null) {
+            return new SpACoreProxy[0];
+        }
+        return new SpACoreProxy[] { proxy };
+    }
 
     public void preInit(FMLPreInitializationEvent event) {
         ModInfo info = this.getModInfo();
@@ -16,14 +27,20 @@ public abstract class SpACoreMod {
             event.getModMetadata().version = info.modVersion;
         }
 
-        this.getProxy().preInit(event);
+        for (SpACoreProxy proxy : this.getProxies()) {
+            proxy.preInit(event);
+        }
     }
 
     public void init(FMLInitializationEvent event) {
-        this.getProxy().init(event);
+        for (SpACoreProxy proxy : this.getProxies()) {
+            proxy.init(event);
+        }
     }
 
     public void postInit(FMLPostInitializationEvent event) {
-        this.getProxy().postInit(event);
+        for (SpACoreProxy proxy : this.getProxies()) {
+            proxy.postInit(event);
+        }
     }
 }

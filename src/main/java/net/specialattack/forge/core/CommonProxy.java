@@ -91,5 +91,4 @@ public class CommonProxy extends SpACoreProxy {
     public Side getSide() {
         return Side.SERVER;
     }
-
 }

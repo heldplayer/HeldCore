@@ -14,5 +14,4 @@ public abstract class SpACoreProxy {
 
     public void postInit(FMLPostInitializationEvent event) {
     }
-
 }

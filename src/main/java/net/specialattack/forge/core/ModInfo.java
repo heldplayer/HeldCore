@@ -40,5 +40,4 @@ public class ModInfo {
         this.modName = modName;
         this.modVersion = modVersion;
     }
-
 }
