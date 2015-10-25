@@ -5,7 +5,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.util.Random;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.specialattack.forge.core.CommonDebug;
 import net.specialattack.forge.core.client.shader.ShaderCallback;
@@ -17,7 +16,7 @@ import org.lwjgl.util.vector.Matrix3f;
 @SideOnly(Side.CLIENT)
 public class ClientDebug extends CommonDebug {
 
-    public static boolean colorBlindEnabled = true; // TODO: set to false by default
+    public static boolean colorBlindEnabled = false; // TODO: set to false by default
     private static Matrix3f colorMatrix;
     private static boolean colorMatrixDirty = true;
     private static ClientHooks.ScreenColorizer colorBlindColorizer = new ClientHooks.ScreenColorizer() {
@@ -62,6 +61,7 @@ public class ClientDebug extends CommonDebug {
     public void init(FMLInitializationEvent event) {
         super.init(event);
         ClientHooks.addColorizer(ClientDebug.colorBlindColorizer);
+        /*
         KeyHandler.registerKeyBind(new KeyHandler.KeyData(new KeyBinding("key.spacore.debug", 0, "key.categories.misc"), false) {
             @Override
             public void keyDown(boolean isRepeat) {
@@ -71,6 +71,7 @@ public class ClientDebug extends CommonDebug {
                 }
             }
         });
+        */
     }
 
     @Override

@@ -117,7 +117,7 @@ public class HalloweenSeasonal implements ISeasonal {
     public boolean itsTheSeason() {
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.MONTH) == Calendar.OCTOBER && calendar.get(Calendar.DAY_OF_MONTH) == 24;
+        return calendar.get(Calendar.MONTH) == Calendar.OCTOBER && calendar.get(Calendar.DAY_OF_MONTH) == 31;
     }
 
     @SubscribeEvent
