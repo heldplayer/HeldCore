@@ -399,6 +399,14 @@ public class GLState {
         GLState.setActiveTexture(texture - GL13.GL_TEXTURE0);
     }
 
+    public static void glBindTexture(int target, int id) {
+        if (!SpACorePlugin.config.stateManager) {
+            GL11.glBindTexture(target, id);
+            return;
+        }
+        GLState.state.TEXTURE_STATES[GLState.activeTexture].bind(id);
+    }
+
     public static void glViewport(int x, int y, int width, int height) {
         if (!SpACorePlugin.config.stateManager) {
             GL11.glViewport(x, y, width, height);
@@ -931,7 +939,6 @@ public class GLState {
                 }
             }
         }
-
     }
 
     private static class TextureState {
@@ -973,7 +980,5 @@ public class GLState {
                 }
             }
         }
-
     }
-
 }

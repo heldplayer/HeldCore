@@ -43,7 +43,7 @@ public class SpACoreGLTransformer implements IClassTransformer {
         SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glVertex4d", "glVertex4d", "(DDDD)V"));
         SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glAlphaFunc", "glAlphaFunc", "(IF)V"));
         SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glBlendFunc", "glBlendFunc", "(II)V"));
-        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3be", "glColor3b", "(BBB)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3b", "glColor3b", "(BBB)V"));
         SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3f", "glColor3f", "(FFF)V"));
         SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3d", "glColor3d", "(DDD)V"));
         SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor3ub", "glColor3ub", "(BBB)V"));
@@ -52,6 +52,7 @@ public class SpACoreGLTransformer implements IClassTransformer {
         SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor4d", "glColor4d", "(DDDD)V"));
         SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glColor4ub", "glColor4ub", "(BBBB)V"));
         SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL13", "glActiveTexture", "glActiveTexture", "(I)V"));
+        SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glBindTexture", "glBindTexture", "(II)V"));
         SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/ARBMultitexture", "glActiveTextureARB", "glActiveTexture", "(I)V"));
         SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glFogf", "glFogf", "(IF)V"));
         SpACoreGLTransformer.replacements.add(new Replacement("org/lwjgl/opengl/GL11", "glFogi", "glFogi", "(II)V"));
@@ -72,7 +73,8 @@ public class SpACoreGLTransformer implements IClassTransformer {
         if (original == null) {
             return null;
         }
-        if (!transformedName.startsWith("net.specialattack.forge.core.client.GLState")) {
+        // TODO: SplashProgress.pause/resume to handle possible bad state switching, maybe mark the entire GL state as being dirty?
+        if (!transformedName.startsWith("net.specialattack.forge.core.client.GLState") && !transformedName.startsWith("cpw.mods.fml.client.SplashProgress")) {
             ClassReader reader = new ClassReader(original);
             ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             ClassVisitor visitor = writer;

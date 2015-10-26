@@ -81,5 +81,4 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
         ConfigManager.registerConfig(SpACorePlugin.config);
         return null;
     }
-
 }
