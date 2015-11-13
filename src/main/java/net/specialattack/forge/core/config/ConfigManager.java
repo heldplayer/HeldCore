@@ -1,6 +1,7 @@
 package net.specialattack.forge.core.config;
 
 import cpw.mods.fml.client.config.ConfigGuiType;
+import cpw.mods.fml.client.config.GuiEditArrayEntries;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.Loader;
@@ -8,13 +9,11 @@ import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.ModMetadata;
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.config.Property;
+import net.specialattack.forge.core.client.gui.config.StringArrayEntry;
 
 public class ConfigManager {
 
@@ -158,7 +157,7 @@ public class ConfigManager {
     public String modId;
     public net.minecraftforge.common.config.Configuration configuration;
     private Object obj;
-    public Map<String, Category> categories = new HashMap<String, Category>();
+    public Map<String, Category> categories = new TreeMap<String, Category>();
     private Runnable reloadListener;
 
     public ConfigManager(String name, String modId, Object obj) {
@@ -210,7 +209,7 @@ public class ConfigManager {
 
         public Map<String, Option> getOptions() {
             if (this.options == null) {
-                this.options = new HashMap<String, Option>();
+                this.options = new TreeMap<String, Option>();
             }
             return this.options;
         }
@@ -1003,6 +1002,15 @@ public class ConfigManager {
         @Override
         public Pattern getValidationPattern() {
             return this.pattern;
+        }
+
+        @Override
+        public Class<? extends GuiEditArrayEntries.IArrayEntry> getArrayEntryClass() {
+            Class<? extends GuiEditArrayEntries.IArrayEntry> clazz = super.getArrayEntryClass();
+            if (clazz != null) {
+                return clazz;
+            }
+            return StringArrayEntry.class;
         }
     }
 }
