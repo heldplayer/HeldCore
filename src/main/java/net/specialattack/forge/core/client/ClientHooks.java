@@ -8,7 +8,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.specialattack.forge.core.Objects;
 import net.specialattack.forge.core.client.shader.ShaderManager;
+import net.specialattack.forge.core.event.WorldChangedEvent;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix3f;
 
@@ -32,6 +34,7 @@ public final class ClientHooks {
     }
 
     public static void clientLoadWorld(WorldClient world) {
+        Objects.MAIN_EVENT_BUS.post(new WorldChangedEvent(world));
         ClientProxy.syncClientInstance.worldChanged(world);
     }
 
