@@ -102,7 +102,7 @@ public class SGScrollPane extends SGComponent {
             SGUtils.clipComponent(this.innerPanel);
             int left = this.getLeft(SizeContext.INNER) - (int) this.scrollLeft;
             int top = this.getTop(SizeContext.INNER) - (int) this.scrollTop;
-            GL11.glTranslatef(left, top, this.getZLevel());
+            GlStateManager.translate(left, top, this.getZLevel());
             List<SGComponent> children = this.getChildren();
             int borders = this.getBorderWidth() + this.getOutlineWidth();
             Region region = new Region((int) this.scrollLeft, (int) this.scrollTop, this.getWidth(SizeContext.INNER), this.getHeight(SizeContext.INNER));
@@ -137,7 +137,7 @@ public class SGScrollPane extends SGComponent {
         super.drawBackground(mouseX, mouseY, partialTicks);
         if (this.horizontal || this.vertical) {
             GlStateManager.pushMatrix();
-            GL11.glTranslatef(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
+            GlStateManager.translate(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
             if (this.vertical) {
                 int superWidth = super.getWidth(SizeContext.INNER);
                 // We use super height in case we can scroll both horizontally and vertically vv
@@ -157,7 +157,7 @@ public class SGScrollPane extends SGComponent {
         super.drawForeground(mouseX, mouseY, partialTicks);
         if (this.horizontal || this.vertical) {
             GlStateManager.pushMatrix();
-            GL11.glTranslatef(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
+            GlStateManager.translate(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
             int width = this.getWidth(SizeContext.INNER);
             int height = this.getHeight(SizeContext.INNER);
             int left = this.getLeft(SizeContext.INNER);

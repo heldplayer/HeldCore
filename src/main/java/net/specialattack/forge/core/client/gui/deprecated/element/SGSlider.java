@@ -39,7 +39,7 @@ public class SGSlider extends SGComponent {
     public void drawBackground(int mouseX, int mouseY, float partialTicks) {
         super.drawBackground(mouseX, mouseY, partialTicks);
         GlStateManager.disableTexture2D();
-        GL11.glTranslatef(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
+        GlStateManager.translate(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
         int width = this.getWidth(SizeContext.INNER);
         int height = this.getHeight(SizeContext.INNER);
 

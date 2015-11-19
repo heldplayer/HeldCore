@@ -24,7 +24,7 @@ public final class SGUtils {
 
     public static void drawErrorBox(SGComponent component) {
         GlStateManager.pushMatrix();
-        GL11.glTranslatef(component.getLeft(SizeContext.OUTLINE), component.getTop(SizeContext.OUTLINE), component.getZLevel());
+        GlStateManager.translate(component.getLeft(SizeContext.OUTLINE), component.getTop(SizeContext.OUTLINE), component.getZLevel());
         int width = component.getWidth(SizeContext.OUTLINE);
         int height = component.getHeight(SizeContext.OUTLINE);
 

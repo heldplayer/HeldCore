@@ -92,7 +92,7 @@ public class SGLabel extends SGComponent {
     @SuppressWarnings("unchecked")
     @Override
     public void drawForeground(int mouseX, int mouseY, float partialTicks) {
-        GL11.glTranslatef(this.getLeft(SizeContext.INNER) + 1, this.getTop(SizeContext.INNER), this.getZLevel());
+        GlStateManager.translate(this.getLeft(SizeContext.INNER) + 1, this.getTop(SizeContext.INNER), this.getZLevel());
         if (this.getText() != null) {
             GlStateManager.enableTexture2D();
             List<String> strings;

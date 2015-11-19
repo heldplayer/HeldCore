@@ -1,5 +1,6 @@
 package net.specialattack.forge.core.client.gui.deprecated.element;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
 import net.specialattack.forge.core.client.gui.Color;
 import net.specialattack.forge.core.client.gui.GuiHelper;
@@ -57,7 +58,7 @@ public class SGProgressBar extends SGComponent {
 
     @Override
     public void drawForeground(int mouseX, int mouseY, float partialTicks) {
-        GL11.glTranslatef(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
+        GlStateManager.translate(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
         int totalWidth = this.getWidth(SizeContext.INNER);
         int totalHeight = this.getHeight(SizeContext.INNER);
         Color color = this.state.getColor();

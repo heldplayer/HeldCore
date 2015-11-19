@@ -2,6 +2,7 @@ package net.specialattack.forge.core.client.gui.deprecated.element;
 
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.client.renderer.GlStateManager;
 import net.specialattack.forge.core.client.gui.GuiHelper;
 import net.specialattack.forge.core.client.gui.deprecated.SizeContext;
 import net.specialattack.forge.core.client.gui.deprecated.layout.SGLayoutManager;
@@ -47,7 +48,7 @@ public class SGCheckbox extends SGInteractable {
     @Override
     public void drawForeground(int mouseX, int mouseY, float partialTicks) {
         if (this.checked) {
-            GL11.glTranslatef(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
+            GlStateManager.translate(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
             this.font.drawString("x", 3, 1, this.getTextColor().colorHex);
         }
     }

@@ -42,7 +42,7 @@ public class SGPasswordField extends SGInteractable {
     @Override
     public void drawForeground(int mouseX, int mouseY, float partialTicks) {
         SGUtils.clipComponent(this);
-        GL11.glTranslatef(this.getLeft(SizeContext.INNER) + 2, this.getTop(SizeContext.INNER), this.getZLevel());
+        GlStateManager.translate(this.getLeft(SizeContext.INNER) + 2, this.getTop(SizeContext.INNER), this.getZLevel());
         int drawColor = this.getTextColor().colorHex;
         int cursorOffset = this.cursorPosition - this.scrollOffset;
         int selectionOffset = this.selectionPosition - this.scrollOffset;

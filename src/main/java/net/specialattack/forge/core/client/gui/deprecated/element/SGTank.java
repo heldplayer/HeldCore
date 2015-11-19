@@ -1,5 +1,6 @@
 package net.specialattack.forge.core.client.gui.deprecated.element;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -31,7 +32,7 @@ public class SGTank extends SGComponent {
     public void drawForeground(int mouseX, int mouseY, float partialTicks) {
         FluidTank tank = this.getTank();
         if (tank != null) {
-            GL11.glTranslatef(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
+            GlStateManager.translate(this.getLeft(SizeContext.INNER), this.getTop(SizeContext.INNER), this.getZLevel());
             float filled = (float) tank.getFluidAmount() / (float) tank.getCapacity();
             if (filled > 1.0F) {
                 filled = 1.0F;

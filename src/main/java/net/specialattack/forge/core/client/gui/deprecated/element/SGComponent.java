@@ -380,7 +380,7 @@ public class SGComponent implements IComponentHolder {
 
             int left = this.getLeft(SizeContext.INNER);
             int top = this.getTop(SizeContext.INNER);
-            GL11.glTranslatef(left, top, this.getZLevel());
+            GlStateManager.translate(left, top, this.getZLevel());
             if (this.children != null) {
                 for (SGComponent component : this.children) {
                     component.draw(mouseX - left, mouseY - top, partialTicks);
