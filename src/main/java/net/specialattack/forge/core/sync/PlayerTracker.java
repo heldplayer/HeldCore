@@ -1,65 +1,116 @@
 package net.specialattack.forge.core.sync;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.network.play.INetHandlerPlayServer;
-import net.specialattack.forge.core.CommonProxy;
-import org.apache.logging.log4j.Level;
+import net.specialattack.forge.core.sync.packet.S03StartSyncing;
+import net.specialattack.util.PlayerUtils;
 
 public class PlayerTracker {
 
-    public Set<ISyncable> syncables;
-    public Set<ISyncableObjectOwner> syncableOwners;
-    protected Set<ISyncable> updatedSyncables;
-    public final UUID uuid;
-    public int ticks;
-    public int interval;
+    private ConnectionInfo player;
+    protected SyncTrackingStorage storage;
 
-    public PlayerTracker(INetHandlerPlayServer handler, int interval) {
-        this.syncables = new HashSet<ISyncable>();
-        this.syncableOwners = new HashSet<ISyncableObjectOwner>();
-        this.updatedSyncables = new HashSet<ISyncable>();
-        this.interval = interval;
-        if (handler instanceof NetHandlerPlayServer) {
-            NetHandlerPlayServer netHandlerPlayServer = (NetHandlerPlayServer) handler;
-            this.uuid = netHandlerPlayServer.playerEntity.getUniqueID();
-            if (SyncHandler.debug) {
-                SyncHandler.Server.log.log(Level.INFO, String.format("Created tracker %s", this.uuid));
+    public Set<ISyncableOwner> syncableOwners = new HashSet<ISyncableOwner>();
+    public Set<ISyncable> syncables = new HashSet<ISyncable>();
+    public Set<ISyncable> changedSyncables = new HashSet<ISyncable>();
+
+    public PlayerTracker(ConnectionInfo player, SyncTrackingStorage storage) {
+        this.player = player;
+        this.storage = storage;
+        player.trackers.add(this);
+    }
+
+    public void releaseData() {
+        this.player.trackers.remove(this);
+        this.syncables.clear();
+        this.syncables = null;
+        this.syncableOwners.clear();
+        this.syncableOwners = null;
+        this.changedSyncables.clear();
+        this.changedSyncables = null;
+        this.player = null;
+        this.storage = null;
+    }
+
+    public ConnectionInfo getPlayerInfo() {
+        return this.player;
+    }
+
+    public boolean attemptTrack(ISyncableOwner owner) {
+        if (!owner.canPlayerTrack(PlayerUtils.getServerPlayer(this.player.getUuid()))) {
+            return false; // The client isn't allowed to know about this
+        }
+        if (!this.player.getProviders().contains(owner.getProvider().id)) {
+            return false; // The client doesn't know how to handle this
+        }
+
+        if (owner.getSyncUUID() == null) {
+            owner.setSyncUUID(UUID.randomUUID());
+        }
+
+        SyncHandler.debug("Starting to track owner %s (%s) for %s", owner.getDebugDisplay(), owner.getSyncUUID(), this.player.getUuid());
+        SyncHandler.debug("Owner syncables: ", this.syncables.toString());
+
+        this.player.trackingUpdates.add(S03StartSyncing.writeCompound(this.storage, owner, true));
+        this.syncableOwners.add(owner);
+        this.syncables.addAll(owner.getSyncables().values());
+        this.storage.trackingSyncableOwners.add(owner);
+        this.storage.trackingSyncables.addAll(owner.getSyncables().values());
+        return true;
+    }
+
+    public void untrack(ISyncableOwner owner) {
+        this.player.trackingUpdates.add(S03StartSyncing.writeCompound(this.storage, owner, false));
+
+        UUID uuid = owner.getSyncUUID();
+
+        Iterator<ISyncableOwner> it = this.syncableOwners.iterator();
+        while (it.hasNext()) {
+            ISyncableOwner obj = it.next();
+            if (obj.getSyncUUID().equals(uuid)) {
+                it.remove();
+                SyncHandler.debug("Untracked owner %s (%s) for %s", obj.getDebugDisplay(), uuid, this.player.getUuid());
             }
-        } else {
-            throw new IllegalArgumentException("handler must be of type NetHandlerPlayServer");
-        }
-    }
-
-    @Override
-    public String toString() {
-        return String.format("[Player Tracker %s]", this.uuid);
-    }
-
-    public EntityPlayerMP getPlayer() {
-        return CommonProxy.getPlayerFromUUID(this.uuid);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
         }
 
-        PlayerTracker tracker = (PlayerTracker) o;
+        Iterator<ISyncable> it2 = this.syncables.iterator();
+        while (it2.hasNext()) {
+            ISyncable syncable = it2.next();
+            if (syncable.getOwner().getSyncUUID().equals(uuid)) {
+                it2.remove();
+                SyncHandler.debug("Untracked syncable %s (owned by %s) for %s", syncable.getDebugDisplay(), uuid, this.player.getUuid());
+            }
+        }
 
-        return uuid.equals(tracker.uuid);
+        this.storage.checkStillTracked(owner);
     }
 
-    @Override
-    public int hashCode() {
-        return uuid.hashCode();
-    }
+    public void untrack(UUID uuid) {
+        ISyncableOwner last = null;
+        Iterator<ISyncableOwner> it = this.syncableOwners.iterator();
+        while (it.hasNext()) {
+            ISyncableOwner obj = it.next();
+            if (obj.getSyncUUID().equals(uuid)) {
+                last = obj;
+                it.remove();
+                SyncHandler.debug("Untracked owner %s (%s) for %s", obj.getDebugDisplay(), uuid, this.player.getUuid());
+            }
+        }
 
+        Iterator<ISyncable> it2 = this.syncables.iterator();
+        while (it2.hasNext()) {
+            ISyncable syncable = it2.next();
+            if (syncable.getOwner().getSyncUUID().equals(uuid)) {
+                it2.remove();
+                SyncHandler.debug("Untracked syncable %s (owned by %s) for %s", syncable.getDebugDisplay(), uuid, this.player.getUuid());
+            }
+        }
+
+        if (last != null) {
+            this.player.trackingUpdates.add(S03StartSyncing.writeCompound(this.storage, last, false));
+            this.storage.checkStillTracked(last);
+        }
+    }
 }

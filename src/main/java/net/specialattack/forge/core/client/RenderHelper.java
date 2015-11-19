@@ -7,9 +7,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.specialattack.util.MathHelper;
-import net.specialattack.util.Vector;
-import net.specialattack.util.VectorPool;
+import net.specialattack.util.math.MathHelper;
+import net.specialattack.util.math.Vector;
+import net.specialattack.util.math.VectorPool;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -22,14 +22,14 @@ public final class RenderHelper {
 
     public static TextureAtlasSprite getIconSafe(TextureAtlasSprite icon) {
         if (icon == null) {
-            icon = ((TextureMap) MC.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
+            icon = ((TextureMap) MC.getMc().getTextureManager().getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
         }
 
         return icon;
     }
 
     public static void bindTexture(ResourceLocation location) {
-        TextureManager texturemanager = MC.getRenderEngine();
+        TextureManager texturemanager = MC.getTextureManager();
 
         if (texturemanager != null) {
             texturemanager.bindTexture(location);

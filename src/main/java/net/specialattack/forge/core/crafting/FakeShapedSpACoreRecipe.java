@@ -13,7 +13,7 @@ public class FakeShapedSpACoreRecipe extends ShapedSpACoreRecipe implements IFak
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return this.enabled;
     }
 
 

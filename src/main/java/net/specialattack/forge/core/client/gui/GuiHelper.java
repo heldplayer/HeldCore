@@ -2,26 +2,24 @@ package net.specialattack.forge.core.client.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import net.minecraft.util.Timer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.specialattack.forge.core.client.MC;
 import net.specialattack.forge.core.client.RenderHelper;
+import net.specialattack.forge.core.client.resources.data.TextureMetadataSection;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 /**
  * A helper class used for rendering on GUIs
@@ -32,7 +30,6 @@ import org.lwjgl.opengl.GL12;
 public final class GuiHelper {
 
     private static final ArrayList<String> reusableArrayList = new ArrayList<String>();
-    private static Timer minecraftTimer;
 
     private GuiHelper() {
     }
@@ -52,7 +49,7 @@ public final class GuiHelper {
      *         The height of the tank to render
      */
     public static void drawFluid(Fluid fluid, int left, int top, int width, int height, float zLevel) {
-        MC.getRenderEngine().bindTexture(TextureMap.locationBlocksTexture);
+        MC.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
         TextureAtlasSprite icon = RenderHelper.getIconSafe(fluid.getIcon());
         int color = fluid.getColor();
         float red = (color >> 16 & 0xFF) / 255.0F;
@@ -161,6 +158,52 @@ public final class GuiHelper {
     }
 
     /**
+     * Scales a float for drawing in a GUI
+     *
+     * @param scale
+     *         The resulting max value
+     * @param amount
+     *         The amount
+     * @param total
+     *         The max amount that can be entered
+     *
+     * @return Scaled float
+     */
+    public static float getScaled(float scale, float amount, float total) {
+        if (amount > total) {
+            amount = total;
+        }
+        if (amount < 0.0F) {
+            amount = 0.0F;
+        }
+
+        return amount * scale / total;
+    }
+
+    /**
+     * Scales a double for drawing in a GUI
+     *
+     * @param scale
+     *         The resulting max value
+     * @param amount
+     *         The amount
+     * @param total
+     *         The max amount that can be entered
+     *
+     * @return Scaled double
+     */
+    public static double getScaled(double scale, double amount, double total) {
+        if (amount > total) {
+            amount = total;
+        }
+        if (amount < 0.0F) {
+            amount = 0.0F;
+        }
+
+        return amount * scale / total;
+    }
+
+    /**
      * Draws a tooltip
      *
      * @param strings
@@ -208,17 +251,17 @@ public final class GuiHelper {
             }
 
             int color1 = 0xF0100010;
-            GuiHelper.drawGradientRect(xPos - 3, yPos - 4, xPos + startY + 3, yPos - 3, color1, color1, 300.0F);
-            GuiHelper.drawGradientRect(xPos - 3, yPos + width + 3, xPos + startY + 3, yPos + width + 4, color1, color1, 300.0F);
-            GuiHelper.drawGradientRect(xPos - 3, yPos - 3, xPos + startY + 3, yPos + width + 3, color1, color1, 300.0F);
-            GuiHelper.drawGradientRect(xPos - 4, yPos - 3, xPos - 3, yPos + width + 3, color1, color1, 300.0F);
-            GuiHelper.drawGradientRect(xPos + startY + 3, yPos - 3, xPos + startY + 4, yPos + width + 3, color1, color1, 300.0F);
+            GuiHelper.drawColoredRect(xPos - 3, yPos - 4, xPos + startY + 3, yPos - 3, color1, 300.0F);
+            GuiHelper.drawColoredRect(xPos - 3, yPos + width + 3, xPos + startY + 3, yPos + width + 4, color1, 300.0F);
+            GuiHelper.drawColoredRect(xPos - 3, yPos - 3, xPos + startY + 3, yPos + width + 3, color1, 300.0F);
+            GuiHelper.drawColoredRect(xPos - 4, yPos - 3, xPos - 3, yPos + width + 3, color1, 300.0F);
+            GuiHelper.drawColoredRect(xPos + startY + 3, yPos - 3, xPos + startY + 4, yPos + width + 3, color1, 300.0F);
             int color2 = 0x505000FF;
             int color3 = (color2 & 0xFEFEFE) >> 1 | color2 & 0x1000000;
             GuiHelper.drawGradientRect(xPos - 3, yPos - 3 + 1, xPos - 3 + 1, yPos + width + 3 - 1, color2, color3, 300.0F);
             GuiHelper.drawGradientRect(xPos + startY + 2, yPos - 3 + 1, xPos + startY + 3, yPos + width + 3 - 1, color2, color3, 300.0F);
-            GuiHelper.drawGradientRect(xPos - 3, yPos - 3, xPos + startY + 3, yPos - 3 + 1, color2, color2, 300.0F);
-            GuiHelper.drawGradientRect(xPos - 3, yPos + width + 2, xPos + startY + 3, yPos + width + 3, color3, color3, 300.0F);
+            GuiHelper.drawColoredRect(xPos - 3, yPos - 3, xPos + startY + 3, yPos - 3 + 1, color2, 300.0F);
+            GuiHelper.drawColoredRect(xPos - 3, yPos + width + 2, xPos + startY + 3, yPos + width + 3, color3, 300.0F);
 
             for (int i = 0; i < strings.size(); ++i) {
                 String currentLine = strings.get(i);
@@ -257,35 +300,14 @@ public final class GuiHelper {
      *         The z-level for rendering
      */
     public static void drawGradientRect(int startX, int startY, int endX, int endY, int startColor, int endColor, float zLevel) {
-        float startAlpha = (float) (startColor >> 24 & 255) / 255.0F;
-        float startRed = (float) (startColor >> 16 & 255) / 255.0F;
-        float startGreen = (float) (startColor >> 8 & 255) / 255.0F;
-        float startBlue = (float) (startColor & 255) / 255.0F;
-        float endAlpha = (float) (endColor >> 24 & 255) / 255.0F;
-        float endRed = (float) (endColor >> 16 & 255) / 255.0F;
-        float endGreen = (float) (endColor >> 8 & 255) / 255.0F;
-        float endBlue = (float) (endColor & 255) / 255.0F;
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        GlStateManager.color(startRed, startGreen, startBlue, startAlpha);
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glVertex3f(endX, startY, zLevel);
-        GL11.glVertex3f(startX, startY, zLevel);
-        GL11.glColor4f(endRed, endGreen, endBlue, endAlpha);
-        GL11.glVertex3f(startX, endY, zLevel);
-        GL11.glVertex3f(endX, endY, zLevel);
-        GL11.glEnd();
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
+        GuiHelper.drawGradientRect((float) startX, (float) startY, (float) endX, (float) endY, startColor, endColor, zLevel);
+        if (startColor == endColor) {
+            GuiHelper.drawColoredRect((float) startX, (float) startY, (float) endX, (float) endY, startColor, zLevel);
+        }
     }
 
     /**
-     * Draws a gradient rectangle using additive blending
+     * Draws a gradient rectangle
      *
      * @param startX
      *         The starting x position
@@ -302,7 +324,10 @@ public final class GuiHelper {
      * @param zLevel
      *         The z-level for rendering
      */
-    public static void drawGradientRectAdditive(int startX, int startY, int endX, int endY, int startColor, int endColor, float zLevel) {
+    public static void drawGradientRect(float startX, float startY, float endX, float endY, int startColor, int endColor, float zLevel) {
+        if (startColor == endColor) {
+            GuiHelper.drawColoredRect(startX, startY, endX, endY, startColor, zLevel);
+        }
         float startAlpha = (float) (startColor >> 24 & 255) / 255.0F;
         float startRed = (float) (startColor >> 16 & 255) / 255.0F;
         float startGreen = (float) (startColor >> 8 & 255) / 255.0F;
@@ -320,7 +345,46 @@ public final class GuiHelper {
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glVertex3f(endX, startY, zLevel);
         GL11.glVertex3f(startX, startY, zLevel);
-        GL11.glColor4f(endRed, endGreen, endBlue, endAlpha);
+        GlStateManager.color(endRed, endGreen, endBlue, endAlpha);
+        GL11.glVertex3f(startX, endY, zLevel);
+        GL11.glVertex3f(endX, endY, zLevel);
+        GL11.glEnd();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
+    }
+
+    /**
+     * Draws a gradient rectangle
+     *
+     * @param startX
+     *         The starting x position
+     * @param startY
+     *         The starting y position
+     * @param endX
+     *         The ending x position
+     * @param endY
+     *         The ending y position
+     * @param color
+     *         The top colour
+     * @param zLevel
+     *         The z-level for rendering
+     */
+    public static void drawColoredRect(float startX, float startY, float endX, float endY, int color, float zLevel) {
+        float startAlpha = (float) (color >> 24 & 255) / 255.0F;
+        float startRed = (float) (color >> 16 & 255) / 255.0F;
+        float startGreen = (float) (color >> 8 & 255) / 255.0F;
+        float startBlue = (float) (color & 255) / 255.0F;
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        GlStateManager.color(startRed, startGreen, startBlue, startAlpha);
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glVertex3f(endX, startY, zLevel);
+        GL11.glVertex3f(startX, startY, zLevel);
         GL11.glVertex3f(startX, endY, zLevel);
         GL11.glVertex3f(endX, endY, zLevel);
         GL11.glEnd();
@@ -354,9 +418,9 @@ public final class GuiHelper {
     public static void drawTexturedModalRect(int startX, int startY, int width, int height, double zLevel, double startU, double startV, double endU, double endV) {
         WorldRenderer tes = Tessellator.getInstance().getWorldRenderer();
         tes.startDrawingQuads();
-        tes.addVertexWithUV(startX, startY + (double) height, zLevel, startU, endV);
-        tes.addVertexWithUV(startX + (double) width, startY + (double) height, zLevel, endU, endV);
-        tes.addVertexWithUV(startX + (double) width, startY, zLevel, endU, startV);
+        tes.addVertexWithUV(startX, startY + height, zLevel, startU, endV);
+        tes.addVertexWithUV(startX + width, startY + height, zLevel, endU, endV);
+        tes.addVertexWithUV(startX + width, startY, zLevel, endU, startV);
         tes.addVertexWithUV(startX, startY, zLevel, startU, startV);
         tes.finishDrawing();
     }
@@ -371,11 +435,96 @@ public final class GuiHelper {
         tes.finishDrawing();
     }
 
-    public static Timer getMinecraftTimer() {
-        if (GuiHelper.minecraftTimer == null) {
-            GuiHelper.minecraftTimer = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "timer", "field_71428_T");
-        }
-        return GuiHelper.minecraftTimer;
+    public static void drawTexturedModalRect(int startX, int startY, TextureAtlasSprite icon, int width, int height) {
+        WorldRenderer tes = Tessellator.getInstance().getWorldRenderer();
+        tes.startDrawingQuads();
+        tes.addVertexWithUV(startX, startY + height, 0.0D, icon.getMinU(), icon.getMaxV());
+        tes.addVertexWithUV(startX + width, startY + height, 0.0D, icon.getMaxU(), icon.getMaxV());
+        tes.addVertexWithUV(startX + width, startY, 0.0D, icon.getMaxU(), icon.getMinV());
+        tes.addVertexWithUV(startX, startY, 0.0D, icon.getMinU(), icon.getMinV());
+        tes.finishDrawing();
     }
 
+    public static void playButtonClick() {
+        MC.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+    }
+
+    public static void drawRepeatingBackground(int left, int top, int width, int height, float zLevel, TextureMetadataSection texture) {
+        int texWidth = texture.textureWidth;
+        int texHeight = texture.textureHeight;
+        int bLeft = 0, bTop = 0, bRight = 0, bBottom = 0;
+        if (texture.repeat != null) {
+            bLeft = texture.repeat.borderLeft;
+            bTop = texture.repeat.borderTop;
+            bRight = texture.repeat.borderRight;
+            bBottom = texture.repeat.borderBottom;
+        }
+        int fillWidth = texWidth - bLeft - bRight;
+        int fillHeight = texHeight - bTop - bBottom;
+        int totalBWidth = width - bLeft - bRight;
+        int totalBHeight = height - bTop - bBottom;
+        int fullHorizParts = (totalBWidth / fillWidth);
+        int fullVertParts = (totalBHeight / fillHeight);
+        int remainingWidth = totalBWidth % fillWidth;
+        int remainingHeight = totalBHeight % fillHeight;
+        if (bTop > 0) { // Top
+            if (bLeft > 0) { // Top left corner
+                GuiHelper.drawPart(left, top, bLeft, bTop, zLevel, 0.0F, 0.0F, bLeft, bTop, texWidth, texHeight);
+            }
+            if (bRight > 0) { // Top right corner
+                GuiHelper.drawPart(left + width - bRight, top, bRight, bTop, zLevel, texWidth - bRight, 0.0F, texWidth, bTop, texWidth, texHeight);
+            }
+            for (int i = 0; i <= fullHorizParts; i++) {
+                if (i < fullHorizParts) {
+                    GuiHelper.drawPart(left + bLeft + fillWidth * i, top, fillWidth, bTop, zLevel, bLeft, 0.0F, texWidth - bRight, bTop, texWidth, texHeight);
+                } else {
+                    GuiHelper.drawPart(left + bLeft + fillWidth * i, top, remainingWidth, bTop, zLevel, bLeft, 0.0F, bLeft + remainingWidth, bTop, texWidth, texHeight);
+                }
+            }
+        }
+        if (bBottom > 0) { // Bottom
+            if (bLeft > 0) { // Bottom left corner
+                GuiHelper.drawPart(left, top + height - bBottom, bLeft, bBottom, zLevel, 0.0F, texHeight - bBottom, bLeft, texHeight, texWidth, texHeight);
+            }
+            if (bRight > 0) { // Bottom right corner
+                GuiHelper.drawPart(left + width - bRight, top + height - bBottom, bRight, bBottom, zLevel, texWidth - bRight, texHeight - bBottom, texWidth, texHeight, texWidth, texHeight);
+            }
+            for (int i = 0; i <= fullHorizParts; i++) {
+                if (i < fullHorizParts) {
+                    GuiHelper.drawPart(left + bLeft + fillWidth * i, top + height - bBottom, fillWidth, bBottom, zLevel, bLeft, texHeight - bBottom, texWidth - bRight, texHeight, texWidth, texHeight);
+                } else {
+                    GuiHelper.drawPart(left + bLeft + fillWidth * i, top + height - bBottom, remainingWidth, bBottom, zLevel, bLeft, texHeight - bBottom, bLeft + remainingWidth, texHeight, texWidth, texHeight);
+                }
+            }
+        }
+        if (bLeft > 0) { // Left
+            for (int i = 0; i <= fullVertParts; i++) {
+                if (i < fullVertParts) {
+                    GuiHelper.drawPart(left, top + bTop + fillWidth * i, bLeft, fillHeight, zLevel, 0.0F, bTop, bLeft, texHeight - bBottom, texWidth, texHeight);
+                } else {
+                    GuiHelper.drawPart(left, top + bTop + fillWidth * i, bLeft, remainingHeight, zLevel, 0.0F, bTop, bLeft, bTop + remainingHeight, texWidth, texHeight);
+                }
+            }
+        }
+        if (bRight > 0) { // Right
+            for (int i = 0; i <= fullVertParts; i++) {
+                if (i < fullVertParts) {
+                    GuiHelper.drawPart(left + width - bRight, top + bTop + fillWidth * i, bRight, fillHeight, zLevel, texWidth - bRight, bTop, texWidth, texHeight - bBottom, texWidth, texHeight);
+                } else {
+                    GuiHelper.drawPart(left + width - bRight, top + bTop + fillWidth * i, bRight, remainingHeight, zLevel, texWidth - bRight, bTop, texWidth, bTop + remainingHeight, texWidth, texHeight);
+                }
+            }
+        }
+        for (int i = 0; i <= fullHorizParts; i++) { // Center
+            int currentWidth = i < fullHorizParts ? fillWidth : remainingWidth;
+            for (int j = 0; j <= fullVertParts; j++) {
+                int currentHeight = j < fullVertParts ? fillHeight : remainingHeight;
+                GuiHelper.drawPart(left + bLeft + fillWidth * i, top + bTop + fillWidth * j, currentWidth, currentHeight, zLevel, bLeft, bTop, bLeft + currentWidth, bTop + currentHeight, texWidth, texHeight);
+            }
+        }
+    }
+
+    private static void drawPart(int startX, int startY, int width, int height, float zLevel, float startU, float startV, float endU, float endV, float texWidth, float texHeight) {
+        GuiHelper.drawTexturedModalRect(startX, startY, width, height, zLevel, startU / texWidth, startV / texHeight, endU / texWidth, endV / texHeight);
+    }
 }

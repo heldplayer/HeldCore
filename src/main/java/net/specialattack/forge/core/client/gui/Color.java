@@ -6,11 +6,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public final class Color {
 
-    public static final Color TEXT_BACKGROUND = new Color(0xFF000000);
-    public static final Color TEXT_BORDER = new Color(0xFFA0A0A0);
-    public static final Color TEXT_FOREGROUND = new Color(0xFFE0E0E0);
-    public static final Color TEXT_FOREGROUND_DISABLED = new Color(0xFF707070);
-
     public final int colorHex;
     public final float red, green, blue, alpha;
 
@@ -37,5 +32,4 @@ public final class Color {
         int iBlue = (int) (blue * 255.0F);
         this.colorHex = (iAlpha << 24) | (iRed << 16) | (iGreen << 8) | iBlue;
     }
-
 }

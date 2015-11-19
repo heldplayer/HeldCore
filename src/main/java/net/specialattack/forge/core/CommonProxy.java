@@ -1,17 +1,28 @@
 package net.specialattack.forge.core;
 
 import java.util.UUID;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.specialattack.forge.core.config.ConfigManager;
 import net.specialattack.forge.core.sync.SyncHandler;
+import net.specialattack.forge.core.sync.SyncServerAPI;
+import net.specialattack.forge.core.sync.TileEntitySyncObjectProvider;
+import net.specialattack.util.Scheduler;
 
 public class CommonProxy extends SpACoreProxy {
+
+    public static TileEntitySyncObjectProvider tileEntityProvider = new TileEntitySyncObjectProvider();
+    public static Scheduler serverScheduler;
 
     public EntityPlayer getClientPlayer() {
         throw new IllegalStateException("This code is client-side only!");
@@ -28,26 +39,44 @@ public class CommonProxy extends SpACoreProxy {
         return null;
     }
 
-    protected void initializeSyncHandler() {
-        SyncHandler.initialize();
-    }
-
-    @Override
-    public void preInit(FMLPreInitializationEvent event) {
-    }
-
     @Override
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
+        FMLCommonHandler.instance().bus().register(this);
+        SyncServerAPI.registerProvider(CommonProxy.tileEntityProvider);
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
-        this.initializeSyncHandler();
+        SyncHandler.initialize();
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
+            if (event.type == TickEvent.Type.SERVER) {
+                SyncHandler.serverTick();
+            }
+            Scheduler.tick(event.type);
+        }
+    }
+
+    @SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        for (ConfigManager manager : ConfigManager.configs.values()) {
+            if (manager.modId.equals(event.modID)) {
+                manager.configuration.save();
+                manager.reload();
+            }
+        }
+    }
+
+
+    public void registerIconHolder(TextureAtlasSprite holder) {
+        throw new IllegalStateException("This code is client-side only!");
     }
 
     public Side getSide() {
         return Side.SERVER;
     }
-
 }

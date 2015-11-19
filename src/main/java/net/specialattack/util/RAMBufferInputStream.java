@@ -27,7 +27,7 @@ public class RAMBufferInputStream extends InputStream {
                 this.markedPosition = -1;
             }
         }
-        this.buffer.read(tinyArray);
+        this.buffer.read(this.tinyArray);
         return this.tinyArray[0] & 0xFF;
     }
 

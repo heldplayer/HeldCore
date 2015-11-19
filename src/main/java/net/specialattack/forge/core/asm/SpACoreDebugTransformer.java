@@ -12,6 +12,9 @@ public class SpACoreDebugTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] original) {
+        if (original == null) {
+            return null;
+        }
         if (!SpACorePlugin.debug || !transformedName.startsWith("net.minecraft.client.")) {
             return original;
         }
@@ -20,18 +23,18 @@ public class SpACoreDebugTransformer implements IClassTransformer {
 
         ClassNode node = new ClassNode();
         reader.accept(node, 0);
-        node.access = fixAccess(node.access);
+        node.access = SpACoreDebugTransformer.fixAccess(node.access);
         for (FieldNode fieldNode : node.fields) {
             if (fieldNode.name.startsWith("__")) {
                 continue;
             }
-            fieldNode.access = fixAccess(fieldNode.access);
+            fieldNode.access = SpACoreDebugTransformer.fixAccess(fieldNode.access);
         }
         for (MethodNode methodNode : node.methods) {
             if (methodNode.name.startsWith("__")) {
                 continue;
             }
-            methodNode.access = fixAccess(methodNode.access);
+            methodNode.access = SpACoreDebugTransformer.fixAccess(methodNode.access);
         }
 
         node.accept(writer);
@@ -41,5 +44,4 @@ public class SpACoreDebugTransformer implements IClassTransformer {
     private static int fixAccess(int start) {
         return (start & ~(Opcodes.ACC_PRIVATE | Opcodes.ACC_PROTECTED)) | Opcodes.ACC_PUBLIC;
     }
-
 }

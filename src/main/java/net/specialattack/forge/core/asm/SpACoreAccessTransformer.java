@@ -8,5 +8,4 @@ public class SpACoreAccessTransformer extends AccessTransformer {
     public SpACoreAccessTransformer() throws IOException {
         super("spacore_at.cfg");
     }
-
 }

@@ -4,13 +4,26 @@ spacore:gui.container.fluid.filled=%s / %s mb
 spacore:recipe.shaped.modded=Shaped Mod
 spacore:recipe.shapeless.modded=Shapeless Mod
 
-spacore:config.general=General
-spacore:config.general.comment=General mod settings
-spacore:config.general.refreshRate=Update interval
-spacore:config.general.refreshRate.comment=The refresh-rate used for syncing objects between server and client. A higher refresh-rate will decrease bandwidth and CPU usage, but will also cause objects to appear to lag
-spacore:config.general.textureMapId=Texture map ID
-spacore:config.general.textureMapId.comment=The ID of the texture map that SpACore assigns
-spacore:config.general.showReportBugs='Report Bug'?
-spacore:config.general.showReportBugs.comment=Should the mod add a 'Report a bug' button to the menu?
-spacore:config.general.replaceModOptions=Replace 'Mod Options'?
-spacore:config.general.replaceModOptions.comment=Should the ingame 'Mod Options' button be replaced with a 'Mods' button that actually works?
+spacore.cfg:client=Client
+spacore.cfg:client.comment=Client Only settings
+spacore.cfg:client.textureMapId=Texture map ID
+spacore.cfg:client.textureMapId.comment=The ID of the texture map that SpACore assigns
+spacore.cfg:client.showReportBugs='Report Bug'?
+spacore.cfg:client.showReportBugs.comment=Should the mod add a 'Report a bug' button to the menu?
+
+spacore.cfg:common=Common
+spacore.cfg:common.comment=Settings that affect both server and client
+spacore.cfg:common.enableSeasonals=Enable Seasonals
+spacore.cfg:common.enableSeasonals.comment=Enable seasonal easter eggs
+
+spacore.cfg:sync=Sync
+spacore.cfg:sync.comment=Syncing system settings
+spacore.cfg:sync.refreshRate=Update interval
+spacore.cfg:sync.refreshRate.comment=The refresh-rate used for syncing objects between server and client. A higher refresh-rate will decrease bandwidth and CPU usage, but will also cause objects to appear to lag
+
+spacore.cfg:tweaks=Tweaks
+spacore.cfg:tweaks.comment=Minecraft Tweaks
+spacore.cfg:tweaks.replaceModOptions=Replace 'Mod Options'?
+spacore.cfg:tweaks.replaceModOptions.comment=Should the ingame 'Mod Options' button be replaced with a 'Mods' button that actually works?
+
+key.spacore.debug=SpACore Debugger

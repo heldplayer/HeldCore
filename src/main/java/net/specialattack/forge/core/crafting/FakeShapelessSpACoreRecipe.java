@@ -13,7 +13,7 @@ public class FakeShapelessSpACoreRecipe extends ShapelessSpACoreRecipe implement
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return this.enabled;
     }
 
 }
