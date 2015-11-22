@@ -5,8 +5,6 @@ import java.util.List;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
@@ -96,13 +94,16 @@ public final class GuiHelper {
      *         The ending texture v location
      */
     public static void drawTexturedModalRect(int startX, int startY, int width, int height, float zLevel, float startU, float startV, float endU, float endV) {
-        WorldRenderer tes = Tessellator.getInstance().getWorldRenderer();
-        tes.startDrawingQuads();
-        tes.addVertexWithUV(startX, startY + height, zLevel, startU, endV);
-        tes.addVertexWithUV(startX + width, startY + height, zLevel, endU, endV);
-        tes.addVertexWithUV(startX + width, startY, zLevel, endU, startV);
-        tes.addVertexWithUV(startX, startY, zLevel, startU, startV);
-        tes.finishDrawing();
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2d(startU, endV);
+        GL11.glVertex3d(startX, startY + height, zLevel);
+        GL11.glTexCoord2d(endU, endV);
+        GL11.glVertex3d(startX + width, startY + height, zLevel);
+        GL11.glTexCoord2d(endU, startV);
+        GL11.glVertex3d(startX + width, startY, zLevel);
+        GL11.glTexCoord2d(startU, startV);
+        GL11.glVertex3d(startX, startY, zLevel);
+        GL11.glEnd();
     }
 
     /**
@@ -128,13 +129,16 @@ public final class GuiHelper {
      *         The ending texture v location
      */
     public static void drawTexturedModalRect(float startX, float startY, float width, float height, float zLevel, float startU, float startV, float endU, float endV) {
-        WorldRenderer tes = Tessellator.getInstance().getWorldRenderer();
-        tes.startDrawingQuads();
-        tes.addVertexWithUV(startX, startY + height, zLevel, startU, endV);
-        tes.addVertexWithUV(startX + width, startY + height, zLevel, endU, endV);
-        tes.addVertexWithUV(startX + width, startY, zLevel, endU, startV);
-        tes.addVertexWithUV(startX, startY, zLevel, startU, startV);
-        tes.finishDrawing();
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2d(startU, endV);
+        GL11.glVertex3d(startX, startY + height, zLevel);
+        GL11.glTexCoord2d(endU, endV);
+        GL11.glVertex3d(startX + width, startY + height, zLevel);
+        GL11.glTexCoord2d(endU, startV);
+        GL11.glVertex3d(startX + width, startY, zLevel);
+        GL11.glTexCoord2d(startU, startV);
+        GL11.glVertex3d(startX, startY, zLevel);
+        GL11.glEnd();
     }
 
     /**
@@ -416,33 +420,42 @@ public final class GuiHelper {
     }
 
     public static void drawTexturedModalRect(int startX, int startY, int width, int height, double zLevel, double startU, double startV, double endU, double endV) {
-        WorldRenderer tes = Tessellator.getInstance().getWorldRenderer();
-        tes.startDrawingQuads();
-        tes.addVertexWithUV(startX, startY + height, zLevel, startU, endV);
-        tes.addVertexWithUV(startX + width, startY + height, zLevel, endU, endV);
-        tes.addVertexWithUV(startX + width, startY, zLevel, endU, startV);
-        tes.addVertexWithUV(startX, startY, zLevel, startU, startV);
-        tes.finishDrawing();
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2d(startU, endV);
+        GL11.glVertex3d(startX, startY + height, zLevel);
+        GL11.glTexCoord2d(endU, endV);
+        GL11.glVertex3d(startX + width, startY + height, zLevel);
+        GL11.glTexCoord2d(endU, startV);
+        GL11.glVertex3d(startX + width, startY, zLevel);
+        GL11.glTexCoord2d(startU, startV);
+        GL11.glVertex3d(startX, startY, zLevel);
+        GL11.glEnd();
     }
 
     public static void drawTexturedModalRect(int startX, int startY, int u, int v, int width, int height) {
-        WorldRenderer tes = Tessellator.getInstance().getWorldRenderer();
-        tes.startDrawingQuads();
-        tes.addVertexWithUV(startX, startY + height, 0.0D, u / 256.0F, (v + height) / 256.0F);
-        tes.addVertexWithUV(startX + width, startY + height, 0.0D, (u + width) / 256.0F, (v + height) / 256.0F);
-        tes.addVertexWithUV(startX + width, startY, 0.0D, (u + width) / 256.0F, v / 256.0F);
-        tes.addVertexWithUV(startX, startY, 0.0D, u / 256.0F, v / 256.0F);
-        tes.finishDrawing();
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2d(u / 256.0F, (v + height) / 256.0F);
+        GL11.glVertex3d(startX, startY + height, 0.0D);
+        GL11.glTexCoord2d((u + width) / 256.0F, (v + height) / 256.0F);
+        GL11.glVertex3d(startX + width, startY + height, 0.0D);
+        GL11.glTexCoord2d((u + width) / 256.0F, v / 256.0F);
+        GL11.glVertex3d(startX + width, startY, 0.0D);
+        GL11.glTexCoord2d(u / 256.0F, v / 256.0F);
+        GL11.glVertex3d(startX, startY, 0.0D);
+        GL11.glEnd();
     }
 
     public static void drawTexturedModalRect(int startX, int startY, TextureAtlasSprite icon, int width, int height) {
-        WorldRenderer tes = Tessellator.getInstance().getWorldRenderer();
-        tes.startDrawingQuads();
-        tes.addVertexWithUV(startX, startY + height, 0.0D, icon.getMinU(), icon.getMaxV());
-        tes.addVertexWithUV(startX + width, startY + height, 0.0D, icon.getMaxU(), icon.getMaxV());
-        tes.addVertexWithUV(startX + width, startY, 0.0D, icon.getMaxU(), icon.getMinV());
-        tes.addVertexWithUV(startX, startY, 0.0D, icon.getMinU(), icon.getMinV());
-        tes.finishDrawing();
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2d(icon.getMinU(), icon.getMaxV());
+        GL11.glVertex3d(startX, startY + height, 0.0D);
+        GL11.glTexCoord2d(icon.getMaxU(), icon.getMaxV());
+        GL11.glVertex3d(startX + width, startY + height, 0.0D);
+        GL11.glTexCoord2d(icon.getMaxU(), icon.getMinV());
+        GL11.glVertex3d(startX + width, startY, 0.0D);
+        GL11.glTexCoord2d(icon.getMinU(), icon.getMinV());
+        GL11.glVertex3d(startX, startY, 0.0D);
+        GL11.glEnd();
     }
 
     public static void playButtonClick() {

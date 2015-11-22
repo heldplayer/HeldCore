@@ -5,8 +5,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
@@ -392,9 +390,9 @@ public class GuiTextBox extends Gui {
                         //break label;
                     }
 
-                    if (remainingChars == 0) {
+                    //if (remainingChars == 0) {
                         //break label;
-                    }
+                    //}
 
                     remainingChars -= line.length();
                 }
@@ -873,9 +871,10 @@ public class GuiTextBox extends Gui {
                             line += " ";
                         }
 
-                        if (remainingLines > height - 1) {
+                        /*if (remainingLines > height - 1) {
                             //break label;
-                        } else if (remainingLines >= 0) {
+                        } else */
+                        if (remainingLines >= 0) {
                             if (i <= this.cursorPositionComponent && remainingChars >= 0) {
                                 cursorY += this.font.FONT_HEIGHT;
                             }
@@ -892,9 +891,9 @@ public class GuiTextBox extends Gui {
                                 //break label;
                             }
 
-                            if (remainingChars == 0) {
+                            //if (remainingChars == 0) {
                                 //break label;
-                            }
+                            //}
 
                             remainingChars -= line.length();
                         }
@@ -905,9 +904,9 @@ public class GuiTextBox extends Gui {
                                 //break label;
                             }
 
-                            if (remainingCharsSel == 0) {
+                            //if (remainingCharsSel == 0) {
                                 //break label;
-                            }
+                            //}
 
                             remainingCharsSel -= line.length();
                         }
@@ -990,38 +989,37 @@ public class GuiTextBox extends Gui {
         return this.getEnableBackgroundDrawing() ? this.width - 8 : this.width;
     }
 
-    private void drawSelection(int startX, int startY, int width, int height) {
-        if (startX < width) {
+    private void drawSelection(int startX, int startY, int endX, int endY) {
+        if (startX < endX) {
             int i1 = startX;
-            startX = width;
-            width = i1;
+            startX = endX;
+            endX = i1;
         }
 
-        if (startY < height) {
+        if (startY < endY) {
             int i1 = startY;
-            startY = height;
-            height = i1;
+            startY = endY;
+            endY = i1;
         }
 
-        if (width > this.posX + this.width) {
-            width = this.posX + this.width;
+        if (endX > this.posX + this.width) {
+            endX = this.posX + this.width;
         }
 
         if (startX > this.posX + this.width) {
             startX = this.posX + this.width;
         }
 
-        WorldRenderer tessellator = Tessellator.getInstance().getWorldRenderer();
         GlStateManager.color(0.0F, 0.0F, 1.0F, 1.0F);
         GlStateManager.disableTexture2D();
         GlStateManager.enableColorLogic();
         GlStateManager.colorLogicOp(GL11.GL_OR_REVERSE);
-        tessellator.startDrawingQuads();
-        tessellator.addVertex(startX, height, 0.0D);
-        tessellator.addVertex(width, height, 0.0D);
-        tessellator.addVertex(width, startY, 0.0D);
-        tessellator.addVertex(startX, startY, 0.0D);
-        tessellator.finishDrawing();
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glVertex3d(startX, endY, 0.0D);
+        GL11.glVertex3d(endX, endY, 0.0D);
+        GL11.glVertex3d(endX, startY, 0.0D);
+        GL11.glVertex3d(startX, startY, 0.0D);
+        GL11.glEnd();
         GlStateManager.disableColorLogic();
         GlStateManager.enableTexture2D();
     }

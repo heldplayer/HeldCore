@@ -3,8 +3,6 @@ package net.specialattack.forge.core.client.gui.deprecated.element;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -115,7 +113,6 @@ public class SGTextField extends SGInteractable {
             startX = posX + width;
         }
 
-        WorldRenderer tess = Tessellator.getInstance().getWorldRenderer();
         if (this.hasFocus()) {
             GlStateManager.color(0.0F, 0.0F, 255.0F, 255.0F);
         } else {
@@ -124,12 +121,12 @@ public class SGTextField extends SGInteractable {
         GlStateManager.disableTexture2D();
         GlStateManager.enableColorLogic();
         GlStateManager.colorLogicOp(GL11.GL_OR_REVERSE);
-        tess.startDrawingQuads();
-        tess.addVertex(startX, endY, 0.0D);
-        tess.addVertex(endX, endY, 0.0D);
-        tess.addVertex(endX, startY, 0.0D);
-        tess.addVertex(startX, startY, 0.0D);
-        tess.finishDrawing();
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glVertex3d(startX, endY, 0.0D);
+        GL11.glVertex3d(endX, endY, 0.0D);
+        GL11.glVertex3d(endX, startY, 0.0D);
+        GL11.glVertex3d(startX, startY, 0.0D);
+        GL11.glEnd();
         GlStateManager.disableColorLogic();
         GlStateManager.enableTexture2D();
     }
