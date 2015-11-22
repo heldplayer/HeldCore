@@ -58,5 +58,4 @@ public final class SyncServerAPI {
     public static ConnectionInfo getConnectionInfo(UUID uuid, boolean create) {
         return SyncHandler.getConnectionInfo(uuid, create);
     }
-
 }

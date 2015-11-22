@@ -140,7 +140,7 @@ public final class SyncHandler {
                 SyncHandler.debug("Sending connection data to player %s (%s)", player.getName(), player.getUniqueID());
                 SpACore.syncPacketHandler.sendTo(new S01Connection(SyncHandler.serverUUID, SyncHandler.getAvailableProviderNames()), player);
             }
-        }, 1L);
+        }, 5L);
     }
 
     @SubscribeEvent // FML Event
