@@ -38,7 +38,7 @@ public @interface Configuration {
         /**
          * @return The side this option should be loaded at.
          */
-        CSide side() default CSide.BOTH;
+        Configuration.CSide side() default Configuration.CSide.BOTH;
 
         /**
          * @return True if this option needs a restart to get applied. False if it can be changed during a session.
@@ -113,7 +113,7 @@ public @interface Configuration {
         /**
          * @return The direction to synchronize to.
          */
-        CSide value();
+        Configuration.CSide value();
     }
 
     /**

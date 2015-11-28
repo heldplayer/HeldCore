@@ -15,20 +15,19 @@ import net.specialattack.forge.core.client.gui.deprecated.layout.SGLayoutManager
 import net.specialattack.forge.core.client.gui.deprecated.style.StyleDefs;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
 
 public class SGScrollPane extends SGComponent {
 
     private float scrollLeft, scrollTop;
     private boolean horizontal, vertical;
-    private Inner innerPanel;
+    private SGScrollPane.Inner innerPanel;
     private Color scrollbarBackground = StyleDefs.COLOR_SCROLLBAR_BACKGROUND;
     private Color scrollbarHoverForeground = StyleDefs.COLOR_SCROLLBAR_FOREGROUND_HOVER, scrollbarForeground = StyleDefs.COLOR_SCROLLBAR_FOREGROUND;
     private int scrollbarWidth = 8;
     private byte dragging = -1;
 
     public SGScrollPane() {
-        this.innerPanel = new Inner();
+        this.innerPanel = new SGScrollPane.Inner();
         super.setLayoutManager(new BorderedSGLayoutManager());
         super.addChild(this.innerPanel, BorderedSGLayoutManager.Border.CENTER);
         //this.innerPanel.setParent(null);

@@ -23,7 +23,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.StatCollector;
 import net.specialattack.forge.core.crafting.CraftingHelper;
 import net.specialattack.forge.core.crafting.FakeShapedSpACoreRecipe;
 import net.specialattack.forge.core.crafting.ShapedSpACoreRecipe;
@@ -38,7 +37,7 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
 
     @Override
     public void loadTransferRects() {
-        this.transferRects.add(new RecipeTransferRect(new Rectangle(84, 23, 24, 18), "crafting"));
+        this.transferRects.add(new TemplateRecipeHandler.RecipeTransferRect(new Rectangle(84, 23, 24, 18), "crafting"));
     }
 
     @Override
@@ -47,12 +46,12 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
             List<IRecipe> allrecipes = new ArrayList<IRecipe>(CraftingManager.getInstance().getRecipeList());
             allrecipes.addAll(CraftingHelper.fakeRecipes);
             for (IRecipe irecipe : allrecipes) {
-                CachedShapedRecipe recipe = null;
+                ShapedSpACoreRecipeHandler.CachedShapedRecipe recipe = null;
 
                 if (irecipe instanceof FakeShapedSpACoreRecipe) {
-                    recipe = ((FakeShapedSpACoreRecipe) irecipe).isEnabled() ? new CachedShapedRecipe((FakeShapedSpACoreRecipe) irecipe) : null;
+                    recipe = ((FakeShapedSpACoreRecipe) irecipe).isEnabled() ? new ShapedSpACoreRecipeHandler.CachedShapedRecipe((FakeShapedSpACoreRecipe) irecipe) : null;
                 } else if (irecipe instanceof ShapedSpACoreRecipe) {
-                    recipe = new CachedShapedRecipe((ShapedSpACoreRecipe) irecipe);
+                    recipe = new ShapedSpACoreRecipeHandler.CachedShapedRecipe((ShapedSpACoreRecipe) irecipe);
                 }
                 if (recipe == null) {
                     continue;
@@ -72,12 +71,12 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
         allrecipes.addAll(CraftingHelper.fakeRecipes);
         for (IRecipe irecipe : allrecipes) {
             if (NEIServerUtils.areStacksSameTypeCrafting(irecipe.getRecipeOutput(), result)) {
-                CachedShapedRecipe recipe = null;
+                ShapedSpACoreRecipeHandler.CachedShapedRecipe recipe = null;
 
                 if (irecipe instanceof FakeShapedSpACoreRecipe) {
-                    recipe = ((FakeShapedSpACoreRecipe) irecipe).isEnabled() ? new CachedShapedRecipe((FakeShapedSpACoreRecipe) irecipe) : null;
+                    recipe = ((FakeShapedSpACoreRecipe) irecipe).isEnabled() ? new ShapedSpACoreRecipeHandler.CachedShapedRecipe((FakeShapedSpACoreRecipe) irecipe) : null;
                 } else if (irecipe instanceof ShapedSpACoreRecipe) {
-                    recipe = new CachedShapedRecipe((ShapedSpACoreRecipe) irecipe);
+                    recipe = new ShapedSpACoreRecipeHandler.CachedShapedRecipe((ShapedSpACoreRecipe) irecipe);
                 }
                 if (recipe == null) {
                     continue;
@@ -93,12 +92,12 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
         List<IRecipe> allrecipes = new ArrayList<IRecipe>(CraftingManager.getInstance().getRecipeList());
         allrecipes.addAll(CraftingHelper.fakeRecipes);
         for (IRecipe irecipe : allrecipes) {
-            CachedShapedRecipe recipe = null;
+            ShapedSpACoreRecipeHandler.CachedShapedRecipe recipe = null;
 
             if (irecipe instanceof FakeShapedSpACoreRecipe) {
-                recipe = ((FakeShapedSpACoreRecipe) irecipe).isEnabled() ? new CachedShapedRecipe((FakeShapedSpACoreRecipe) irecipe) : null;
+                recipe = ((FakeShapedSpACoreRecipe) irecipe).isEnabled() ? new ShapedSpACoreRecipeHandler.CachedShapedRecipe((FakeShapedSpACoreRecipe) irecipe) : null;
             } else if (irecipe instanceof ShapedSpACoreRecipe) {
-                recipe = new CachedShapedRecipe((ShapedSpACoreRecipe) irecipe);
+                recipe = new ShapedSpACoreRecipeHandler.CachedShapedRecipe((ShapedSpACoreRecipe) irecipe);
             }
             if (recipe == null || !recipe.contains(recipe.ingredients, ingredient)) {
                 continue;
@@ -124,7 +123,7 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
     @Override
     public void drawExtras(int recipeId) {
         super.drawExtras(recipeId);
-        CachedShapedRecipe recipe = (CachedShapedRecipe) this.arecipes.get(recipeId);
+        ShapedSpACoreRecipeHandler.CachedShapedRecipe recipe = (ShapedSpACoreRecipeHandler.CachedShapedRecipe) this.arecipes.get(recipeId);
 
         if (recipe != null && recipe.recipe != null && recipe.recipe.handler != null) {
             GuiDraw.drawStringC(recipe.recipe.handler.getOwningModName(), 124, 8, 0x404040, false);
@@ -141,8 +140,8 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
         super.onUpdate();
 
         if (!NEIClientUtils.shiftKey() && this.cycleticks % 20 == 0) {
-            for (CachedRecipe cachedRecipe : this.arecipes) {
-                CachedShapedRecipe recipe = (CachedShapedRecipe) cachedRecipe;
+            for (TemplateRecipeHandler.CachedRecipe cachedRecipe : this.arecipes) {
+                ShapedSpACoreRecipeHandler.CachedShapedRecipe recipe = (ShapedSpACoreRecipeHandler.CachedShapedRecipe) cachedRecipe;
 
                 recipe.getCycledIngredients(this.cycleticks / 20, recipe.ingredients);
 
@@ -182,7 +181,7 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
 
     @Override
     public List<String> handleItemTooltip(GuiRecipe gui, ItemStack stack, List<String> currenttip, int recipeId) {
-        CachedShapedRecipe recipe = (CachedShapedRecipe) this.arecipes.get(recipeId);
+        ShapedSpACoreRecipeHandler.CachedShapedRecipe recipe = (ShapedSpACoreRecipeHandler.CachedShapedRecipe) this.arecipes.get(recipeId);
 
         currenttip = super.handleItemTooltip(gui, stack, currenttip, recipeId);
 
@@ -212,7 +211,7 @@ public class ShapedSpACoreRecipeHandler extends TemplateRecipeHandler {
         return true;
     }
 
-    public class CachedShapedRecipe extends CachedRecipe {
+    public class CachedShapedRecipe extends TemplateRecipeHandler.CachedRecipe {
 
         public List<PositionedStack> ingredients;
         public List<ItemStack> input;

@@ -12,20 +12,20 @@ import org.lwjgl.input.Mouse;
 @SideOnly(Side.CLIENT)
 public class KeyHandler {
 
-    private static List<KeyData> keybinds = new ArrayList<KeyData>();
+    private static List<KeyHandler.KeyData> keybinds = new ArrayList<KeyHandler.KeyData>();
 
     public static void registerKeyBind(KeyBinding keyBinding, boolean repeats) {
-        KeyHandler.keybinds.add(new KeyData(keyBinding, repeats));
+        KeyHandler.keybinds.add(new KeyHandler.KeyData(keyBinding, repeats));
         ClientRegistry.registerKeyBinding(keyBinding);
     }
 
-    public static void registerKeyBind(KeyData key) {
+    public static void registerKeyBind(KeyHandler.KeyData key) {
         KeyHandler.keybinds.add(key);
         ClientRegistry.registerKeyBinding(key.keyBinding);
     }
 
     static void tickKeys() {
-        for (KeyData key : KeyHandler.keybinds) {
+        for (KeyHandler.KeyData key : KeyHandler.keybinds) {
             int keyCode = key.keyBinding.getKeyCode();
             boolean state = (keyCode < 0 ? Mouse.isButtonDown(keyCode + 100) : Keyboard.isKeyDown(keyCode));
             if (state != key.keyDown || (state && key.repeating)) {

@@ -33,7 +33,7 @@ public final class SyncHandlerClient {
     public static SyncWorldTrackingStorage worldStorage;
     public static Map<UUID, SyncTrackingStorage> storages = Collections.synchronizedMap(new TreeMap<UUID, SyncTrackingStorage>());
 
-    private static final List<TrackingRequests> trackingRequests = Collections.synchronizedList(new ArrayList<TrackingRequests>());
+    private static final List<SyncHandlerClient.TrackingRequests> trackingRequests = Collections.synchronizedList(new ArrayList<SyncHandlerClient.TrackingRequests>());
 
     /**
      * Initializes the SyncHandlerClient.
@@ -130,11 +130,11 @@ public final class SyncHandlerClient {
             }
             int i = 0;
             NBTTagList list = new NBTTagList();
-            List<TrackingRequests> delayedList = null;
-            for (TrackingRequests request : SyncHandlerClient.trackingRequests) {
+            List<SyncHandlerClient.TrackingRequests> delayedList = null;
+            for (SyncHandlerClient.TrackingRequests request : SyncHandlerClient.trackingRequests) {
                 if (!request.owner.canStartTracking()) {
                     if (delayedList == null) {
-                        delayedList = new ArrayList<TrackingRequests>();
+                        delayedList = new ArrayList<SyncHandlerClient.TrackingRequests>();
                     }
                     delayedList.add(request);
                     continue;
@@ -181,11 +181,11 @@ public final class SyncHandlerClient {
     }
 
     public static void requestStartTracking(ISyncableOwner owner, UUID storage) {
-        SyncHandlerClient.trackingRequests.add(new TrackingRequests(owner, storage, true));
+        SyncHandlerClient.trackingRequests.add(new SyncHandlerClient.TrackingRequests(owner, storage, true));
     }
 
     public static void requestStopTracking(ISyncableOwner owner, UUID storage) {
-        SyncHandlerClient.trackingRequests.add(new TrackingRequests(owner, storage, false));
+        SyncHandlerClient.trackingRequests.add(new SyncHandlerClient.TrackingRequests(owner, storage, false));
     }
 
     public static SyncTrackingStorage getStorage(UUID uuid) {

@@ -6,10 +6,10 @@ import java.util.TreeMap;
 
 public class Table<K, V1, V2> {
 
-    private final TreeMap<K, Value<V1, V2>> entries;
+    private final TreeMap<K, Table.Value<V1, V2>> entries;
 
     public Table() {
-        this.entries = new TreeMap<K, Value<V1, V2>>();
+        this.entries = new TreeMap<K, Table.Value<V1, V2>>();
     }
 
     public int size() {
@@ -20,7 +20,7 @@ public class Table<K, V1, V2> {
         if (this.entries.containsKey(key)) {
             return;
         }
-        this.entries.put(key, new Value<V1, V2>(value1, value2));
+        this.entries.put(key, new Table.Value<V1, V2>(value1, value2));
     }
 
     public boolean containsKey(K key) {
@@ -47,22 +47,22 @@ public class Table<K, V1, V2> {
         return false;
     }
 
-    public Value<V1, V2> deleteEntry(K key) {
+    public Table.Value<V1, V2> deleteEntry(K key) {
         return this.entries.remove(key);
     }
 
-    public Value<V1, V2> getValue(K key) {
+    public Table.Value<V1, V2> getValue(K key) {
         return this.entries.get(key);
     }
 
     public V1 getValue1(K key) {
-        Value<V1, V2> entry = this.entries.get(key);
+        Table.Value<V1, V2> entry = this.entries.get(key);
 
         return entry != null ? this.entries.get(key).getValue1() : null;
     }
 
     public V2 getValue2(K key) {
-        Value<V1, V2> entry = this.entries.get(key);
+        Table.Value<V1, V2> entry = this.entries.get(key);
 
         return entry != null ? this.entries.get(key).getValue2() : null;
     }
@@ -87,11 +87,11 @@ public class Table<K, V1, V2> {
         return null;
     }
 
-    public Collection<Entry<K, V1, V2>> getEntries() {
-        HashSet<Entry<K, V1, V2>> result = new HashSet<Entry<K, V1, V2>>();
+    public Collection<Table.Entry<K, V1, V2>> getEntries() {
+        HashSet<Table.Entry<K, V1, V2>> result = new HashSet<Table.Entry<K, V1, V2>>();
 
-        for (java.util.Map.Entry<K, Value<V1, V2>> entry : this.entries.entrySet()) {
-            result.add(new Entry<K, V1, V2>(entry.getKey(), entry.getValue().value1, entry.getValue().value2));
+        for (java.util.Map.Entry<K, Table.Value<V1, V2>> entry : this.entries.entrySet()) {
+            result.add(new Table.Entry<K, V1, V2>(entry.getKey(), entry.getValue().value1, entry.getValue().value2));
         }
 
         return result;

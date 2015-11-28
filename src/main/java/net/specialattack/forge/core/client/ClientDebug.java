@@ -52,7 +52,7 @@ public class ClientDebug extends CommonDebug {
         }
     };
 
-    public static void setColorMode(ColorMode mode) {
+    public static void setColorMode(ClientDebug.ColorMode mode) {
         ClientDebug.colorMatrix = mode.fMatrix;
         ClientDebug.colorMatrixDirty = true;
     }
@@ -121,9 +121,9 @@ public class ClientDebug extends CommonDebug {
             this.fMatrix.m22 = transformations[2][2] / 100.0F;
         }
 
-        public static ColorMode getRandom() {
+        public static ClientDebug.ColorMode getRandom() {
             Random rand = new Random();
-            return ColorMode.values()[rand.nextInt(ColorMode.values().length)];
+            return ClientDebug.ColorMode.values()[rand.nextInt(ClientDebug.ColorMode.values().length)];
         }
     }
 }

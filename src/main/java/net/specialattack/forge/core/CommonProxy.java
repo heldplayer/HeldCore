@@ -1,7 +1,6 @@
 package net.specialattack.forge.core;
 
 import java.util.UUID;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -13,6 +12,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.specialattack.forge.core.client.texture.IconHolder;
 import net.specialattack.forge.core.config.ConfigManager;
 import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.SyncServerAPI;
@@ -71,9 +71,7 @@ public class CommonProxy extends SpACoreProxy {
         }
     }
 
-
-    public void registerIconHolder(TextureAtlasSprite holder) {
-        throw new IllegalStateException("This code is client-side only!");
+    public void registerIconHolder(IconHolder holder) {
     }
 
     public Side getSide() {

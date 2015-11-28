@@ -11,11 +11,11 @@ import net.specialattack.forge.core.client.MC;
 
 public class AdvancedTexturesManager implements IResourceManagerReloadListener {
 
-    private static Map<ResourceLocation, AdvancedTexture> data = Maps.newHashMap();
+    private static Map<ResourceLocation, AdvancedTexturesManager.AdvancedTexture> data = Maps.newHashMap();
 
     @Override
     public void onResourceManagerReload(IResourceManager manager) {
-        for (AdvancedTexture data : AdvancedTexturesManager.data.values()) {
+        for (AdvancedTexturesManager.AdvancedTexture data : AdvancedTexturesManager.data.values()) {
             IResource resource;
             try {
                 resource = manager.getResource(data.resource);
@@ -29,7 +29,7 @@ public class AdvancedTexturesManager implements IResourceManagerReloadListener {
     public static AdvancedTexturesManager.AdvancedTexture getTexture(ResourceLocation resourceLocation) {
         AdvancedTexturesManager.AdvancedTexture result = AdvancedTexturesManager.data.get(resourceLocation);
         if (result == null) {
-            result = new AdvancedTexture(resourceLocation);
+            result = new AdvancedTexturesManager.AdvancedTexture(resourceLocation);
             IResource resource;
             try {
                 resource = MC.getResourceManager().getResource(resourceLocation);

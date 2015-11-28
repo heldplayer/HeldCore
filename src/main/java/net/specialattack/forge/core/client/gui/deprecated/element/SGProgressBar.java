@@ -9,16 +9,15 @@ import net.specialattack.forge.core.client.gui.deprecated.layout.FlowDirection;
 import net.specialattack.forge.core.client.gui.deprecated.layout.Region;
 import net.specialattack.forge.core.client.gui.deprecated.style.StyleDefs;
 import net.specialattack.forge.core.client.gui.deprecated.style.border.InvisibleBorder;
-import org.lwjgl.opengl.GL11;
 
 public class SGProgressBar extends SGComponent {
 
     private float progress;
-    private State state;
+    private SGProgressBar.State state;
     private FlowDirection direction;
     private int timer;
 
-    public SGProgressBar(State state, FlowDirection direction) {
+    public SGProgressBar(SGProgressBar.State state, FlowDirection direction) {
         this.setState(state);
         this.setBackground(StyleDefs.BACKGROUND_PROGRESS_BAR);
         this.setBorder(new InvisibleBorder(1));
@@ -30,24 +29,24 @@ public class SGProgressBar extends SGComponent {
         }
     }
 
-    public SGProgressBar(State state) {
+    public SGProgressBar(SGProgressBar.State state) {
         this(state, FlowDirection.HORIZONTAL);
     }
 
     public SGProgressBar(FlowDirection direction) {
-        this(State.NORMAL, direction);
+        this(SGProgressBar.State.NORMAL, direction);
     }
 
     public SGProgressBar() {
-        this(State.NORMAL, FlowDirection.HORIZONTAL);
+        this(SGProgressBar.State.NORMAL, FlowDirection.HORIZONTAL);
     }
 
     public void setProgress(float progress) {
         this.progress = MathHelper.clamp_float(progress, 0.0F, 100.0F);
     }
 
-    public void setState(State state) {
-        this.state = state == null ? State.NORMAL : state;
+    public void setState(SGProgressBar.State state) {
+        this.state = state == null ? SGProgressBar.State.NORMAL : state;
     }
 
     @Override

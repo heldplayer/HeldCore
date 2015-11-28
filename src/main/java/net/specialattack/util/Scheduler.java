@@ -31,7 +31,7 @@ public final class Scheduler {
 
     private PriorityQueue<Scheduler.Task> queue = new PriorityQueue<Scheduler.Task>(4, new Comparator<Scheduler.Task>() {
         @Override
-        public int compare(Task o1, Task o2) {
+        public int compare(Scheduler.Task o1, Scheduler.Task o2) {
             return (int) (o1.nextTick - o2.nextTick);
         }
     });
@@ -53,7 +53,7 @@ public final class Scheduler {
     public void tick() {
         this.currentTick++;
         while (!this.queue.isEmpty() && this.queue.peek().nextTick <= this.currentTick) {
-            Task task = this.queue.poll();
+            Scheduler.Task task = this.queue.poll();
             task.task.run();
             if (task.repeats) {
                 task.nextTick = this.currentTick + task.period;
@@ -108,9 +108,9 @@ public final class Scheduler {
      *         The ID of the scheduled task to remove.
      */
     public void unscheduleTask(int id) {
-        Iterator<Task> i = this.queue.iterator();
+        Iterator<Scheduler.Task> i = this.queue.iterator();
         while (i.hasNext()) {
-            Task task = i.next();
+            Scheduler.Task task = i.next();
             if (task.id == id) {
                 i.remove();
                 return;

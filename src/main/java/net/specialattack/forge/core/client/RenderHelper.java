@@ -7,6 +7,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.specialattack.forge.core.client.texture.IconHolder;
 import net.specialattack.util.math.MathHelper;
 import net.specialattack.util.math.Vector;
 import net.specialattack.util.math.VectorPool;
@@ -37,6 +38,38 @@ public final class RenderHelper {
     }
 
     public static void renderBezierPlane(Vector[][] points, TextureAtlasSprite icon, int pointCount) {
+        Vector[] result = RenderHelper.getBezierPlanePoints(points, pointCount);
+
+        GL11.glBegin(GL11.GL_QUADS);
+        for (int i = 0; i < pointCount; i++) {
+            for (int j = 0; j < pointCount; j++) {
+                Vector point1 = result[i + j * (pointCount + 1)];
+                Vector point2 = result[i + (j + 1) * (pointCount + 1)];
+                Vector point3 = result[i + 1 + j * (pointCount + 1)];
+                Vector point4 = result[i + 1 + (j + 1) * (pointCount + 1)];
+                GL11.glTexCoord2d(icon.getInterpolatedU((double) i / (double) pointCount * 16.0D), icon.getInterpolatedV((double) (j + 1) / (double) pointCount * 16.0D));
+                GL11.glVertex3d(point2.posX, point2.posY, point2.posZ);
+                GL11.glTexCoord2d(icon.getInterpolatedU((double) (i + 1) / (double) pointCount * 16.0D), icon.getInterpolatedV((double) (j + 1) / (double) pointCount * 16.0D));
+                GL11.glVertex3d(point4.posX, point4.posY, point4.posZ);
+                GL11.glTexCoord2d(icon.getInterpolatedU((double) (i + 1) / (double) pointCount * 16.0D), icon.getInterpolatedV((double) j / (double) pointCount * 16.0D));
+                GL11.glVertex3d(point3.posX, point3.posY, point3.posZ);
+                GL11.glTexCoord2d(icon.getInterpolatedU((double) i / (double) pointCount * 16.0D), icon.getInterpolatedV((double) j / (double) pointCount * 16.0D));
+                GL11.glVertex3d(point1.posX, point1.posY, point1.posZ);
+
+                GL11.glTexCoord2d(icon.getInterpolatedU((double) i / (double) pointCount * 16.0D), icon.getInterpolatedV((double) j / (double) pointCount * 16.0D));
+                GL11.glVertex3d(point1.posX, point1.posY, point1.posZ);
+                GL11.glTexCoord2d(icon.getInterpolatedU((double) (i + 1) / (double) pointCount * 16.0D), icon.getInterpolatedV((double) j / (double) pointCount * 16.0D));
+                GL11.glVertex3d(point3.posX, point3.posY, point3.posZ);
+                GL11.glTexCoord2d(icon.getInterpolatedU((double) (i + 1) / (double) pointCount * 16.0D), icon.getInterpolatedV((double) (j + 1) / (double) pointCount * 16.0D));
+                GL11.glVertex3d(point4.posX, point4.posY, point4.posZ);
+                GL11.glTexCoord2d(icon.getInterpolatedU((double) i / (double) pointCount * 16.0D), icon.getInterpolatedV((double) (j + 1) / (double) pointCount * 16.0D));
+                GL11.glVertex3d(point2.posX, point2.posY, point2.posZ);
+            }
+        }
+        GL11.glEnd();
+    }
+
+    public static void renderBezierPlane(Vector[][] points, IconHolder icon, int pointCount) {
         Vector[] result = RenderHelper.getBezierPlanePoints(points, pointCount);
 
         GL11.glBegin(GL11.GL_QUADS);

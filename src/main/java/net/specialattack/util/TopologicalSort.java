@@ -24,7 +24,7 @@ import java.util.*;
 public class TopologicalSort<N> {
 
     private final List<N> nodes;
-    private final LinkedList<Vertex<N>> vertices;
+    private final LinkedList<TopologicalSort.Vertex<N>> vertices;
     private WeakReference<List<N>> lastSort = new WeakReference<List<N>>(null);
     private boolean dirty;
 
@@ -36,7 +36,7 @@ public class TopologicalSort<N> {
      */
     public TopologicalSort(Collection<N> nodes) {
         this.nodes = new ArrayList<N>(nodes);
-        this.vertices = new LinkedList<Vertex<N>>();
+        this.vertices = new LinkedList<TopologicalSort.Vertex<N>>();
         this.dirty = true;
     }
 
@@ -45,7 +45,7 @@ public class TopologicalSort<N> {
      */
     public TopologicalSort() {
         this.nodes = new ArrayList<N>();
-        this.vertices = new LinkedList<Vertex<N>>();
+        this.vertices = new LinkedList<TopologicalSort.Vertex<N>>();
         this.dirty = true;
     }
 
@@ -111,7 +111,7 @@ public class TopologicalSort<N> {
         }
         // First we construct the relations between all the nodes. Namely the parents
         int remaining = this.nodes.size();
-        HashMap<N, Relation<N>> relations = new HashMap<N, Relation<N>>(remaining);
+        HashMap<N, TopologicalSort.Relation<N>> relations = new HashMap<N, TopologicalSort.Relation<N>>(remaining);
         for (N node : this.nodes) { // Create a new blank relation for each node
             relations.put(node, new TopologicalSort.Relation<N>(node));
         }
@@ -124,7 +124,7 @@ public class TopologicalSort<N> {
         }
         Deque<N> orphans = new ArrayDeque<N>();
         List<N> result = new ArrayList<N>(remaining);
-        Iterator<Map.Entry<N, Relation<N>>> i = relations.entrySet().iterator();
+        Iterator<Map.Entry<N, TopologicalSort.Relation<N>>> i = relations.entrySet().iterator();
         while (i.hasNext()) { // Find all orphans first, as they appear at the top of the graph
             Map.Entry<N, TopologicalSort.Relation<N>> entry = i.next();
             if (entry.getValue().parents == null) { // null signals that there are no parents in this case

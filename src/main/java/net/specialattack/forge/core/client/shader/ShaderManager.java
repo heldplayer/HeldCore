@@ -19,11 +19,11 @@ import org.apache.commons.io.IOUtils;
 
 public class ShaderManager implements IResourceManagerReloadListener {
 
-    private static Map<ResourceLocation, ShaderBinding> data = Maps.newHashMap();
+    private static Map<ResourceLocation, ShaderManager.ShaderBinding> data = Maps.newHashMap();
 
     @Override
     public void onResourceManagerReload(IResourceManager manager) {
-        for (ShaderBinding data : ShaderManager.data.values()) {
+        for (ShaderManager.ShaderBinding data : ShaderManager.data.values()) {
             List<ShaderCallback> callbacks = null;
             if (data.shader != null) {
                 data.shader.deleteShader();
@@ -44,7 +44,7 @@ public class ShaderManager implements IResourceManagerReloadListener {
     public static ShaderManager.ShaderBinding getShader(ResourceLocation resourceLocation) {
         ShaderManager.ShaderBinding result = ShaderManager.data.get(resourceLocation);
         if (result == null) {
-            result = new ShaderBinding(resourceLocation);
+            result = new ShaderManager.ShaderBinding(resourceLocation);
 
             result.shader = ShaderLoader.createShader(resourceLocation);
             ShaderManager.loadMetadata(result);

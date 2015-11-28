@@ -17,13 +17,13 @@ public class SGComboBox extends SGInteractable {
             return SGComboBox.this.getTextColor();
         }
     };
-    private List<Value> values;
+    private List<SGComboBox.Value> values;
 
     public SGComboBox(Iterable<String> values) {
-        this.values = new ArrayList<Value>();
+        this.values = new ArrayList<SGComboBox.Value>();
         if (values != null) {
             for (String value : values) {
-                this.values.add(new Value(value));
+                this.values.add(new SGComboBox.Value(value));
             }
         }
         this.popout.setLayoutManager(new FlowSGLayoutManager(FlowDirection.VERTICAL, FlowLayout.MIN));
@@ -43,10 +43,10 @@ public class SGComboBox extends SGInteractable {
     }
 
     public void setValue(String value) {
-        Iterator<Value> i = this.values.iterator();
+        Iterator<SGComboBox.Value> i = this.values.iterator();
         String selected = "";
         while (i.hasNext()) {
-            Value next = i.next();
+            SGComboBox.Value next = i.next();
             if (next.getValue().equals(value)) {
                 next.getOption().selected = true;
                 selected = value;
@@ -62,14 +62,14 @@ public class SGComboBox extends SGInteractable {
     }
 
     public void addOption(String value) {
-        this.values.add(new Value(value));
+        this.values.add(new SGComboBox.Value(value));
         this.rebuildOptions();
     }
 
     public void removeOption(String value) {
-        Iterator<Value> i = this.values.iterator();
+        Iterator<SGComboBox.Value> i = this.values.iterator();
         while (i.hasNext()) {
-            Value next = i.next();
+            SGComboBox.Value next = i.next();
             if (next.getValue().equals(value)) {
                 i.remove();
             }
@@ -81,7 +81,7 @@ public class SGComboBox extends SGInteractable {
         for (SGComponent component : this.popout.getChildren()) {
             this.popout.removeChild(component);
         }
-        for (Value value : this.values) {
+        for (SGComboBox.Value value : this.values) {
             this.popout.addChild(value.option, true);
         }
     }
@@ -201,17 +201,17 @@ public class SGComboBox extends SGInteractable {
     private class Value {
 
         private String value;
-        private Option option;
+        private SGComboBox.Option option;
         private boolean selected;
 
         public Value(String value) {
             this.value = value;
-            this.option = new Option(value);
+            this.option = new SGComboBox.Option(value);
             this.option.setMouseHandler(new MouseHandler() {
                 @Override
                 public boolean onClick(int mouseX, int mouseY, int button) {
-                    if (Value.this.option.isEnabled()) {
-                        SGComboBox.this.setValue(Value.this.value);
+                    if (SGComboBox.Value.this.option.isEnabled()) {
+                        SGComboBox.this.setValue(SGComboBox.Value.this.value);
                         return true;
                     }
                     return false;
@@ -223,7 +223,7 @@ public class SGComboBox extends SGInteractable {
             return this.value;
         }
 
-        public Option getOption() {
+        public SGComboBox.Option getOption() {
             return this.option;
         }
 
@@ -237,11 +237,11 @@ public class SGComboBox extends SGInteractable {
             if (this == o) {
                 return true;
             }
-            if (o == null || getClass() != o.getClass()) {
+            if (o == null || this.getClass() != o.getClass()) {
                 return false;
             }
 
-            Value value1 = (Value) o;
+            SGComboBox.Value value1 = (SGComboBox.Value) o;
             return this.value.equals(value1.value);
         }
 
@@ -256,7 +256,7 @@ public class SGComboBox extends SGInteractable {
         private SGLabel innerLabel = new SGLabel() {
             @Override
             public Color getColor() {
-                return Option.this.getTextColor();
+                return SGComboBox.Option.this.getTextColor();
             }
         };
         private Color colorSelected = StyleDefs.COLOR_BUTTON_TEXT;

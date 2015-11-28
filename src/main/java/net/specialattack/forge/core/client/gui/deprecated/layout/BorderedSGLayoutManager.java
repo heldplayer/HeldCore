@@ -178,17 +178,17 @@ public class BorderedSGLayoutManager extends SGLayoutManager {
 
     @Override
     public void addComponent(SGComponent component, Object param) {
-        if (param == null || !(param instanceof Border)) {
+        if (param == null || !(param instanceof BorderedSGLayoutManager.Border)) {
             throw new IllegalArgumentException("The layout argument has to be an instance of Border");
         }
         if (component == null) {
             throw new IllegalArgumentException("The component argument cannot be null");
         }
 
-        this.addComponent(component, (Border) param);
+        this.addComponent(component, (BorderedSGLayoutManager.Border) param);
     }
 
-    private void addComponent(SGComponent component, Border param) {
+    private void addComponent(SGComponent component, BorderedSGLayoutManager.Border param) {
         this.components[(param).ordinal()] = component;
     }
 
@@ -214,18 +214,18 @@ public class BorderedSGLayoutManager extends SGLayoutManager {
         int limitHeight = component.getHeightLimit();
         int width = 0;
         int height = 0;
-        for (Border border : Border.values()) {
+        for (BorderedSGLayoutManager.Border border : BorderedSGLayoutManager.Border.values()) {
             SGComponent current = this.components[border.ordinal()];
             if (current != null) {
                 Region predicted = current.predictSize();
-                if (border == Border.TOP || border == Border.BOTTOM || border == Border.CENTER) {
+                if (border == BorderedSGLayoutManager.Border.TOP || border == BorderedSGLayoutManager.Border.BOTTOM || border == BorderedSGLayoutManager.Border.CENTER) {
                     if (predicted == null) {
                         height += current.getPreferredHeight();
                     } else {
                         height += MathHelper.max(current.getPreferredHeight(), predicted.getHeight());
                     }
                 }
-                if (border == Border.LEFT || border == Border.RIGHT || border == Border.CENTER) {
+                if (border == BorderedSGLayoutManager.Border.LEFT || border == BorderedSGLayoutManager.Border.RIGHT || border == BorderedSGLayoutManager.Border.CENTER) {
                     if (predicted == null) {
                         width += current.getPreferredWidth();
                     } else {

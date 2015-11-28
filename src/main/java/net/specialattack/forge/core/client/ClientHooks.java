@@ -19,9 +19,9 @@ public final class ClientHooks {
 
     protected static final FloatBuffer COLOR_MATRIX = BufferUtils.createFloatBuffer(16);
     public static ShaderManager.ShaderBinding colorBlindShader;
-    private static Set<ScreenColorizer> colorizers = new TreeSet<ScreenColorizer>(new Comparator<ScreenColorizer>() {
+    private static Set<ClientHooks.ScreenColorizer> colorizers = new TreeSet<ClientHooks.ScreenColorizer>(new Comparator<ClientHooks.ScreenColorizer>() {
         @Override
-        public int compare(ScreenColorizer o1, ScreenColorizer o2) {
+        public int compare(ClientHooks.ScreenColorizer o1, ClientHooks.ScreenColorizer o2) {
             int compared = Integer.valueOf(o1.getPriority()).compareTo(o2.getPriority());
             if (compared != 0) {
                 return compared;
@@ -41,7 +41,7 @@ public final class ClientHooks {
     public static void framebufferRenderPre() {
         if (OpenGlHelper.shadersSupported && OpenGlHelper.framebufferSupported) {
             boolean dirty = false;
-            for (ScreenColorizer colorizer : ClientHooks.colorizers) {
+            for (ClientHooks.ScreenColorizer colorizer : ClientHooks.colorizers) {
                 if (colorizer.isDirty()) {
                     dirty = true;
                     break;
@@ -51,7 +51,7 @@ public final class ClientHooks {
             if (dirty) {
                 Matrix3f matrix = new Matrix3f();
                 matrix.setIdentity();
-                for (ScreenColorizer colorizer : ClientHooks.colorizers) {
+                for (ClientHooks.ScreenColorizer colorizer : ClientHooks.colorizers) {
                     matrix = colorizer.apply(matrix);
                 }
 
@@ -69,7 +69,7 @@ public final class ClientHooks {
         }
     }
 
-    public static void addColorizer(ScreenColorizer colorizer) {
+    public static void addColorizer(ClientHooks.ScreenColorizer colorizer) {
         ClientHooks.colorizers.add(colorizer);
     }
 

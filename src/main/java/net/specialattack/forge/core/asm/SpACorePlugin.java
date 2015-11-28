@@ -18,7 +18,7 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
     protected static boolean debug = false;
     public static final Logger LOG = LogManager.getLogger("SpACore-ASM");
 
-    public static Config config = new Config();
+    public static SpACorePlugin.Config config = new SpACorePlugin.Config();
 
     @Configuration("spacore-asm.cfg")
     public static class Config {

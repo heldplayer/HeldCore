@@ -4,22 +4,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.specialattack.forge.core.client.RenderHelper;
+import net.specialattack.forge.core.client.texture.IconHolder;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class GuiButtonIcon extends GuiButton {
 
-    private TextureAtlasSprite normalIcon;
-    private TextureAtlasSprite hoverIcon;
-    private TextureAtlasSprite disabledIcon;
+    private IconHolder normalIcon;
+    private IconHolder hoverIcon;
+    private IconHolder disabledIcon;
     private ResourceLocation iconMap;
 
-    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, TextureAtlasSprite normalIcon, ResourceLocation iconMap) {
+    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, IconHolder normalIcon, ResourceLocation iconMap) {
         super(id, posX, posY, width, height, text);
         this.normalIcon = normalIcon;
         this.hoverIcon = normalIcon;
@@ -27,7 +27,7 @@ public class GuiButtonIcon extends GuiButton {
         this.iconMap = iconMap;
     }
 
-    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, TextureAtlasSprite normalIcon, TextureAtlasSprite hoverIcon, ResourceLocation iconMap) {
+    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, IconHolder normalIcon, IconHolder hoverIcon, ResourceLocation iconMap) {
         super(id, posX, posY, width, height, text);
         this.normalIcon = normalIcon;
         this.hoverIcon = hoverIcon;
@@ -35,7 +35,7 @@ public class GuiButtonIcon extends GuiButton {
         this.iconMap = iconMap;
     }
 
-    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, TextureAtlasSprite normalIcon, TextureAtlasSprite hoverIcon, TextureAtlasSprite disabledIcon, ResourceLocation iconMap) {
+    public GuiButtonIcon(int id, int posX, int posY, int width, int height, String text, IconHolder normalIcon, IconHolder hoverIcon, IconHolder disabledIcon, ResourceLocation iconMap) {
         super(id, posX, posY, width, height, text);
         this.normalIcon = normalIcon;
         this.hoverIcon = hoverIcon;
@@ -58,7 +58,7 @@ public class GuiButtonIcon extends GuiButton {
             this.mouseDragged(mc, mouseX, mouseY);
             int textColor = 0xE0E0E0;
 
-            TextureAtlasSprite icon = this.normalIcon;
+            IconHolder icon = this.normalIcon;
 
             if (this.packedFGColour != 0) {
                 textColor = this.packedFGColour;
@@ -79,9 +79,10 @@ public class GuiButtonIcon extends GuiButton {
             }
 
             if (icon != null && this.iconMap != null) {
+                icon.bind();
                 GlStateManager.color(1.0F, 1.0F, 1.0F);
                 RenderHelper.bindTexture(this.iconMap);
-                this.drawTexturedModalRect(iconX + this.xPosition, iconY + this.yPosition, icon, 16, 16);
+                GuiHelper.drawTexturedModalRect(iconX + this.xPosition, iconY + this.yPosition, 16, 16, 0.0F, icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV());
             }
         }
     }

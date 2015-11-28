@@ -17,6 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.specialattack.forge.core.client.MC;
 import net.specialattack.forge.core.client.RenderHelper;
 import net.specialattack.forge.core.client.resources.data.TextureMetadataSection;
+import net.specialattack.forge.core.client.texture.IconHolder;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -446,6 +447,20 @@ public final class GuiHelper {
     }
 
     public static void drawTexturedModalRect(int startX, int startY, TextureAtlasSprite icon, int width, int height) {
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2d(icon.getMinU(), icon.getMaxV());
+        GL11.glVertex3d(startX, startY + height, 0.0D);
+        GL11.glTexCoord2d(icon.getMaxU(), icon.getMaxV());
+        GL11.glVertex3d(startX + width, startY + height, 0.0D);
+        GL11.glTexCoord2d(icon.getMaxU(), icon.getMinV());
+        GL11.glVertex3d(startX + width, startY, 0.0D);
+        GL11.glTexCoord2d(icon.getMinU(), icon.getMinV());
+        GL11.glVertex3d(startX, startY, 0.0D);
+        GL11.glEnd();
+    }
+
+    public static void drawTexturedModalRect(int startX, int startY, IconHolder icon, int width, int height) {
+        icon.bind();
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2d(icon.getMinU(), icon.getMaxV());
         GL11.glVertex3d(startX, startY + height, 0.0D);

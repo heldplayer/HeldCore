@@ -11,15 +11,13 @@ import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconCreator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.data.IMetadataSerializer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Timer;
-import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.fml.client.GuiModList;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -48,7 +46,7 @@ import net.specialattack.forge.core.sync.SyncTileEntity;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
 
-    public static TextureAtlasSprite iconReportBug;
+    public static IconHolder iconReportBug;
     public static Timer minecraftTimer;
     public static IMetadataSerializer metadataSerializer;
     public static Set<IconHolder> iconHolders = new HashSet<IconHolder>();
@@ -122,15 +120,13 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void registerIconHolder(TextureAtlasSprite icon) {
-        if (icon instanceof IconHolder) {
-            ClientProxy.iconHolders.add((IconHolder) icon);
-        }
+    public void registerIconHolder(IconHolder icon) {
+        ClientProxy.iconHolders.add(icon);
     }
 
     @SuppressWarnings("unchecked")
     @SubscribeEvent
-    public void onInitGuiPost(InitGuiEvent.Post event) {
+    public void onInitGuiPost(GuiScreenEvent.InitGuiEvent.Post event) {
         if (SpACore.config.showReportBugs) {
             if (event.gui != null && event.gui instanceof GuiMainMenu) {
                 int centerX = event.gui.width / 2;
@@ -194,7 +190,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @SubscribeEvent
-    public void onActionPerformedPost(ActionPerformedEvent.Pre event) {
+    public void onActionPerformedPost(GuiScreenEvent.ActionPerformedEvent.Pre event) {
         if (SpACore.config.showReportBugs) {
             if (event.button != null && event.button.id == -123 && event.gui != null && event.gui instanceof GuiMainMenu) {
                 MC.getMc().displayGuiScreen(new GuiSGTest());

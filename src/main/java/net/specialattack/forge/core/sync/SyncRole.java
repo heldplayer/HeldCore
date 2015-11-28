@@ -12,7 +12,7 @@ public class SyncRole {
 
     private static Map<String, SyncRole> roles = new TreeMap<String, SyncRole>();
 
-    public static final SyncRole ROLE_GLOBAL = new SyncRole("SpACore:Global", new RoleHandler() {
+    public static final SyncRole ROLE_GLOBAL = new SyncRole("SpACore:Global", new SyncRole.RoleHandler() {
         @Override
         @SideOnly(Side.CLIENT)
         public SyncTrackingStorage handle(UUID uuid, boolean startTracking) {
@@ -29,7 +29,7 @@ public class SyncRole {
             return null;
         }
     });
-    public static final SyncRole ROLE_WORLD = new SyncRole("SpACore:World", new RoleHandler() {
+    public static final SyncRole ROLE_WORLD = new SyncRole("SpACore:World", new SyncRole.RoleHandler() {
         @Override
         @SideOnly(Side.CLIENT)
         public SyncTrackingStorage handle(UUID uuid, boolean startTracking) {
@@ -50,9 +50,9 @@ public class SyncRole {
     public static final SyncRole ROLE_DUMMY = new SyncRole("SpACore:Dummy", null);
 
     public final String name;
-    public final RoleHandler handler;
+    public final SyncRole.RoleHandler handler;
 
-    public SyncRole(String name, RoleHandler handler) {
+    public SyncRole(String name, SyncRole.RoleHandler handler) {
         if (SyncRole.roles.containsKey(name)) {
             throw new IllegalArgumentException("Duplicate role " + name + " already exists!");
         }

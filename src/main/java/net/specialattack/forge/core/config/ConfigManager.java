@@ -52,7 +52,7 @@ public class ConfigManager {
                     name = option.name().trim();
                 }
 
-                Option opt;
+                ConfigManager.Option opt;
                 Class<?> type = field.getType();
 
                 boolean isArray = false;
@@ -64,16 +64,16 @@ public class ConfigManager {
                     throw new IllegalStateException(String.format("Mod %s tried loading a config with an Array tag on a non-array for option %s", mod.getModId(), name));
                 }
 
-                Category category = manager.resolveCategory(option.category());
+                ConfigManager.Category category = manager.resolveCategory(option.category());
 
                 if (type == int.class) {
-                    opt = new IntOption(name, category);
+                    opt = new ConfigManager.IntOption(name, category);
                 } else if (type == double.class) {
-                    opt = new DoubleOption(name, category);
+                    opt = new ConfigManager.DoubleOption(name, category);
                 } else if (type == boolean.class) {
-                    opt = new BooleanOption(name, category);
+                    opt = new ConfigManager.BooleanOption(name, category);
                 } else if (type == String.class) {
-                    opt = new StringOption(name, category);
+                    opt = new ConfigManager.StringOption(name, category);
                 } else {
                     throw new IllegalStateException(String.format("Mod %s tried loading a config with an unsupported type for option %s", mod.getModId(), name));
                 }
@@ -157,7 +157,7 @@ public class ConfigManager {
     public String modId;
     public net.minecraftforge.common.config.Configuration configuration;
     private Object obj;
-    public Map<String, Category> categories = new TreeMap<String, Category>();
+    public Map<String, ConfigManager.Category> categories = new TreeMap<String, ConfigManager.Category>();
     private Runnable reloadListener;
 
     public ConfigManager(String name, String modId, Object obj) {
@@ -173,8 +173,8 @@ public class ConfigManager {
 
     public void reload() {
         try {
-            for (Category category : this.categories.values()) {
-                for (Option option : category.options.values()) {
+            for (ConfigManager.Category category : this.categories.values()) {
+                for (ConfigManager.Option option : category.options.values()) {
                     option.reload();
                 }
             }
@@ -186,10 +186,10 @@ public class ConfigManager {
         }
     }
 
-    private Category resolveCategory(String name) {
-        Category result = this.categories.get(name);
+    private ConfigManager.Category resolveCategory(String name) {
+        ConfigManager.Category result = this.categories.get(name);
         if (result == null) {
-            result = new Category(name);
+            result = new ConfigManager.Category(name);
             result.languageKey = this.name + ":" + name;
             this.categories.put(name, result);
         }
@@ -200,16 +200,16 @@ public class ConfigManager {
 
         public String name;
         public String languageKey;
-        public Map<String, Category> children;
-        public Map<String, Option> options;
+        public Map<String, ConfigManager.Category> children;
+        public Map<String, ConfigManager.Option> options;
 
         public Category(String name) {
             this.name = name;
         }
 
-        public Map<String, Option> getOptions() {
+        public Map<String, ConfigManager.Option> getOptions() {
             if (this.options == null) {
-                this.options = new TreeMap<String, Option>();
+                this.options = new TreeMap<String, ConfigManager.Option>();
             }
             return this.options;
         }
@@ -239,13 +239,13 @@ public class ConfigManager {
             ArrayList<IConfigElement> result = new ArrayList<IConfigElement>();
 
             if (this.children != null) {
-                for (Category category : this.children.values()) {
+                for (ConfigManager.Category category : this.children.values()) {
                     result.add(category);
                 }
             }
 
             if (this.options != null) {
-                for (Option key : this.options.values()) {
+                for (ConfigManager.Option key : this.options.values()) {
                     result.add(key);
                 }
             }
@@ -277,7 +277,7 @@ public class ConfigManager {
     private static abstract class Option extends ElementStub.Element {
 
         public String name, alias, aliasCategory;
-        public Category category;
+        public ConfigManager.Category category;
         public String languageKey;
         public Configuration.CSide side, syncSide;
         public boolean needsRestart, needsRelog;
@@ -289,7 +289,7 @@ public class ConfigManager {
         protected ConfigManager manager;
         protected Property property;
 
-        public Option(String name, Category category) {
+        public Option(String name, ConfigManager.Category category) {
             this.name = name;
             this.category = category;
             category.getOptions().put(this.name, this);
@@ -382,13 +382,13 @@ public class ConfigManager {
         }
     }
 
-    private static class IntOption extends Option {
+    private static class IntOption extends ConfigManager.Option {
 
         private int def;
         private int[] defA;
         private int min, max;
 
-        public IntOption(String name, Category category) {
+        public IntOption(String name, ConfigManager.Category category) {
             super(name, category);
         }
 
@@ -541,13 +541,13 @@ public class ConfigManager {
         }
     }
 
-    private static class DoubleOption extends Option {
+    private static class DoubleOption extends ConfigManager.Option {
 
         private double def;
         private double[] defA;
         private double min, max;
 
-        public DoubleOption(String name, Category category) {
+        public DoubleOption(String name, ConfigManager.Category category) {
             super(name, category);
         }
 
@@ -700,12 +700,12 @@ public class ConfigManager {
         }
     }
 
-    private static class BooleanOption extends Option {
+    private static class BooleanOption extends ConfigManager.Option {
 
         private boolean def;
         private boolean[] defA;
 
-        public BooleanOption(String name, Category category) {
+        public BooleanOption(String name, ConfigManager.Category category) {
             super(name, category);
         }
 
@@ -840,14 +840,14 @@ public class ConfigManager {
         }
     }
 
-    private static class StringOption extends Option {
+    private static class StringOption extends ConfigManager.Option {
 
         private String def;
         private String[] defA;
         private String[] options;
         private Pattern pattern;
 
-        public StringOption(String name, Category category) {
+        public StringOption(String name, ConfigManager.Category category) {
             super(name, category);
         }
 

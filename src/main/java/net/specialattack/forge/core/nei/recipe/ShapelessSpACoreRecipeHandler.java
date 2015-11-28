@@ -6,6 +6,7 @@ import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.ShapedRecipeHandler;
+import codechicken.nei.recipe.TemplateRecipeHandler;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.StatCollector;
 import net.specialattack.forge.core.crafting.CraftingHelper;
 import net.specialattack.forge.core.crafting.FakeShapelessSpACoreRecipe;
 import net.specialattack.forge.core.crafting.ShapelessSpACoreRecipe;
@@ -36,12 +36,12 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
             List<IRecipe> allrecipes = new ArrayList<IRecipe>(CraftingManager.getInstance().getRecipeList());
             allrecipes.addAll(CraftingHelper.fakeRecipes);
             for (IRecipe irecipe : allrecipes) {
-                CachedShapelessRecipe recipe = null;
+                ShapelessSpACoreRecipeHandler.CachedShapelessRecipe recipe = null;
 
                 if (irecipe instanceof FakeShapelessSpACoreRecipe) {
-                    recipe = ((FakeShapelessSpACoreRecipe) irecipe).isEnabled() ? new CachedShapelessRecipe((FakeShapelessSpACoreRecipe) irecipe) : null;
+                    recipe = ((FakeShapelessSpACoreRecipe) irecipe).isEnabled() ? new ShapelessSpACoreRecipeHandler.CachedShapelessRecipe((FakeShapelessSpACoreRecipe) irecipe) : null;
                 } else if (irecipe instanceof ShapelessSpACoreRecipe) {
-                    recipe = new CachedShapelessRecipe((ShapelessSpACoreRecipe) irecipe);
+                    recipe = new ShapelessSpACoreRecipeHandler.CachedShapelessRecipe((ShapelessSpACoreRecipe) irecipe);
                 }
 
                 if (recipe == null) {
@@ -61,12 +61,12 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
         allrecipes.addAll(CraftingHelper.fakeRecipes);
         for (IRecipe irecipe : allrecipes) {
             if (NEIServerUtils.areStacksSameTypeCrafting(irecipe.getRecipeOutput(), result)) {
-                CachedShapelessRecipe recipe = null;
+                ShapelessSpACoreRecipeHandler.CachedShapelessRecipe recipe = null;
 
                 if (irecipe instanceof FakeShapelessSpACoreRecipe) {
-                    recipe = ((FakeShapelessSpACoreRecipe) irecipe).isEnabled() ? new CachedShapelessRecipe((FakeShapelessSpACoreRecipe) irecipe) : null;
+                    recipe = ((FakeShapelessSpACoreRecipe) irecipe).isEnabled() ? new ShapelessSpACoreRecipeHandler.CachedShapelessRecipe((FakeShapelessSpACoreRecipe) irecipe) : null;
                 } else if (irecipe instanceof ShapelessSpACoreRecipe) {
-                    recipe = new CachedShapelessRecipe((ShapelessSpACoreRecipe) irecipe);
+                    recipe = new ShapelessSpACoreRecipeHandler.CachedShapelessRecipe((ShapelessSpACoreRecipe) irecipe);
                 }
                 if (recipe == null) {
                     continue;
@@ -81,12 +81,12 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
         List<IRecipe> allrecipes = new ArrayList<IRecipe>(CraftingManager.getInstance().getRecipeList());
         allrecipes.addAll(CraftingHelper.fakeRecipes);
         for (IRecipe irecipe : allrecipes) {
-            CachedShapelessRecipe recipe = null;
+            ShapelessSpACoreRecipeHandler.CachedShapelessRecipe recipe = null;
 
             if (irecipe instanceof FakeShapelessSpACoreRecipe) {
-                recipe = ((FakeShapelessSpACoreRecipe) irecipe).isEnabled() ? new CachedShapelessRecipe((FakeShapelessSpACoreRecipe) irecipe) : null;
+                recipe = ((FakeShapelessSpACoreRecipe) irecipe).isEnabled() ? new ShapelessSpACoreRecipeHandler.CachedShapelessRecipe((FakeShapelessSpACoreRecipe) irecipe) : null;
             } else if (irecipe instanceof ShapelessSpACoreRecipe) {
-                recipe = new CachedShapelessRecipe((ShapelessSpACoreRecipe) irecipe);
+                recipe = new ShapelessSpACoreRecipeHandler.CachedShapelessRecipe((ShapelessSpACoreRecipe) irecipe);
             }
             if (recipe == null) {
                 continue;
@@ -106,7 +106,7 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
     @Override
     public void drawExtras(int recipeId) {
         super.drawExtras(recipeId);
-        CachedShapelessRecipe recipe = (CachedShapelessRecipe) this.arecipes.get(recipeId);
+        ShapelessSpACoreRecipeHandler.CachedShapelessRecipe recipe = (ShapelessSpACoreRecipeHandler.CachedShapelessRecipe) this.arecipes.get(recipeId);
 
         if (recipe != null && recipe.recipe != null && recipe.recipe.handler != null) {
             GuiDraw.drawStringC(recipe.recipe.handler.getOwningModName(), 124, 8, 0x404040, false);
@@ -118,8 +118,8 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
         super.onUpdate();
 
         if (!NEIClientUtils.shiftKey() && this.cycleticks % 20 == 0) {
-            for (CachedRecipe cachedRecipe : this.arecipes) {
-                CachedShapelessRecipe recipe = (CachedShapelessRecipe) cachedRecipe;
+            for (TemplateRecipeHandler.CachedRecipe cachedRecipe : this.arecipes) {
+                ShapelessSpACoreRecipeHandler.CachedShapelessRecipe recipe = (ShapelessSpACoreRecipeHandler.CachedShapelessRecipe) cachedRecipe;
 
                 recipe.getCycledIngredients(this.cycleticks / 20, recipe.ingredients);
 
@@ -130,7 +130,7 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
 
     @Override
     public List<String> handleItemTooltip(GuiRecipe gui, ItemStack stack, List<String> currenttip, int recipeId) {
-        CachedShapelessRecipe recipe = (CachedShapelessRecipe) this.arecipes.get(recipeId);
+        ShapelessSpACoreRecipeHandler.CachedShapelessRecipe recipe = (ShapelessSpACoreRecipeHandler.CachedShapelessRecipe) this.arecipes.get(recipeId);
 
         currenttip = super.handleItemTooltip(gui, stack, currenttip, recipeId);
 
@@ -150,7 +150,7 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
         return currenttip;
     }
 
-    public class CachedShapelessRecipe extends CachedRecipe {
+    public class CachedShapelessRecipe extends TemplateRecipeHandler.CachedRecipe {
 
         public List<PositionedStack> ingredients;
         public List<ItemStack> input;

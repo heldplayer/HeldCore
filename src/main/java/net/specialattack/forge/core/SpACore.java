@@ -1,6 +1,5 @@
 package net.specialattack.forge.core;
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ICrashCallable;
 import net.minecraftforge.fml.common.Mod;
@@ -9,6 +8,7 @@ import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+import net.specialattack.forge.core.client.texture.IconHolder;
 import net.specialattack.forge.core.config.ConfigManager;
 import net.specialattack.forge.core.config.Configuration;
 import net.specialattack.forge.core.packet.SpAPacketHandler;
@@ -32,7 +32,7 @@ public class SpACore extends SpACoreMod {
 
     public static SpAPacketHandler<SyncPacket> syncPacketHandler;
 
-    public static Config config;
+    public static SpACore.Config config;
     public static ConfigManager configManager;
 
     @Configuration("spacore.cfg")
@@ -87,7 +87,7 @@ public class SpACore extends SpACoreMod {
     public void preInit(FMLPreInitializationEvent event) {
         Objects.log = event.getModLog();
 
-        SpACore.configManager = ConfigManager.registerConfig(SpACore.config = new Config());
+        SpACore.configManager = ConfigManager.registerConfig(SpACore.config = new SpACore.Config());
 
         SpACore.syncPacketHandler = new SpAPacketHandler<SyncPacket>("SpACore:Sync", //
                 // Server packets
@@ -124,7 +124,7 @@ public class SpACore extends SpACoreMod {
         CommonProxy.serverScheduler = null;
     }
 
-    public static void registerIconHolder(TextureAtlasSprite holder) {
+    public static void registerIconHolder(IconHolder holder) {
         SpACore.proxy.registerIconHolder(holder);
     }
 }

@@ -4,7 +4,7 @@ import net.minecraft.client.resources.data.IMetadataSection;
 
 public class TextureMetadataSection implements IMetadataSection {
 
-    public Repeat repeat;
+    public TextureMetadataSection.Repeat repeat;
     public int textureWidth, textureHeight;
 
     public static class Repeat {
