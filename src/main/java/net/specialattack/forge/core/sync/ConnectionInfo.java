@@ -18,9 +18,9 @@ public class ConnectionInfo implements Comparable<ConnectionInfo> {
     private UUID uuid;
     private Set<String> providers;
 
-    public Set<PlayerTracker> trackers = new HashSet<PlayerTracker>();
+    public Set<PlayerTracker> trackers = Collections.synchronizedSet(new HashSet<PlayerTracker>());
     protected int refreshRate, ticks;
-    protected List<NBTTagCompound> trackingUpdates = new ArrayList<NBTTagCompound>();
+    protected List<NBTTagCompound> trackingUpdates = Collections.synchronizedList(new ArrayList<NBTTagCompound>());
 
     public ConnectionInfo(NetHandlerPlayServer handler) {
         this(handler.playerEntity.getUniqueID(), Side.SERVER);

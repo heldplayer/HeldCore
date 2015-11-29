@@ -1,6 +1,16 @@
-plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.2"
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
+    }
 }
+apply plugin: 'net.minecraftforge.gradle.forge'
 
 repositories {
     ivy {
@@ -95,7 +105,7 @@ processResources {
 jar {
     manifest {
         attributes 'FMLCorePlugin': 'net.specialattack.forge.core.asm.SpACorePlugin'
-        attributes 'AccessTransformer': 'spacore_at.cfg'
+        attributes 'FMLAT': 'spacore_at.cfg'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }
@@ -106,7 +116,7 @@ task buildDev(type: Jar) {
     version = "${project.version}"
     manifest {
         attributes 'FMLCorePlugin': 'net.specialattack.forge.core.asm.SpACorePlugin'
-        attributes 'AccessTransformer': 'spacore_at.cfg'
+        attributes 'FMLAT': 'spacore_at.cfg'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }

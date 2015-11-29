@@ -68,7 +68,8 @@ public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
     public String getAccessTransformerClass() {
-        return "net.specialattack.forge.core.asm.SpACoreAccessTransformer";
+        return null;
+        //return "net.specialattack.forge.core.asm.SpACoreAccessTransformer";
     }
 
     @Override
