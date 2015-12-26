@@ -17,6 +17,7 @@ import net.specialattack.forge.core.config.ConfigManager;
 import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.SyncServerAPI;
 import net.specialattack.forge.core.sync.TileEntitySyncObjectProvider;
+import net.specialattack.util.Consumer;
 import net.specialattack.util.Scheduler;
 
 public class CommonProxy extends SpACoreProxy {
@@ -73,6 +74,10 @@ public class CommonProxy extends SpACoreProxy {
 
     public void registerIconHolder(IconHolder holder) {
     }
+
+    public void registerIconProvider(Consumer provider) {
+    }
+
 
     public Side getSide() {
         return Side.SERVER;

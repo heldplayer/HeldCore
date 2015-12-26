@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconCreator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.data.IMetadataSerializer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,6 +43,7 @@ import net.specialattack.forge.core.sync.SyncClientDebug;
 import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.SyncHandlerClient;
 import net.specialattack.forge.core.sync.SyncTileEntity;
+import net.specialattack.util.Consumer;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
@@ -49,7 +51,9 @@ public class ClientProxy extends CommonProxy {
     public static IconHolder iconReportBug;
     public static Timer minecraftTimer;
     public static IMetadataSerializer metadataSerializer;
+    public static TextureAtlasSprite missingSprite;
     public static Set<IconHolder> iconHolders = new HashSet<IconHolder>();
+    public static Set<Consumer<TextureMap>> iconProviders = new HashSet<Consumer<TextureMap>>();
     public static SyncHandlerClient syncClientInstance;
 
     public static Timer getMinecraftTimer() {
@@ -76,14 +80,19 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent event) {
         super.init(event);
 
-        MC.getTextureManager().loadTickableTexture(Assets.TEXTURE_MAP, new TextureMap("textures/spacore", new IIconCreator() {
+        TextureMap map = new TextureMap("textures/spacore", new IIconCreator() {
             @Override
             public void registerSprites(TextureMap map) {
                 for (IconHolder holder : ClientProxy.iconHolders) {
                     holder.register(map);
                 }
+                for (Consumer<TextureMap> provider : ClientProxy.iconProviders) {
+                    provider.accept(map);
+                }
             }
-        }));
+        });
+        MC.getTextureManager().loadTickableTexture(Assets.TEXTURE_MAP, map);
+        ClientProxy.missingSprite = map.getMissingSprite();
 
         FMLCommonHandler.instance().bus().register(this);
         ClientProxy.metadataSerializer = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, MC.getMc(), "metadataSerializer_", "field_110452_an");
@@ -122,6 +131,12 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void registerIconHolder(IconHolder icon) {
         ClientProxy.iconHolders.add(icon);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void registerIconProvider(Consumer provider) {
+        ClientProxy.iconProviders.add((Consumer<TextureMap>) provider);
     }
 
     @SuppressWarnings("unchecked")

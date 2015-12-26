@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.specialattack.forge.core.client.ClientProxy;
 
 public class IconHolder {
 
@@ -33,7 +34,7 @@ public class IconHolder {
     @SideOnly(Side.CLIENT)
     public int getIconWidth() {
         if (this.icon == null) {
-            return 0;
+            return ClientProxy.missingSprite.getIconWidth();
         }
         return this.icon.getIconWidth();
     }
@@ -41,7 +42,7 @@ public class IconHolder {
     @SideOnly(Side.CLIENT)
     public int getIconHeight() {
         if (this.icon == null) {
-            return 0;
+            return ClientProxy.missingSprite.getIconHeight();
         }
         return this.icon.getIconHeight();
     }
@@ -49,7 +50,7 @@ public class IconHolder {
     @SideOnly(Side.CLIENT)
     public float getMinU() {
         if (this.icon == null) {
-            return 0.0F;
+            return ClientProxy.missingSprite.getMinU();
         }
         return this.icon.getMinU();
     }
@@ -57,7 +58,7 @@ public class IconHolder {
     @SideOnly(Side.CLIENT)
     public float getMaxU() {
         if (this.icon == null) {
-            return 0.0F;
+            return ClientProxy.missingSprite.getMaxU();
         }
         return this.icon.getMaxU();
     }
@@ -65,7 +66,7 @@ public class IconHolder {
     @SideOnly(Side.CLIENT)
     public float getInterpolatedU(double offset) {
         if (this.icon == null) {
-            return 0.0F;
+            return ClientProxy.missingSprite.getInterpolatedU(offset);
         }
         return this.icon.getInterpolatedU(offset);
     }
@@ -73,7 +74,7 @@ public class IconHolder {
     @SideOnly(Side.CLIENT)
     public float getMinV() {
         if (this.icon == null) {
-            return 0.0F;
+            return ClientProxy.missingSprite.getMinV();
         }
         return this.icon.getMinV();
     }
@@ -81,7 +82,7 @@ public class IconHolder {
     @SideOnly(Side.CLIENT)
     public float getMaxV() {
         if (this.icon == null) {
-            return 0.0F;
+            return ClientProxy.missingSprite.getMaxV();
         }
         return this.icon.getMaxV();
     }
@@ -89,7 +90,7 @@ public class IconHolder {
     @SideOnly(Side.CLIENT)
     public float getInterpolatedV(double offset) {
         if (this.icon == null) {
-            return 0.0F;
+            return ClientProxy.missingSprite.getInterpolatedV(offset);
         }
         return this.icon.getInterpolatedV(offset);
     }

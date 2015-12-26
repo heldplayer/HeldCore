@@ -15,6 +15,7 @@ import net.specialattack.forge.core.packet.SpAPacketHandler;
 import net.specialattack.forge.core.seasonal.CommonSeasonal;
 import net.specialattack.forge.core.sync.SyncHandler;
 import net.specialattack.forge.core.sync.packet.*;
+import net.specialattack.util.Consumer;
 import net.specialattack.util.Scheduler;
 
 @Mod(name = Objects.MOD_NAME, modid = Objects.MOD_ID, guiFactory = Objects.GUI_FACTORY)
@@ -122,5 +123,9 @@ public class SpACore extends SpACoreMod {
 
     public static void registerIconHolder(IconHolder holder) {
         SpACore.proxy.registerIconHolder(holder);
+    }
+
+    public static void registerIconProvider(Consumer provider) {
+        SpACore.proxy.registerIconProvider(provider);
     }
 }
