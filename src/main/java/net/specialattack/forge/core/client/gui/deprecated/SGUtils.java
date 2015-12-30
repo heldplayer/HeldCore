@@ -47,7 +47,7 @@ public final class SGUtils {
 
     private static void clipRegion(Region region) {
         Minecraft mc = MC.getMc();
-        ScaledResolution resolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        ScaledResolution resolution = new ScaledResolution(mc);
         float scaleW = (float) mc.displayWidth / (float) resolution.getScaledWidth_double();
         float scaleH = (float) mc.displayHeight / (float) resolution.getScaledHeight_double();
 

@@ -8,7 +8,6 @@ import net.specialattack.forge.core.client.gui.deprecated.SizeContext;
 import net.specialattack.forge.core.client.gui.deprecated.layout.SGLayoutManager;
 import net.specialattack.forge.core.client.gui.deprecated.style.StyleDefs;
 import net.specialattack.forge.core.client.gui.deprecated.style.outline.InvisibleOutline;
-import org.lwjgl.opengl.GL11;
 
 public class SGCheckbox extends SGInteractable {
 

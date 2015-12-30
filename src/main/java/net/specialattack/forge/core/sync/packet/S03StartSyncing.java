@@ -3,7 +3,6 @@ package net.specialattack.forge.core.sync.packet;
 import io.netty.buffer.ByteBuf;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -99,7 +98,7 @@ public class S03StartSyncing extends SyncPacket {
             SyncHandlerClient.debug("Owner syncables: %s", syncables.toString());
 
             NBTTagCompound data = tag.getCompoundTag("data");
-            for (String key : (Set<String>) data.getKeySet()) {
+            for (String key : data.getKeySet()) {
                 if (syncables.containsKey(key)) {
                     syncables.get(key).read(data.getTag(key));
                     SyncHandlerClient.debug("Got data for tag %s", key);

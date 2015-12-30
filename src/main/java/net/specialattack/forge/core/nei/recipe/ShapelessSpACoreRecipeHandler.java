@@ -1,5 +1,5 @@
 package net.specialattack.forge.core.nei.recipe;
-
+/*
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIClientUtils;
 import codechicken.nei.NEIServerUtils;
@@ -234,3 +234,4 @@ public class ShapelessSpACoreRecipeHandler extends ShapedRecipeHandler {
     }
 
 }
+*/

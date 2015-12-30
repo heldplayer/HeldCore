@@ -9,21 +9,21 @@ import net.minecraft.client.resources.data.BaseMetadataSectionSerializer;
 import net.minecraft.util.JsonUtils;
 import org.apache.commons.lang3.Validate;
 
-public class TextureMetadataSectionSerializer extends BaseMetadataSectionSerializer {
+public class TextureMetadataSectionSerializer extends BaseMetadataSectionSerializer<TextureMetadataSection> {
 
     @Override
     public TextureMetadataSection deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
         JsonObject object = json.getAsJsonObject();
         TextureMetadataSection result = new TextureMetadataSection();
-        result.textureWidth = JsonUtils.getJsonObjectIntegerFieldValueOrDefault(object, "width", 128);
-        result.textureHeight = JsonUtils.getJsonObjectIntegerFieldValueOrDefault(object, "height", 128);
+        result.textureWidth = JsonUtils.getInt(object, "width", 128);
+        result.textureHeight = JsonUtils.getInt(object, "height", 128);
         if (object.has("repeat")) {
             JsonObject repeat = object.getAsJsonObject("repeat");
 
-            int borderLeft = JsonUtils.getJsonObjectIntegerFieldValueOrDefault(repeat, "border-left", -1);
-            int borderTop = JsonUtils.getJsonObjectIntegerFieldValueOrDefault(repeat, "border-top", -1);
-            int borderRight = JsonUtils.getJsonObjectIntegerFieldValueOrDefault(repeat, "border-right", -1);
-            int borderBottom = JsonUtils.getJsonObjectIntegerFieldValueOrDefault(repeat, "border-bottom", -1);
+            int borderLeft = JsonUtils.getInt(repeat, "border-left", -1);
+            int borderTop = JsonUtils.getInt(repeat, "border-top", -1);
+            int borderRight = JsonUtils.getInt(repeat, "border-right", -1);
+            int borderBottom = JsonUtils.getInt(repeat, "border-bottom", -1);
 
             if (borderLeft != -1 || borderTop != -1 || borderRight != -1 || borderBottom != -1) {
                 Validate.inclusiveBetween(0, result.textureWidth, borderLeft, "Invalid border left");

@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @IFMLLoadingPlugin.TransformerExclusions({ "net.specialattack.forge.core.asm" })
-@IFMLLoadingPlugin.MCVersion("1.8")
+@IFMLLoadingPlugin.MCVersion("1.8.9")
 @IFMLLoadingPlugin.SortingIndex(100)
 public class SpACorePlugin implements IFMLLoadingPlugin, IFMLCallHook {
 

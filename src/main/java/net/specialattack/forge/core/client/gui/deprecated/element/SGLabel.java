@@ -11,7 +11,6 @@ import net.specialattack.forge.core.client.gui.deprecated.layout.Region;
 import net.specialattack.forge.core.client.gui.deprecated.layout.SGLayoutManager;
 import net.specialattack.forge.core.client.gui.deprecated.style.StyleDefs;
 import net.specialattack.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
 
 public class SGLabel extends SGComponent {
 
@@ -98,7 +97,7 @@ public class SGLabel extends SGComponent {
             List<String> strings;
             int width = this.getWidth(SizeContext.INNER);
             if (this.shouldSplit) {
-                strings = (List<String>) this.font.listFormattedStringToWidth(this.getText(), width);
+                strings = this.font.listFormattedStringToWidth(this.getText(), width);
             } else {
                 strings = Arrays.asList(this.getText().split("\n"));
             }

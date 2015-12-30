@@ -50,10 +50,6 @@ public class SpACore extends SpACoreMod {
         @Configuration.Debug
         public boolean showReportBugs = false;
 
-        @Configuration.Option(category = "tweaks", side = Configuration.CSide.CLIENT)
-        @Configuration.Alias(category = "general", name = "replaceModOptions")
-        public boolean replaceModOptions = true;
-
         @Configuration.Option(category = "common")
         public boolean enableSeasonals = true;
     }

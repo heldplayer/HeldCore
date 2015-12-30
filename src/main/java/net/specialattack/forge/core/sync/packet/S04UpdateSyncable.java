@@ -2,7 +2,6 @@ package net.specialattack.forge.core.sync.packet;
 
 import io.netty.buffer.ByteBuf;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -89,7 +88,7 @@ public class S04UpdateSyncable extends SyncPacket {
         SyncHandlerClient.debug("Updating data for %s (%s)", owner.getDebugDisplay(), owner.getSyncUUID());
 
         NBTTagCompound data = tag.getCompoundTag("data");
-        for (String key : (Set<String>) data.getKeySet()) {
+        for (String key : data.getKeySet()) {
             if (syncables.containsKey(key)) {
                 ISyncable syncable = syncables.get(key);
                 syncable.changed();

@@ -65,16 +65,16 @@ public class ConnectionInfo implements Comparable<ConnectionInfo> {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null || this.getClass() != o.getClass()) {
             return false;
         }
         ConnectionInfo that = (ConnectionInfo) o;
-        return getUuid().equals(that.getUuid());
+        return this.getUuid().equals(that.getUuid());
     }
 
     @Override
     public int hashCode() {
-        return getUuid().hashCode();
+        return this.getUuid().hashCode();
     }
 
     public void tick() {

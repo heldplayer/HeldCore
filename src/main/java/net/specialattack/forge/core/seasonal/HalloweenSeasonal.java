@@ -1,13 +1,12 @@
 package net.specialattack.forge.core.seasonal;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Random;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Timer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -108,14 +107,13 @@ public class HalloweenSeasonal implements ISeasonal {
     @Override
     public void init() {
         ClientHooks.addColorizer(this.halloweenColorizer);
-        FMLCommonHandler.instance().bus().register(this);
+        MinecraftForge.EVENT_BUS.register(this);
         this.nextRun = 6000; // Start after 300 seconds
         //this.nextRun = 200; // Start after 10 seconds
     }
 
     @Override
     public boolean itsTheSeason() {
-        Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.MONTH) == Calendar.OCTOBER && calendar.get(Calendar.DAY_OF_MONTH) == 31;
     }

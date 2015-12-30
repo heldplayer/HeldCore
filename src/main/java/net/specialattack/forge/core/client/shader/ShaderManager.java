@@ -63,7 +63,7 @@ public class ShaderManager implements IResourceManagerReloadListener {
 
                 reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
                 JsonObject json = new JsonParser().parse(reader).getAsJsonObject();
-                ShaderMetadataSection metadata = (ShaderMetadataSection) ClientProxy.metadataSerializer.parseMetadataSection("spacore:shader", json);
+                ShaderMetadataSection metadata = ClientProxy.metadataSerializer.parseMetadataSection("spacore:shader", json);
                 for (String uniform : metadata.uniforms) {
                     binding.shader.uniforms.put(uniform, new ShaderUniform(binding.shader, uniform));
                 }

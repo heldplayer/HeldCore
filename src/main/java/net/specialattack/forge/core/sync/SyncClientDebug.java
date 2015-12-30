@@ -12,7 +12,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,7 +23,7 @@ import net.specialattack.forge.core.client.MC;
 public class SyncClientDebug extends Gui {
 
     public SyncClientDebug() {
-        FMLCommonHandler.instance().bus().register(this);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public static String getShortUUID(UUID uuid) {
@@ -34,7 +34,7 @@ public class SyncClientDebug extends Gui {
     public void onRenderTick(TickEvent.RenderTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             Minecraft mc = MC.getMc();
-            ScaledResolution resolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+            ScaledResolution resolution = new ScaledResolution(mc);
 
             int left = this.drawClientSyncInfo(1, SyncHandlerClient.globalStorage);
             this.drawClientSyncInfo(left, SyncHandlerClient.worldStorage);

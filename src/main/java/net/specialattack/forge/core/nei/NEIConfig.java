@@ -1,5 +1,5 @@
 package net.specialattack.forge.core.nei;
-
+/*
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import net.specialattack.forge.core.Objects;
@@ -33,3 +33,4 @@ public class NEIConfig implements IConfigureNEI {
     }
 
 }
+*/

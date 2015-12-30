@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconCreator;
@@ -20,8 +19,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.Timer;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.fml.client.GuiModList;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -94,7 +91,6 @@ public class ClientProxy extends CommonProxy {
         MC.getTextureManager().loadTickableTexture(Assets.TEXTURE_MAP, map);
         ClientProxy.missingSprite = map.getMissingSprite();
 
-        FMLCommonHandler.instance().bus().register(this);
         ClientProxy.metadataSerializer = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, MC.getMc(), "metadataSerializer_", "field_110452_an");
         ClientProxy.metadataSerializer.registerMetadataSectionType(new TextureMetadataSectionSerializer(), TextureMetadataSection.class);
         ClientProxy.metadataSerializer.registerMetadataSectionType(new ShaderMetadataSectionSerializer(), ShaderMetadataSection.class);
@@ -139,10 +135,10 @@ public class ClientProxy extends CommonProxy {
         ClientProxy.iconProviders.add((Consumer<TextureMap>) provider);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "ConstantConditions", "PointlessBooleanExpression" })
     @SubscribeEvent
     public void onInitGuiPost(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (SpACore.config.showReportBugs) {
+        if (SpACore.config.showReportBugs && false) {
             if (event.gui != null && event.gui instanceof GuiMainMenu) {
                 int centerX = event.gui.width / 2;
                 int fourthY = event.gui.height / 4;
@@ -150,41 +146,20 @@ public class ClientProxy extends CommonProxy {
                 int buttonHeight = 20;
 
                 GuiButton button = new GuiButtonIcon(-123, 0, 0, buttonWidth, buttonHeight, null, ClientProxy.iconReportBug, Assets.TEXTURE_MAP);
-                //button.enabled = false;
 
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX - 124, fourthY + 96, buttonWidth, buttonHeight), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX - 124, fourthY + 96, buttonWidth, buttonHeight), button))
                     return;
-                }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX + 104, fourthY + 96, buttonWidth, buttonHeight), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX + 104, fourthY + 96, buttonWidth, buttonHeight), button))
                     return;
-                }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX + 104, fourthY + 132, buttonWidth, buttonHeight), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX + 104, fourthY + 132, buttonWidth, buttonHeight), button))
                     return;
-                }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX - 124, fourthY + 72, buttonWidth, buttonHeight), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX - 124, fourthY + 72, buttonWidth, buttonHeight), button))
                     return;
-                }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX + 104, fourthY + 72, buttonWidth, buttonHeight), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX + 104, fourthY + 72, buttonWidth, buttonHeight), button))
                     return;
-                }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX - 124, fourthY + 48, buttonWidth, buttonHeight), button)) {
+                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX - 124, fourthY + 48, buttonWidth, buttonHeight), button))
                     return;
-                }
-                if (ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX + 104, fourthY + 48, buttonWidth, buttonHeight), button)) {
-                    return;
-                }
-            }
-        }
-        if (SpACore.config.replaceModOptions) {
-            if (event.gui != null && event.gui instanceof GuiIngameMenu) {
-                for (int i = 0; i < event.gui.buttonList.size(); i++) {
-                    Object obj = event.gui.buttonList.get(i);
-                    if (obj instanceof GuiButton && ((GuiButton) obj).id == 12) {
-                        event.gui.buttonList.remove(i);
-                        break;
-                    }
-                }
-                event.gui.buttonList.add(new GuiButton(12, event.gui.width / 2 + 2, event.gui.height / 4 + 80, 98, 20, "Mods"));
+                ClientProxy.addButtonCheckClear(event.gui, new Rectangle(centerX + 104, fourthY + 48, buttonWidth, buttonHeight), button);
             }
         }
     }
@@ -209,13 +184,6 @@ public class ClientProxy extends CommonProxy {
         if (SpACore.config.showReportBugs) {
             if (event.button != null && event.button.id == -123 && event.gui != null && event.gui instanceof GuiMainMenu) {
                 MC.getMc().displayGuiScreen(new GuiSGTest());
-                event.setCanceled(true);
-                event.button.playPressSound(MC.getSoundHandler());
-            }
-        }
-        if (SpACore.config.replaceModOptions) {
-            if (event.button != null && event.button.id == 12 && event.gui != null && event.gui instanceof GuiIngameMenu) {
-                MC.getMc().displayGuiScreen(new GuiModList(event.gui));
                 event.setCanceled(true);
                 event.button.playPressSound(MC.getSoundHandler());
             }

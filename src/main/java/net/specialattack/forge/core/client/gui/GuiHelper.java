@@ -6,7 +6,6 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
@@ -15,7 +14,6 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.specialattack.forge.core.client.MC;
-import net.specialattack.forge.core.client.RenderHelper;
 import net.specialattack.forge.core.client.resources.data.TextureMetadataSection;
 import net.specialattack.forge.core.client.texture.IconHolder;
 import org.lwjgl.opengl.GL11;
@@ -48,6 +46,7 @@ public final class GuiHelper {
      *         The height of the tank to render
      */
     public static void drawFluid(Fluid fluid, int left, int top, int width, int height, float zLevel) {
+        /* Disabled but kept if needed, as fluid.getIcon() no longer exists
         MC.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
         TextureAtlasSprite icon = RenderHelper.getIconSafe(fluid.getIcon());
         int color = fluid.getColor();
@@ -70,6 +69,7 @@ public final class GuiHelper {
                 GuiHelper.drawTexturedModalRect(left + x, top + height - y - drawHeight, drawWidth, drawHeight, zLevel, minU, minV, maxU, maxV);
             }
         }
+        //*/
     }
 
     /**

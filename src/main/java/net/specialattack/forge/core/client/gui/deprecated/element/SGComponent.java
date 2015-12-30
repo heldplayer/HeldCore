@@ -19,7 +19,6 @@ import net.specialattack.forge.core.client.gui.deprecated.style.border.IBorder;
 import net.specialattack.forge.core.client.gui.deprecated.style.outline.IOutline;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
 
 public class SGComponent implements IComponentHolder {
 

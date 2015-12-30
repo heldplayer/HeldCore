@@ -436,7 +436,7 @@ public class GuiSGTest extends SGScreenRoot {
         if (this.prevSize == -1) {
             this.prevSize = this.mc.gameSettings.guiScale;
             this.mc.gameSettings.guiScale = 3;
-            ScaledResolution resolution = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
+            ScaledResolution resolution = new ScaledResolution(this.mc);
             this.setWorldAndResolution(this.mc, resolution.getScaledWidth(), resolution.getScaledHeight());
         }
     }

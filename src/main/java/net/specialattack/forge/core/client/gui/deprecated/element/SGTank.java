@@ -6,7 +6,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.specialattack.forge.core.client.gui.GuiHelper;
 import net.specialattack.forge.core.client.gui.deprecated.SizeContext;
-import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class SGTank extends SGComponent {
@@ -45,5 +44,4 @@ public class SGTank extends SGComponent {
             }
         }
     }
-
 }

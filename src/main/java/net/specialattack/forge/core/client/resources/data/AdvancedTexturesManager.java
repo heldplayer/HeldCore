@@ -22,7 +22,7 @@ public class AdvancedTexturesManager implements IResourceManagerReloadListener {
             } catch (IOException e) {
                 continue;
             }
-            data.texture = (TextureMetadataSection) resource.getMetadata("spacore:texture");
+            data.texture = resource.getMetadata("spacore:texture");
         }
     }
 
@@ -34,7 +34,7 @@ public class AdvancedTexturesManager implements IResourceManagerReloadListener {
             try {
                 resource = MC.getResourceManager().getResource(resourceLocation);
                 if (resource.hasMetadata()) {
-                    result.texture = (TextureMetadataSection) resource.getMetadata("spacore:texture");
+                    result.texture = resource.getMetadata("spacore:texture");
                 }
             } catch (IOException e) {
             }

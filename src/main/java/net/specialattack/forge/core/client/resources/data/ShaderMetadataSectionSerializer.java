@@ -4,7 +4,7 @@ import com.google.gson.*;
 import java.lang.reflect.Type;
 import net.minecraft.client.resources.data.BaseMetadataSectionSerializer;
 
-public class ShaderMetadataSectionSerializer extends BaseMetadataSectionSerializer {
+public class ShaderMetadataSectionSerializer extends BaseMetadataSectionSerializer<ShaderMetadataSection> {
 
     @Override
     public ShaderMetadataSection deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {

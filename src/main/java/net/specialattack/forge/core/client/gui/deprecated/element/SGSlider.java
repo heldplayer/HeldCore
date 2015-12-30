@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.specialattack.forge.core.client.gui.GuiHelper;
 import net.specialattack.forge.core.client.gui.deprecated.SizeContext;
 import net.specialattack.forge.core.client.gui.deprecated.layout.FlowDirection;
-import org.lwjgl.opengl.GL11;
 
 public class SGSlider extends SGComponent {
 
