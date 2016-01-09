@@ -23,7 +23,7 @@ public class SpACoreModTransformer implements IClassTransformer {
         ClassReader reader = new ClassReader(original);
 
         if (reader.getSuperName().equals(SpACoreModTransformer.type)) {
-            ClassNode node = new ClassNode(Opcodes.ASM4);
+            ClassNode node = new ClassNode(Opcodes.ASM5);
             reader.accept(node, 0);
 
             boolean[] methodsPresent = new boolean[SpACoreModTransformer.methods.length];
@@ -49,7 +49,7 @@ public class SpACoreModTransformer implements IClassTransformer {
                      *     super.[pre|post|]init(event);
                      * }
                      */
-                    MethodNode method = new MethodNode(Opcodes.ASM4, Opcodes.ACC_PUBLIC, SpACoreModTransformer.methods[i], descriptor, null, null);
+                    MethodNode method = new MethodNode(Opcodes.ASM5, Opcodes.ACC_PUBLIC, SpACoreModTransformer.methods[i], descriptor, null, null);
                     AnnotationVisitor annotation = method.visitAnnotation("Lcpw/mods/fml/common/Mod$EventHandler;", true);
                     annotation.visitEnd();
                     method.visitCode();

@@ -82,12 +82,12 @@ public class SpACoreGLTransformer implements IClassTransformer {
             SpACoreGLTransformer.changed = false;
 
             if (SpACorePlugin.config.stateManager && transformedName.equals("net.minecraft.client.renderer.OpenGlHelper")) {
-                visitor = new ClassVisitor(Opcodes.ASM4, visitor) {
+                visitor = new ClassVisitor(Opcodes.ASM5, visitor) {
 
                     @Override
                     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
                         if (desc.equals("(IIII)V") && (name.equals("glBlendFunc") || name.equals("func_148821_a") || name.equals("c"))) {
-                            return new DummyMethodVisitor(Opcodes.ASM4, super.visitMethod(access, name, desc, signature, exceptions)) {
+                            return new DummyMethodVisitor(Opcodes.ASM5, super.visitMethod(access, name, desc, signature, exceptions)) {
                                 @Override
                                 public void visitCode() {
                                     super.visitCode();
@@ -130,13 +130,13 @@ public class SpACoreGLTransformer implements IClassTransformer {
                 };
             }
 
-            visitor = new ClassVisitor(Opcodes.ASM4, visitor) {
+            visitor = new ClassVisitor(Opcodes.ASM5, visitor) {
 
                 @Override
                 public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
                     MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions);
 
-                    visitor = new MethodVisitor(Opcodes.ASM4, visitor) {
+                    visitor = new MethodVisitor(Opcodes.ASM5, visitor) {
 
                         @Override
                         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
@@ -190,7 +190,7 @@ public class SpACoreGLTransformer implements IClassTransformer {
 
                     if (SpACorePlugin.config.stateManager) { // Disabled if the state manager is disabled
                         // 1.7.10 Specific transformer because call lists make the colour state dirty
-                        visitor = new SequenceMethodVisitor(Opcodes.ASM4, visitor) {
+                        visitor = new SequenceMethodVisitor(Opcodes.ASM5, visitor) {
 
                             @Override
                             public void visitLdcInsn(Object cst) {

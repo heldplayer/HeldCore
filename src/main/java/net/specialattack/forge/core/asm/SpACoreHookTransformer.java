@@ -14,13 +14,13 @@ public class SpACoreHookTransformer implements IClassTransformer {
             ClassReader reader = new ClassReader(original);
             ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
-            ClassVisitor visitor = new ClassVisitor(Opcodes.ASM4, writer) {
+            ClassVisitor visitor = new ClassVisitor(Opcodes.ASM5, writer) {
 
                 @Override
                 @SuppressWarnings("deprecation")
                 public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
                     if ((name.equals("func_71353_a") || name.equals("loadWorld")) && desc.equals("(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V")) {
-                        return new MethodVisitor(Opcodes.ASM4, super.visitMethod(access, name, desc, signature, exceptions)) {
+                        return new MethodVisitor(Opcodes.ASM5, super.visitMethod(access, name, desc, signature, exceptions)) {
 
                             @Override
                             public void visitInsn(int opcode) {
@@ -33,7 +33,7 @@ public class SpACoreHookTransformer implements IClassTransformer {
                         };
                     }
                     if ((name.equals("func_71411_J") || name.equals("runGameLoop")) && desc.equals("()V")) {
-                        return new MethodVisitor(Opcodes.ASM4, super.visitMethod(access, name, desc, signature, exceptions)) {
+                        return new MethodVisitor(Opcodes.ASM5, super.visitMethod(access, name, desc, signature, exceptions)) {
 
                             @Override
                             public void visitMethodInsn(int opcode, String owner, String name, String desc) {

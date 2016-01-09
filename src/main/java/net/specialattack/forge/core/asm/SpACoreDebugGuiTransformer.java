@@ -17,13 +17,13 @@ public class SpACoreDebugGuiTransformer implements IClassTransformer {
             ClassReader reader = new ClassReader(original);
             ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
-            ClassVisitor visitor = new ClassVisitor(Opcodes.ASM4, writer) {
+            ClassVisitor visitor = new ClassVisitor(Opcodes.ASM5, writer) {
 
                 @Override
                 public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
                     if (desc.equals("(II)V")) {
                         if (name.equals("renderHUDText")) {
-                            return new DummyMethodVisitor(Opcodes.ASM4, super.visitMethod(access, name, desc, signature, exceptions)) {
+                            return new DummyMethodVisitor(Opcodes.ASM5, super.visitMethod(access, name, desc, signature, exceptions)) {
                                 @Override
                                 public void visitCode() {
                                     super.visitCode();
@@ -58,7 +58,7 @@ public class SpACoreDebugGuiTransformer implements IClassTransformer {
                                 }
                             };
                         } else if (name.equals("renderCrosshairs")) {
-                            return new DummyMethodVisitor(Opcodes.ASM4, super.visitMethod(access, name, desc, signature, exceptions)) {
+                            return new DummyMethodVisitor(Opcodes.ASM5, super.visitMethod(access, name, desc, signature, exceptions)) {
                                 @Override
                                 public void visitCode() {
                                     super.visitCode();
