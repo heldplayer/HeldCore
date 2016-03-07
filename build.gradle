@@ -66,9 +66,6 @@ minecraft {
     runDir = "../../jar"
     mappings = "stable_20"
     useDepAts = true
-
-    if (project.hasProperty("signature"))
-        replace "@FINGERPRINT@", project.signature
 }
 
 processResources {
@@ -103,6 +100,24 @@ jar {
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }
+
+// https://gist.github.com/matthewprenger/9b2da059b89433a01c1c
+task signJar(type: SignJar, dependsOn: reobfJar) {
+    onlyIf { project.hasProperty('keyStore') }
+
+    if (!project.hasProperty('keyStore')) { // This shouldn't be possible, but onlyIf isn't working properly :/
+        throw new StopExecutionException()
+    }
+
+    keyStore = project.keyStore // This needs to be a path to the keystore file
+    alias = project.keyStoreAlias
+    storePass = project.keyStorePass
+    keyPass = project.keyStoreKeyPass
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+
+build.dependsOn signJar
 
 task buildDev(type: Jar) {
     from sourceSets.main.output

@@ -4,10 +4,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ICrashCallable;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLConstructionEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.specialattack.forge.core.client.texture.IconHolder;
 import net.specialattack.forge.core.config.ConfigManager;
 import net.specialattack.forge.core.config.Configuration;
@@ -18,7 +15,7 @@ import net.specialattack.forge.core.sync.packet.*;
 import net.specialattack.util.Consumer;
 import net.specialattack.util.Scheduler;
 
-@Mod(name = Objects.MOD_NAME, modid = Objects.MOD_ID, guiFactory = Objects.GUI_FACTORY)
+@Mod(name = Objects.MOD_NAME, modid = Objects.MOD_ID, guiFactory = Objects.GUI_FACTORY, certificateFingerprint = "50d7581cf144a9c1c8d2529f263849db7717cdf9")
 public class SpACore extends SpACoreMod {
 
     @Mod.Instance(value = Objects.MOD_ID)
@@ -115,6 +112,13 @@ public class SpACore extends SpACoreMod {
 
         Scheduler.removeScheduler(CommonProxy.serverScheduler);
         CommonProxy.serverScheduler = null;
+    }
+
+    @Mod.EventHandler
+    public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
+        System.err.println("Invalid fingerprint detected!");
+        System.err.println("Expected: " + event.expectedFingerprint);
+        System.err.println("Actual:   " + event.fingerprints.toString());
     }
 
     public static void registerIconHolder(IconHolder holder) {
