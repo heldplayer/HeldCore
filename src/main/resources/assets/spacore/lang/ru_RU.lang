@@ -1,0 +1,16 @@
+spacore:gui.container.fluid.empty=Пусто
+spacore:gui.container.fluid.filled=%s / %s мВ
+
+spacore:recipe.shaped.modded=Форменное (Модификация)
+spacore:recipe.shapeless.modded=Бесформенное (Модификация)
+
+spacore:config.general=Общее
+spacore:config.general.comment=Общие настройки модификации
+spacore:config.general.refreshRate=Интервал обновлений
+spacore:config.general.refreshRate.comment=Количество обновлений, используемое для синхронизации объектов между сервером и клиентом. Большее количество обновлений уменьшит пропускную способность и загрузку процессора, но замедлит появление объектов на экране
+spacore:config.general.textureMapId=ID карты текстур
+spacore:config.general.textureMapId.comment=ID карты текстур, которую SpACore присваивает
+spacore:config.general.showReportBugs='Сообщать об ошибке'?
+spacore:config.general.showReportBugs.comment=Добавить кнопку 'Сообщать об ошибке' в меню?
+spacore:config.general.replaceModOptions=Заменить 'Опции модификаций'?
+spacore:config.general.replaceModOptions.comment=Заменить ненужную кнопку 'Опции модификаций' кнопкой 'Модификации', которая будет работать?
